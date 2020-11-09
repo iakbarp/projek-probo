@@ -34,11 +34,6 @@
                                         <h4>Data Kategori</h4>
                                     </div>
                                     <div class="card-body">
-                                        <div>
-                                            <button class="btn btn-info btn-icon icon-left" id="add_kategori"><i
-                                                    class="fa fa-plus"></i> Tambah Data
-                                            </button>
-                                        </div>
                                         <div class="table-responsive">
                                             <table class="table table-striped" id="table-1">
                                                 <thead>
@@ -76,7 +71,7 @@
                                                                     onclick="edit_negara('{{$item->id}}','{{$item->nama}}')">
                                                                 <i
                                                                     class="fa fa-edit"></i></button>
-                                                            <button class="btn btn-icon"
+                                                            <button class="btn btn-icon" style="color: white;background-color: grey"
                                                                     onclick="del({{$item->id}})"><i
                                                                     class="fa fa-trash"></i></button>
                                                         </td>
@@ -85,6 +80,11 @@
                                                 @endforeach
                                                 </tbody>
                                             </table>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-info btn-icon icon-left" id="add_kategori"><i
+                                                    class="fa fa-plus"></i> Tambah Data
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                                                     class="fa fa-edit"
                                                                     onclick="edit_sub('{{$item->id}}','{{$item->nama}}','1')"></i>
                                                             </button>
-                                                            <button class="btn btn-danger btn-icon"><i
+                                                            <button class="btn btn-icon" style="color: white;background-color: grey"><i
                                                                     class="fa fa-trash"
                                                                     onclick="delsub({{$item->id}})"></i></button>
                                                         </td>

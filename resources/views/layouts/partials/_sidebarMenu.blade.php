@@ -18,14 +18,14 @@
 
     <li class="menu-header">Data Master</li>
 
-{{--    <li class="dropdown">--}}
-{{--        <a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">--}}
-{{--            <i class="fas fa-briefcase"></i><span>Proyek & Layanan</span></a>--}}
-{{--        <ul class="dropdown-menu">--}}
-{{--            <li class=""><a href="{{route('admin.show.project')}}" class="nav-link">Proyek</a></li>--}}
-{{--            <li class=""><a href="{{route('admin.show.service')}}" class="nav-link">Layanan</a></li>--}}
-{{--        </ul>--}}
-{{--    </li>--}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">
+            <i class="fas fa-briefcase"></i><span>Proyek & Layanan</span></a>
+        <ul class="dropdown-menu">
+            <li class=""><a href="{{route('admin.show.project')}}" class="nav-link">Proyek</a></li>
+            <li class=""><a href="{{route('admin.show.service')}}" class="nav-link">Layanan</a></li>
+        </ul>
+    </li>
 
     <li class="dropdown">
         <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">

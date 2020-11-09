@@ -40,15 +40,13 @@
                                             </button>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped" id="table-1">
+                                            <table class="table table-striped dtable" id="">
                                                 <thead>
                                                 <tr>
                                                     <th class="text-center">
                                                         #
                                                     </th>
                                                     <th>Nama Negara</th>
-
-                                                    <th>Due Date</th>
 
                                                     <th>Action</th>
                                                 </tr>
@@ -60,8 +58,6 @@
                                                             {{ $loop->iteration }}
                                                         </td>
                                                         <td>{{$item->nama}}</td>
-
-                                                        <td>2018-01-20</td>
 
                                                         <td>
                                                             <form id="delete-form-{{$item->id}}"
@@ -76,7 +72,7 @@
                                                                     onclick="edit_negara('{{$item->id}}','{{$item->nama}}')">
                                                                 <i
                                                                     class="fa fa-edit"></i></button>
-                                                            <button class="btn btn-icon"
+                                                            <button class="btn btn-icon" style="color: white;background-color: grey"
                                                                     onclick="del({{$item->id}})"><i
                                                                     class="fa fa-trash"></i></button>
                                                         </td>
@@ -102,14 +98,13 @@
                                             </button>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped" id="table-2">
+                                            <table class="table table-striped dtable">
                                                 <thead>
                                                 <tr>
                                                     <th class="text-center">
                                                         #
                                                     </th>
                                                     <th>Task Name</th>
-                                                    <th>Due Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -121,7 +116,6 @@
                                                         </td>
                                                         <td>{{$item->nama}}</td>
 
-                                                        <td>2018-01-20</td>
 
                                                         <td>
                                                             <form id="delete-form-provinsi-{{$item->id}}"
@@ -133,7 +127,7 @@
                                                             </form>
                                                             <button class="btn btn-info btn-icon"><i
                                                                     class="fa fa-edit" onclick="edit_provinsi('{{$item->id}}','{{$item->nama}}')"></i></button>
-                                                            <button class="btn btn-danger btn-icon"><i
+                                                            <button class="btn btn-icon" style="color: white;background-color: grey"><i
                                                                     class="fa fa-trash"
                                                                     onclick="delprov({{$item->id}})"></i></button>
                                                         </td>
@@ -193,11 +187,14 @@
     <script src="{{asset('admins/js/page/modules-datatables.js')}}"></script>
 
     <script>
+        $(document).ready(function() {
+            $('.dtable').DataTable();
+        } );
         function del(id) {
             swal({
                 title: "Apakah Anda Yakin?",
                 text: "Data yang akan dihapus tidak akan bisa dipulihkan lagi!",
-                icon: "warning",
+                icon: '{{asset('images/red-icon.png')}}',
                 buttons: true,
                 dangerMode: true,
             })

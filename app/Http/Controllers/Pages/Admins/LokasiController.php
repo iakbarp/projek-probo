@@ -17,7 +17,7 @@ class LokasiController extends Controller
      */
     public function negara()
     {
-        $data = Negara::all();
+        $data = Negara::query()->orderBy('nama')->get();
         $data_provinsi = Provinsi::all();
         return view('pages.admins.lokasi.negara', [
             'negara' => $data,
