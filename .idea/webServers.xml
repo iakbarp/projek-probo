@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="495c1fbb-3e09-4ab3-8b94-065c9696ac9b" name="kariernesia.com" url="http://kariernesia.com">
+        <fileTransfer host="kariernesia.com" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="bcd8bbd2-7716-4924-a845-f4deac6d48ac" name="supremewrap.co.id" url="http://supremewrap.co.id">
+        <fileTransfer host="supremewrap.co.id" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="3afc2740-a9e8-4609-b816-f259b13b0627" name="ppf.co.id" url="http://ppf.co.id">
+        <fileTransfer host="ppf.co.id" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
