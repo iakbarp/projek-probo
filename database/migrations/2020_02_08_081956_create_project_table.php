@@ -22,7 +22,7 @@ class CreateProjectTable extends Migration
             $table->foreign('subkategori_id')->references('id')->on('subkategori')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('judul');
-            $table->text('permalink')->unique();
+            $table->text('permalink');
             $table->text('deskripsi');
             $table->string('thumbnail')->nullable();
             $table->text('lampiran')->nullable();
