@@ -30,4 +30,17 @@ Route::group(['namespace' => 'API'], function () {
         Route::post('refresh', 'AuthController@refresh');
         Route::get('me', 'AuthController@me');
     });
+
+    //tab
+    Route::group(['middleware' => 'jwt.verify'], function () {
+        Route::get('/home', 'tabDataController@home');
+        Route::get('/proyek', 'tabDataController@proyek');
+        Route::get('/layanan', 'tabDataController@layanan');
+        Route::get('/frelencer', 'tabDataController@frelencer');
+
+
+    });
+
+
+
 });
