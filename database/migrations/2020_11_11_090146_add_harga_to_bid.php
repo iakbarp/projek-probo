@@ -16,6 +16,8 @@ class AddHargaToBid extends Migration
         Schema::table('bid', function (Blueprint $table) {
             $table->string('negoharga')->nullable();
             $table->string('negowaktu')->nullable();
+            $table->string('task')->nullable();
+            $table->timestamp('waktukontrak')->nullable();
         });
     }
 

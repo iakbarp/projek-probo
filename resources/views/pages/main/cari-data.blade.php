@@ -349,13 +349,13 @@
                     '<span class="list-date"><i class="fa fa-calendar-week"></i>'+'Batas Waktu:&nbsp;' + val.deadline + ' hari</span><br>'+
                     '<span style="font-size: 28px;color: black;font-family: Arial">'+'Rp' + val._harga +'</span>' +
                     '<br><sub class="list-category">Kategori ' + val.kategori + ': <span style="color: #0073ff">' + val.subkategori + '</span></sub>' +
-                    '<b style="font-size: 20px;font-family: Arial;color: #0073ff" class="pull-right">' + val.judul + '</b></p>'+
-                    '<br><sub>'+val._deskripsi+'</sub>'+
 
                     '<p class="list-price" style="display: ' + user + ';margin-bottom: .5em">' +
                     '<span class="list-date rate">' + val.subkategori + '</span>' + val.rate +
                     '<br><sub class="list-category">' + val.username + ': <span>' + val.kategori + ' layanan</span></sub></p>' +
+                    '<br><sub>'+val._deskripsi+'</sub>'+
                     '</div>' +
+                    '<b style="font-size: 20px;font-family: Arial;color: #0073ff" class="pull-right">' + val.judul + '</b></p>'+
                     '</a></div>';
             });
             $("#data").empty().append($result);

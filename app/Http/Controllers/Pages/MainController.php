@@ -63,6 +63,9 @@ class MainController extends Controller
         Bid::create([
             'user_id' => Auth::id(),
             'proyek_id' => $proyek->id,
+            'negoharga' => $request->negoharga,
+            'negowaktu' => $request->negowaktu,
+
         ]);
 
         return back()->with('bid', 'Bid tugas/proyek [' . $proyek->judul . '] berhasil diajukan!');
