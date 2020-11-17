@@ -101,7 +101,7 @@
                                 Temukan
                             </div>
                             <div class="tp-caption sfr stb text-justify custom-size-7 strong-black tp-resizeme zindex">
-                                Pekerja Terbaik
+                                Pekerja
                             </div>
                             <div class="tp-caption sfr stb text-justify custom-size-7 strong-black tp-resizeme zindex">
                                 Di UNDAGI
@@ -114,21 +114,21 @@
                                     <div class="input-group">
                                         <div class="search-panel">
                                         <div id="filter-pencarian" role="menu">
-                                            <button class="btn-search" data-filter="pekerja"><a href="#"><small style="color: white">Pekerja</small></a></button>
+                                            <button class="btn-search current" data-filter="pekerja"><a href="#"><small style="color: white">Pekerja</small></a></button>
                                             <button class="btn-search" style="background-color: transparent" data-filter="proyek"><a href="#"><small style="color: black">Proyek</small></a></button>
                                             <button class="btn-search" style="background-color: transparent" data-filter="layanan"><a href="#"> <small style="color: black">Layanan</small></a> </button>
                                         </div>
                                         </div>
                                         <div style="background-color: #2979FF;padding: 17px 30px;border: none">
-                                            <input style="padding: 12px;width: 117px;display: inline-block;border-radius: 4px;border: none" type="text" placeholder="keyword"
+                                            <input style="padding: 12px;width: 351px;display: inline-block;border-radius: 4px;border: none" type="text" placeholder="keyword"
                                                    autocomplete="off" id="keyword" name="q">
                                             <input type="hidden" name="filter">
-                                            <select class="selectpicker" style="display: inline-block;border: none;padding: 15px;width: 117px;border-radius: 4px">
-                                                <option>Kategori</option>
-                                            </select>
-                                            <select style="padding: 15px;width: 117px;border-radius: 4px;border: none" class="selectpicker">
-                                                <option>Sub Kategori</option>
-                                            </select>
+{{--                                            <select class="selectpicker" style="display: inline-block;border: none;padding: 15px;width: 117px;border-radius: 4px">--}}
+{{--                                                <option>Kategori</option>--}}
+{{--                                            </select>--}}
+{{--                                            <select style="padding: 15px;width: 117px;border-radius: 4px;border: none" class="selectpicker">--}}
+{{--                                                <option>Sub Kategori</option>--}}
+{{--                                            </select>--}}
                                             <button style="background-color: #0d47a1;padding: 15px;width: 117px;border-radius: 4px;border: none"><small style="color: white">CARI</small> </button>
                                         </div>
                                     </div>
@@ -929,7 +929,7 @@
             });
         });
 
-        $("#filter-pencarian > li").on("click", function () {
+        $("#filter-pencarian > button").on("click", function () {
             $("#btn_reset").show();
             $("#txt_filter").text($(this).text());
             $("#form-pencarian input[name='filter']").val($(this).data('filter'));

@@ -18195,7 +18195,7 @@ hr.lg-size {
 .filter-projects a.current,
 .filter-projects a:hover {
     color: #fff;
-    background-color: #122752;
+    background-color: black;
 }
 
 .full-projects {

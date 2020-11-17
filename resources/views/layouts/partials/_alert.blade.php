@@ -47,7 +47,7 @@
     swal('Sukses!', '{{ session('hire_me') }}', 'success');
 
     @elseif(session('invite_to_bid'))
-    swal('SURAT KONTRAK', '{{ session('invite_to_bid') }}', 'success');
+    swal('Sukses!', '{{ session('invite_to_bid') }}', 'success');
     @endif
 
     @if (count($errors) > 0)

@@ -1178,7 +1178,7 @@
                 title: 'Batalkan Bid',
                 text: 'Apakah Anda yakin akan membatalkan bid tugas/proyek "' + judul + '"? ' +
                     'Anda tidak dapat mengembalikannya!',
-                icon: 'warning',
+                icon: '{{asset('images/red-icon.png')}}',
                 dangerMode: true,
                 buttons: ["Tidak", "Ya"],
                 closeOnEsc: false,
@@ -1197,7 +1197,7 @@
                 title: 'Konfirmasi Undangan',
                 text: 'Apakah Anda yakin akan mengkonfirmasi undangan proyek ' + privat + '"' + judul + '"? ' +
                     'Anda tidak dapat mengembalikannya!',
-                icon: 'warning',
+                icon: '{{asset('images/red-icon.png')}}',
                 dangerMode: true,
                 buttons: {
                     // cancel: 'Batal',

@@ -73,6 +73,9 @@ class AkunController extends Controller
                     'alamat' => $request->alamat,
                     'kode_pos' => $request->kode_pos,
                     'kota_id' => $request->kota_id,
+                    'bank' => $request->bank,
+                    'an' => $request->an,
+                    'rekening' => $request->rekening,
                 ]);
 
             } elseif ($request->check_form == 'summary') {

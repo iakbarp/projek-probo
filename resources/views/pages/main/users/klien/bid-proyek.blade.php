@@ -84,7 +84,9 @@
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th>Bidder</th>
-                                    <th class="text-center">Rating</th>
+                                    <th class="text-center" style="width: 55px">Harga</th>
+                                    <th class="text-center" style="width: 55px">Waktu</th>
+                                    <th class="text-center" style="width: 55px">Fitur</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
@@ -193,19 +195,6 @@
                                                                 @endif
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td><i class="fa fa-globe"></i></td>
-                                                            <td>&nbsp;</td>
-                                                            <td>
-                                                                @if($pekerja->get_bio->website != "")
-                                                                    <a href="{{$pekerja->get_bio->website}}"
-                                                                       target="_blank"
-                                                                       style="text-transform: none">{{$pekerja->get_bio->website}}</a>
-                                                                @else
-                                                                    Website (-)
-                                                                @endif
-                                                            </td>
-                                                        </tr>
                                                     </table>
                                                     <hr style="margin: 10px 0">
                                                     <table class="no-striped" style="font-size: 14px; margin-top: 0">
@@ -228,8 +217,15 @@
                                             </div>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
-                                            <i class="fa fa-star" style="color: #ffc100;margin: 0 0 0 .5rem"></i>
-                                            <b>{{round($rating_pekerja * 2) / 2}}</b>
+{{--                                            <i class="fa fa-star" style="color: #ffc100;margin: 0 0 0 .5rem"></i>--}}
+{{--                                            <b>{{round($rating_pekerja * 2) / 2}}</b>--}}
+                                            <b>Rp. lorem ipsum</b>
+                                        </td>
+                                        <td style="vertical-align: middle" align="center">
+                                            <b>Lorem Ipsum Hari</b>
+                                        </td>
+                                        <td style="vertical-align: middle" align="center">
+                                            <b>Lorem Ipsum</b>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
                                             <span class="label label-{{$class}}">{{$status}}</span>
@@ -244,9 +240,7 @@
                                                     </a>
                                                     <button class="btn btn-link btn-sm" type="button"
                                                             data-toggle="tooltip" title="Terima Bid" {{$attr}}
-                                                            onclick="terimaBid('{{route('klien.terima.bid',['judul' =>
-                                                           $proyek->permalink, 'id' => $row->id])}}',
-                                                        '{{$pekerja->name}}','{{$proyek->judul}}')">
+                                                            id="btn_kontrak">
                                                         <i class="fa fa-paper-plane" style="margin-right: 0"></i>
                                                     </button>
                                                 </span>
@@ -261,6 +255,60 @@
                 </div>
             </div>
         </div>
+        <div class="modal" tabindex="-1" role="dialog" id="modal_kontrak">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img src="{{asset('images/logo/undagi_logo.png')}}" width="120">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <div style="background-color: #E1E2DF;width: 525px;height: 250px;overflow: scroll;border: 1px solid black;padding: 2px 40px">
+                                        <h2>Terms of Use</h2>
+                                        These Terms and Conditions constitute an agreement (“Agreement”) between you (“you”, “your”, “user”, “Customer”) and the Company.Avocado gumbo artichoke ricebean groundnut tigernut. Daikon kakadu plum water spinach garbanzo eggplant fava bean chard rock melon carrot rutabaga water chestnut broccoli courgette onion.
+
+                                        <h2>Eligibility and Identity.</h2>
+                                        To be eligible to use our Services, you must be at least 13 years old. Sorrel jícama tomato silver beet wattle seed black-eyed pea garlic fennel tigernut okra beetroot shallot. Soko shallot melon dandelion bamboo shoot chickpea soybean pumpkin kakadu plum parsley ricebean grape courgette courgette jícama tatsoi. Black-eyed pea gourd tomatillo arugula cucumber celery mustard black-eyed pea cauliflower soybean rutabaga turnip groundnut.
+
+                                        <h2>Termination</h2>
+                                        You may terminate this Agreement at any time by ceasing all use of the Services and by notifying us. The Company may terminate this Agreement, at any time, without notice to you, if it believes, in its sole judgment, that you have breached or may breach any term or condition of this Agreement. Fennel garlic melon broccoli kohlrabi dulse black-eyed pea chicory watercress shallot bamboo shoot cucumber rutabaga ricebean gourd chickweed gumbo. Burdock fennel sorrel cress collard greens tomato tigernut salad chickweed yarrow water spinach catsear earthnut pea cabbage dulse potato. Onion courgette bitterleaf rutabaga tomatillo tigernut groundnut courgette water spinach tomato. Celery ricebean cabbage salsify caulie watercress cress collard greens potato chard gourd pea sprouts cucumber dulse gram. Leek summer purslane tatsoi catsear celtuce broccoli rabe onion zucchini.
+
+                                        <h2>Use of Services & Account</h2>
+                                        You represent and warrant that you possess the legal right and ability to enter into this Agreement. You agree not to use the Materials, Content, Services, and your Account for any unlawful or abusive purpose or in any way which interferes with our ability to provide Services to our customers, or which damages our property. Chickpea gourd coriander daikon zucchini lettuce tomatillo sierra leone bologi maize parsnip grape melon kohlrabi welsh onion. Celery wakame corn garlic courgette silver beet cabbage gram amaranth jícama bitterleaf. Ricebean bunya nuts prairie turnip water chestnut artichoke cauliflower watercress gourd cabbage okra broccoli rabe. Burdock leek sorrel radicchio azuki bean collard greens winter purslane broccoli rabe gourd water chestnut pumpkin gumbo. Azuki bean green bean kohlrabi kombu aubergine salsify lotus root turnip lentil radicchio nori eggplant sorrel.
+
+                                        <h2>Modification to Service</h2>
+                                        The Company may change, suspend, or discontinue all or any part of the Service at any time, with or without reason. You acknowledge that the operation of the Service may from time to time encounter technical or other problems and may not necessarily continue uninterrupted or without technical or other errors and The Company shall not be responsible to you or others for any such interruptions, errors or problems or an outright discontinuance of the Service.
+
+                                        <h2>Intellectual Property Ownership</h2>
+                                        All Materials, Services, Accounts, and content, including, but not limited to, policy information, text, software, music, sound, photographs, video, graphics, the arrangement of text and images, commercially produced information, and other material contained on the Site or through the Services (“Content”), are provided by The Company unless indicated otherwise. Welsh onion tigernut broccoli asparagus brussels sprout jícama eggplant earthnut pea cress chickpea gourd zucchini. Radicchio lentil cucumber groundnut endive kohlrabi winter purslane. Seakale plantain quandong celtuce shallot fennel seakale epazote groundnut dandelion.
+
+                                        <h2>Privacy</h2>
+                                        Please see our <a href="">Privacy Policy</a> as set forth on the site.
+
+                                        <h2>About These Terms</h2>
+                                        <p>These Terms and Conditions are just a sample and are not legally binding. Real Terms of Services do not (usually) contain vegetables...</p>
+                                    </div>
+                                    <label for="bid" class="pull-right"
+                                           style="text-transform: none">
+                                        <input type="checkbox" style="background-color: grey" required>	&nbsp;Ya, Saya setuju dengan kontrak ini
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn2" onclick="terimaBid('{{route('klien.terima.bid',['judul' =>
+                                                           $proyek->permalink, 'id' => $row->id])}}',
+                                    '{{$pekerja->name}}','{{$proyek->judul}}')"><span style="color: white">Terima Bid</span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 @endsection
 @push('scripts')
@@ -269,6 +317,10 @@
     <script src="{{asset('admins/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
     <script src="{{asset('admins/modules/datatables/Buttons-1.5.6/js/buttons.dataTables.min.js')}}"></script>
     <script>
+        var $btn = $("#btn_kontrak");
+        $btn.on('click', function () {
+            $("#modal_kontrak").modal("show");
+        });
         $(function () {
             var export_bid = 'Daftar Bid Tugas/Proyek: {{$proyek->judul.' ('.now()->format('j F Y').')'}}';
 
@@ -337,7 +389,7 @@
                 title: 'Terima Bid',
                 text: 'Apakah Anda yakin akan membuat ' + name + ' menjadi pekerja untuk tugas/proyek "' + judul + '"? ' +
                     'Anda tidak dapat mengembalikannya!',
-                icon: 'warning',
+                icon: '{{asset('images/red-icon.png')}}',
                 dangerMode: true,
                 buttons: ["Tidak", "Ya"],
                 closeOnEsc: false,
