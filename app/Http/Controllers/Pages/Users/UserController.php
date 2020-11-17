@@ -112,6 +112,6 @@ class UserController extends Controller
             'proyek_id' => $request->proyek_id,
         ]);
 
-        return back()->with('invite_to_bid', 'Berikut merupakan surat kontrak yang mampu digunakan oleh pemilik proyek/layanan untuk melakukan untuk melakukan perjanjian dengan pekerja/klien');
+        return back()->with('invite_to_bid', 'Undangan lelang berhasil dikirim');
     }
 }
