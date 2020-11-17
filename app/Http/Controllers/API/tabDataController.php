@@ -64,6 +64,7 @@ class tabDataController extends Controller
         $offset = $request->offset;
         $limit = $request->limit;
         $q = $request->q;
+        $kat = $request->kat;
 
         $proyek = DB::table('project')
 
@@ -87,6 +88,9 @@ class tabDataController extends Controller
             ->when($q, function ($query) use ($q) {
                 $query->where('project.judul', 'like', "%$q%");
             })
+            ->when($kat, function ($query) use ($kat) {
+                $query->where('kat.id', $kat);
+            })
             ->groupBy('project.id')
             ->orderBy('project.id')
 
@@ -94,7 +98,7 @@ class tabDataController extends Controller
             ->limit($limit ?? 8)
             ->get();
 
-        $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'public/proyek/thumbnail/', 0) : [];
+        $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
 
         return response()->json([
             'error' => false,
@@ -107,6 +111,7 @@ class tabDataController extends Controller
         $offset = $request->offset;
         $limit = $request->limit;
         $q = $request->q;
+        $kat = $request->kat;
 
         $layanan = DB::table('service')
             ->join('subkategori as sub', 'sub.id', '=', 'service.subkategori_id')
@@ -128,12 +133,17 @@ class tabDataController extends Controller
                 $query->where('service.judul', 'like', "%$q%");
             })
 
+            ->when($kat, function ($query) use ($kat) {
+                $query->where('kat.id', $kat);
+            })
+
             // ->offset($offset ?? 0)
             ->limit($limit ?? 8)
 
             ->get();;
 
-        $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'public/proyek/thumbnail/', 0) : [];
+       
+            $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'storage/layanan/thumbnail/', 0) : [];
 
         return response()->json([
             'error' => false,
@@ -187,7 +197,7 @@ class tabDataController extends Controller
             ->get();
 
 
-        $frelance = $frelance ? $this->imgCheck($frelance, 'thumbnail', 'public/proyek/thumbnail/', 1) : [];
+        $frelance = $frelance ? $this->imgCheck($frelance, 'thumbnail', 'storage/proyek/thumbnail/', 1) : [];
 
         return response()->json([
             'error' => false,
@@ -195,22 +205,52 @@ class tabDataController extends Controller
         ]);
     }
 
-    private function imgCheck($data, $column, $path, $ch)
+    public function kategori(Request $request)
+    {
+      
+        $q = $request->q;
+    
+
+        $kategori = DB::table('kategori')
+           ->select(
+                'id','nama','img')
+            ->when($q, function ($query) use ($q) {
+                $query->where('nama', 'like', "%$q%");
+            })
+            ->orderBy(
+                'nama'
+            )
+            ->get();
+
+       
+            $kategori = $kategori ? $this->imgCheck($kategori, 'img', 'storage/kategori_ico/', 2,false) : [];
+
+        return response()->json([
+            'error' => false,
+            'data' => $kategori
+        ]);
+    }
+
+    private function imgCheck($data, $column, $path, $ch,$desk=true)
     {
         $res = [];
         $dummy_photo = [
             asset('images/slider/beranda-' . rand(1, 5) . '.jpg'),
-            asset('admins/avatar/avatar-' . rand(1, 2) . '.jpg')
+            asset('admins/avatar/avatar-' . rand(1, 2) . '.jpg'),
+            asset('images/notfound.png')
         ];
 
         foreach ($data as $i => $row) {
             $res[$i] = $row;
 
-            $res[$i]->{$column} = File::exists(asset($path . $res[$i]->{$column})) ?
+            $res[$i]->{$column} = $res[$i]->{$column}&&File::exists($path . $res[$i]->{$column}) ?
                 asset($path . $res[$i]->{$column}) :
                 $dummy_photo[$ch];
+            
+            if($desk){
             $res[$i]->deskripsi = $res[$i]->deskripsi ?
                 strip_tags($res[$i]->deskripsi) : 'Belum diisi';
+            }
         }
 
         return $res;

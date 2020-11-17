@@ -37,6 +37,16 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/proyek', 'tabDataController@proyek');
         Route::get('/layanan', 'tabDataController@layanan');
         Route::get('/frelencer', 'tabDataController@frelencer');
+        Route::get('/kategori', 'tabDataController@kategori');
+
+        Route::group(['prefix' => 'user'], function () {
+            Route::get('/', 'userController@get');
+            Route::post('/summary', 'userController@summary');
+            Route::get('/edit', 'userController@edit');
+            Route::post('/update', 'userController@update');
+            Route::post('/photo', 'userController@photo');
+        });
+        
 
 
     });

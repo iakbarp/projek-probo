@@ -8,6 +8,7 @@ use App\Model\Negara;
 use App\Model\Portofolio;
 use App\Model\Provinsi;
 use App\Model\Skill;
+use App\Model\Bank;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,13 +21,14 @@ class AkunController extends Controller
     {
         $user = Auth::user();
         $negara = Negara::all();
+        $bank = Bank::all();
         $provinsi = Provinsi::all();
         $bahasa = Bahasa::where('user_id', Auth::id())->orderByDesc('id')->get();
         $skill = Skill::where('user_id', Auth::id())->orderByDesc('id')->get();
         $portofolio = Portofolio::where('user_id', Auth::id())->orderByDesc('tahun')->get();
-
+        
         return view('pages.main.users.sunting-profil', compact('user', 'negara', 'provinsi',
-            'bahasa', 'skill', 'portofolio'));
+            'bahasa', 'skill', 'portofolio','bank'));
     }
 
     public function updateProfil(Request $request)
