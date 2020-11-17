@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'user' => UserMiddleware::class,
         'user.bio' => BiodataMiddleware::class,
         'jwt.verify' => \App\Http\Middleware\API\JWTMiddleware::class,
+        'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
 
     ];
 

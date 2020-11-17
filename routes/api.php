@@ -42,15 +42,33 @@ Route::group(['namespace' => 'API'], function () {
         Route::group(['prefix' => 'user'], function () {
             Route::get('/', 'userController@get');
             Route::post('/summary', 'userController@summary');
+
             Route::get('/edit', 'userController@edit');
             Route::post('/update', 'userController@update');
-            Route::post('/photo', 'userController@photo');
+
+
+            Route::get('/skills', 'userController@skills');
+            Route::put('/skills_update', 'userController@skills_update');
+
+            Route::group(['middleware' => 'optimizeImages'], function () {
+                Route::post('/photo', 'userController@photo');
+
+                Route::post('/portofolio', 'userController@portofolio');
+                Route::post('/portofolio/{id}', 'userController@portofolio_update');
+                Route::delete('/portofolio/{id}', 'userController@portofolio_delete');
+            });
         });
-        
 
+        Route::group(['prefix' => 'klien'], function () {
 
+            Route::group(['prefix' => 'proyek','namespace' => 'Users\Klien'], function () {
+            Route::get('/', 'ProyekController@dashboard');
+
+            });
+
+        });
+
+        Route::group(['prefix' => 'pekerja'], function () {
+        });
     });
-
-
-
 });
