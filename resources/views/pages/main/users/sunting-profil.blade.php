@@ -394,13 +394,13 @@
                                                                 <div class="">
                                                                     <select id="" class="form-control use-select2"
                                                                             name="">
-                                                                        <option disabled selected>Nama Bank</option>
-                                                                        <option>BCA</option>
-                                                                        <option>Mandiri</option>
-                                                                        <option>BNI</option>
-                                                                        <option>BRI</option>
-                                                                        <option>BTN</option>
-                                                                        <option>Lainnya</option>
+                                                                <option disabled selected>Nama Bank</option>
+                                                                       
+                                                                        
+                                                                        @foreach($bank as $r)
+                                                                <option value={{$r->id}} {{$r->id==$user->get_bio->bank ? 'selected' : ''}}>{{$r->nama}}</option>
+
+                                                                        @endforeach
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -410,7 +410,7 @@
                                                                 <div class="">
                                                                     <input id="" type="text" class="form-control"
                                                                            name=""
-                                                                           placeholder="Nomor Rekening" value="">
+                                                                placeholder="Nomor Rekening" value="{{$user->get_bio->rekening}}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -419,7 +419,7 @@
                                                                 <div class="">
                                                                     <input id="" type="text" class="form-control"
                                                                            name=""
-                                                                           placeholder="Nama Rekening" value="">
+                                                                placeholder="Nama Rekening" value="{{$user->get_bio->an}}">
                                                                 </div>
                                                             </div>
                                                         </div>
