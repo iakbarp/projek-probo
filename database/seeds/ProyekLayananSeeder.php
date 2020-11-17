@@ -139,13 +139,13 @@ class ProyekLayananSeeder extends Seeder
         })->whereHas('get_bid')->whereHas('get_undangan')->first();
 
         $fq->update([
-            'name' => 'Fiqy Ainuzzaqy',
-            'username' => 'fq_whysoserious',
-            'email' => 'fiqy_a@icloud.com'
+            'name' => 'Fahmi rizky maulidy',
+            'username' => 'fahmirm',
+            'email' => 'vreallyla@gmail.com'
         ]);
         $fq->get_bio->update([
             'tgl_lahir' => '1997-10-15',
-            'jenis_kelamin' => 'pria',
+            'jenis_kelamin' => 'Laki-laki',
             'kewarganegaraan' => 'Indonesia',
             'kota_id' => 259,
             'alamat' => 'Jl. Hikmat 50A Betro, Sedati',
@@ -153,17 +153,17 @@ class ProyekLayananSeeder extends Seeder
             'hp' => '081356598237',
             'status' => 'Talk slowly, think quickly!',
             'summary' => $faker->paragraph,
-            'website' => 'http://rabbit-media.net'
+            'website' => 'http://undagi.com'
         ]);
         \App\Model\Bahasa::create([
             'user_id' => $fq->id,
             'nama' => 'Indonesia',
-            'tingkatan' => 'asli'
+            'tingkatan' => 'Menengah'
         ]);
         \App\Model\Bahasa::create([
             'user_id' => $fq->id,
             'nama' => 'Inggris',
-            'tingkatan' => 'percakapan'
+            'tingkatan' => 'Menengah'
         ]);
         \App\Model\Skill::create([
             'user_id' => $fq->id,

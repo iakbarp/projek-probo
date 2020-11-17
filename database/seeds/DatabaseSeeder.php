@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
              NegaraTableSeeder::class,
              PovinsiTableSeeder::class,
              KotaTableSeeder::class,
+             BankTableSeeder::class,
+
              UserTableSeeder::class,
              ProyekLayananSeeder::class,
          ]);

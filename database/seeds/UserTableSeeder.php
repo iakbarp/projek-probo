@@ -20,7 +20,7 @@ class UserTableSeeder extends Seeder
                 $user = User::create([
                     'name' => "ADMIN",
                     'username' => "admin",
-                    'email' => "admin@bagasku.com",
+                    'email' => "admin@undagi.com",
                     'password' => bcrypt('secret'),
                     'role' => $role
                 ]);
@@ -29,7 +29,7 @@ class UserTableSeeder extends Seeder
                 $user = User::create([
                     'name' => "ADMIN",
                     'username' => "root",
-                    'email' => "root@bagasku.com",
+                    'email' => "root@undagi.com",
                     'password' => bcrypt('secret'),
                     'role' => $role
                 ]);
@@ -46,13 +46,13 @@ class UserTableSeeder extends Seeder
                         'role' => $role
                     ]);
 
-                    $bank = array("BCA", "BRI", "BNI", "BTN",'Mandiri');
+                    $bank = \App\Model\Bank::inRandomOrder()->first()->id;
                     \App\Model\Bio::create([
                         'user_id' => $user->id,
                         'status' => $faker->sentence,
                         'rekening' => $faker->creditCardNumber,
                         'an' => $user->name,
-                        'bank' => $bank[array_rand($bank)]
+                        'bank' => $bank
                     ]);
 
                     $arr = array("3.5", "4", "4.5", "5");

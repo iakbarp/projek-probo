@@ -15,6 +15,17 @@ class KategoriTableSeeder extends Seeder
         'Data Entry'
     ];
 
+    const KategoriArrayIco = [
+        'website.png',
+        'penulisan.png',
+        'design.png',
+        'bisnis.png',
+        'penerjemah.png',
+        'mobile.png',
+        'animasi.png',
+        'entry.png'
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -22,9 +33,10 @@ class KategoriTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach (static::KategoriArray as $kategori) {
+        foreach (static::KategoriArray as $i=>$kategori) {
             \App\Model\Kategori::create([
-                'nama' => $kategori
+                'nama' => $kategori,
+                'img'=>static::KategoriArrayIco[$i]
             ]);
         }
     }

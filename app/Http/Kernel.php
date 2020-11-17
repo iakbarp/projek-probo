@@ -69,6 +69,8 @@ class Kernel extends HttpKernel
         'admin' => AdminMiddleware::class,
         'user' => UserMiddleware::class,
         'user.bio' => BiodataMiddleware::class,
+        'jwt.verify' => \App\Http\Middleware\API\JWTMiddleware::class,
+
     ];
 
     /**

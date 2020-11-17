@@ -15,6 +15,7 @@ use App\Model\ReviewWorker;
 use App\Model\Services;
 use App\Model\Skill;
 use App\Model\Bid;
+use App\Model\Bank;
 use App\Model\Testimoni;
 use App\Model\UlasanService;
 use App\Model\Undangan;
@@ -114,6 +115,11 @@ class User extends Authenticatable implements JWTSubject
     public function get_bio()
     {
         return $this->hasOne(Bio::class, 'user_id');
+    }
+    public function get_bank()
+    {
+        return $this->belongsTo(Bank::class, 'bank');
+
     }
 
     public function get_bahasa()
