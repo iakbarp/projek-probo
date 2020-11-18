@@ -4,11 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\Auth\ActivationMail;
+use App\Model\Bio;
 // use App\Models\Bio;
 
 use App\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -21,15 +24,28 @@ class AuthController extends Controller
     public function login(Request $request)
     {
 
-        $credentials = $request->only('email', 'password');
 
         try {
-            $user = User::where('email', $request->email)->firstOrFail();
+            $isEmail = false;
+            if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+                $isEmail = true;
+            }
+            $user = User::when($isEmail, function ($q) use ($request) {
+                $q->where('email', $request->email);
+            })
+                ->when(!$isEmail, function ($q) use ($request) {
+                    $q->where('username', $request->email);
+                })
+                ->firstOrFail();
+
+            $user->password = $request->password;
+            $credentials = $user->only('email', 'password');
+
 
             // if ($user->status != 0) {
-                if (!$token = JWTAuth::attempt($credentials)) {
-                    return response()->json(['error' => 'invalid_credentials'], 404);
-                }
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'invalid_credentials'], 404);
+            }
             // } else {
             //     return response()->json(['error' => 'Silahkan aktivasi akun anda'], 400);
             // }
@@ -44,10 +60,11 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        DB::beginTransaction();
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'username' => 'required|string|max:255|unique:users',
+            'name' => 'required|string|max:50',
+            'email' => 'required|string|email|max:60|unique:users',
+            'username' => 'required|string|max:15|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -55,29 +72,38 @@ class AuthController extends Controller
             return response()->json([
                 'error' => true,
                 'data' => [
-                    'message' => $validator->errors()->toJson()
+                    'message' =>json_decode( $validator->errors()->toJson())
                 ]
-            ], 400);
+            ], 422);
         }
 
-        $user = User::create([
-            'name' => $request->get('name'),
-            'username' => $request->get('username'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
-            'status' => false,
-            'verifyToken' => Str::random(255),
-        ]);
+        try {
 
-        // Bio::create([
-        //     'user_id' => $user->id,
-        //     'gender' => $request->get('gender'),
-        //     'dob' => Carbon::parse($request->get('dob'))
-        // ]);
-        Mail::to($user->email)->send(new ActivationMail($user));
-        $token = JWTAuth::fromUser($user);
+            $data = $request->toArray();
 
-        return response()->json(compact('user', 'token'), 201);
+            $user = User::create([
+                'name' => $data['name'],
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'role' => 'other'
+            ]);
+
+            Bio::create([
+                'user_id' => $user->id,
+
+            ]);
+
+            $token = JWTAuth::fromUser($user);
+            DB::commit();
+
+
+            return response()->json(['error' => false, 'data' => compact('user', 'token')], 201);
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return response()->json(['error' => true, 'data' => ['message' => $e]], 500);
+        }
     }
 
 

@@ -26,6 +26,8 @@ Route::group(['namespace' => 'API'], function () {
     ], function ($router) {
 
         Route::post('login', 'AuthController@login');
+        Route::post('register', 'AuthController@register');
+        
         Route::post('logout', 'AuthController@logout');
         Route::post('refresh', 'AuthController@refresh');
         Route::get('me', 'AuthController@me');
@@ -48,7 +50,7 @@ Route::group(['namespace' => 'API'], function () {
 
 
             Route::get('/skills', 'userController@skills');
-            Route::put('/skills_update', 'userController@skills_update');
+            Route::post('/skills_update', 'userController@skills_update');
 
             Route::group(['middleware' => 'optimizeImages'], function () {
                 Route::post('/photo', 'userController@photo');
