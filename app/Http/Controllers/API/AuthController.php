@@ -65,14 +65,15 @@ class AuthController extends Controller
             'name' => 'required|string|max:50',
             'email' => 'required|string|email|max:60|unique:users',
             'username' => 'required|string|max:15|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|min:6|required_with:password_confirmation',
+            'password_confirmation' => 'required|min:6|same:password'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
                 'data' => [
-                    'message' =>json_decode( $validator->errors()->toJson())
+                    'message' => json_decode($validator->errors()->toJson())
                 ]
             ], 422);
         }

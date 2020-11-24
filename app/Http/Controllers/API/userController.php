@@ -9,6 +9,7 @@ use App\User;
 use App\Model\Bank;
 use App\Model\Kota;
 use App\Model\Bio;
+use App\Model\Negara;
 use App\Model\Skill;
 use App\Model\Portofolio;
 use App\Model\Provinsi;
@@ -17,9 +18,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-
-
-
 
 
 class userController extends Controller
@@ -33,7 +31,7 @@ class userController extends Controller
             // ->makeHidden(['id','user_id'])
 
             // $user->get_portofolio;
-            $user->bio = Bio::where('user_id', $user->id)->first()->makeHidden(['id', 'user_id', 'created_at', 'updated_at', 'latar_belakang']);
+            $user->bio = Bio::where('user_id', $user->id)->first();
             $user->skills = Skill::where('user_id', $user->id)->get()->makeHidden(['user_id', 'created_at', 'updated_at']);
             $user->portofolio = portofolio::where('user_id', $user->id)->orderBy(
                 'tahun'
@@ -44,7 +42,12 @@ class userController extends Controller
             $user->bio = $this->imgCheck($user->bio, 'foto', 'storage/users/foto/');
             $user->portofolio = $this->imgCheck($user->portofolio->toArray(), 'foto', 'storage/users/portofolio/', 1);
 
-
+            $user->bio->bank = Bank::find($user->bio->bank);
+            $user->bio->bank = $user->bio->bank ? $user->bio->bank->nama : null;
+            $user->bio->kota = Kota::find($user->bio->kota_id);
+            $user->bio->provinsi = $user->bio->kota ? Provinsi::find($user->bio->kota->provinsi_id)->nama : null;
+            $user->bio->kota = $user->bio->kota ? $user->bio->kota->nama : null;
+            $user->bio->makeHidden(['kota_id', 'id', 'user_id', 'created_at', 'updated_at', 'latar_belakang']);
 
             return response()->json(
                 [
@@ -62,10 +65,139 @@ class userController extends Controller
         }
     }
 
+    public function negara(Request $r)
+    {
+        $id = $r->id;
+        $q = $r->q;
+        try {
+            $negara = Negara::select(
+                'id',
+                'nama',
+                DB::raw("if(id='$id',true,false) as selected")
+            )
+                ->when($q, function ($query) use ($q) {
+                    $query->where('nama', 'like', "%$q%");
+                })
+                ->get()->toArray();
+
+            return response()->json(
+                [
+                    'error' => false,
+                    'data' => $negara,
+                ]
+            );
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ], 400);
+        }
+    }
+
+    public function kota(Request $r)
+    {
+        $id = $r->id;
+        $q = $r->q;
+
+        try {
+            $negara = Provinsi::select('id', 'nama')->get()->toArray();
+            $negara = collect($negara);
+
+
+            $keyed = $negara->map(function ($item, $i) use ($id, $q) {
+                $kota = Kota::select(
+                    'id',
+                    'nama',
+                    DB::raw("if(id='$id',true,false) as selected")
+                )->where('provinsi_id', $item['id'])
+                    ->when($q, function ($query) use ($q) {
+                        $query->where('nama', 'like', "%$q%");
+                    })
+                    ->get();
+
+
+                return  [
+                    'id' => $item['id'],
+                    'nama' => $item['nama'],
+                    'sub' => $kota->count() ? $kota : null,
+                ];
+            });
+            $kota = [];
+            foreach ($keyed->whereNotNull('sub')->all() as $row) {
+                $kota[] = $row;
+            }
+
+
+
+
+
+            return response()->json(
+                [
+                    'error' => false,
+                    'data' => $kota,
+                ]
+            );
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ], 400);
+        }
+    }
+
+    public function bank(Request $r)
+    {
+        $id = $r->id;
+        $q = $r->q;
+        try {
+            $Bank = Bank::select(
+                'id',
+                'nama',
+                DB::raw("if(id='$id',true,false) as selected")
+            )
+                ->when($q, function ($query) use ($q) {
+                    $query->where('nama', 'like', "%$q%");
+                })
+                ->get();
+
+            return response()->json(
+                [
+                    'error' => false,
+                    'data' => $Bank,
+                ]
+            );
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ], 400);
+        }
+    }
+
     public function summary(Request $request)
     {
 
         $summary = $request->summary;
+        $validator = Validator::make($request->all(), [
+            'summary' => 'required|string|min:20|max:255',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
         try {
             $bio = auth('api')->user()->get_bio;
             $summary_edit = $bio->summary;
@@ -83,9 +215,9 @@ class userController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -107,7 +239,8 @@ class userController extends Controller
 
             $bio->makeHidden(['id', 'user_id', 'latar_belakang', 'created_at', 'updated_at', 'summary', 'kota_id']);
             $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
-
+            $bio->kewarganegaraan = Negara::where('nama', $bio->kewarganegaraan)->first()
+                ->makeHidden(['created_at', 'updated_at']);
             //   return response()->json($bio);
 
             return response()->json([
@@ -117,22 +250,23 @@ class userController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
 
     public function update(Request $r)
     {
+        $user = auth('api')->user();
         $validator = Validator::make($r->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,id,' . $user->id,
             'jenis_kelamin' => 'required|string',
             'tgl_lahir' => 'required|date_format:Y-m-d',
             'status' => 'required|max:60',
-            'kewarganegaraan' => 'required|exists:negara,id',
+            'kewarganegaraan' => 'required|exists:negara,nama',
             'hp' => 'required|max:60',
             'alamat' => 'required|max:191',
             'kota_id' => 'nullable|exists:kota,id',
@@ -169,9 +303,9 @@ class userController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -183,18 +317,21 @@ class userController extends Controller
             $user = auth('api')->user();
             $bio = $user->get_bio;
 
-            $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+            // $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
 
-            $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+            // $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
 
-            $image = str_replace($replace, '', $image_64);
+            // $image = str_replace($replace, '', $image_64);
 
-            $image = str_replace(' ', '+', $image);
+            // $image = str_replace(' ', '+', $image);
+            $image = $image_64;
+            $extension = 'jpg';
+
             $kond = (bool) base64_decode($image, true);
 
             if ($kond) {
 
-                $imageName = $user->id . '_' . $user->name . '_' . now()->format('Ymd') . '.' . $extension;
+                $imageName = $user->id . '_' . str_replace(' ', '-', $user->name) . '_' . now()->format('dHis') . '.' . $extension;
 
                 if ($user->get_bio->foto != '') {
                     Storage::delete('public/users/foto/' . $bio->foto);
@@ -214,16 +351,16 @@ class userController extends Controller
 
             return response()->json([
                 'error' => !(bool)$kond,
-                'data' => [
-                    'message' => $kond ? 'foto telah diperbarui!' : 'Harap pilih gambar!',
-                ]
+
+                'message' => $kond ? 'foto telah diperbarui!' : 'Harap pilih gambar!',
+
             ], ($kond ? 201 : 400));
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -292,7 +429,7 @@ class userController extends Controller
             'deskripsi' => 'required|string|max:255',
             'tahun' => 'required',
             'tautan' => 'required',
-            
+
             'image' => 'image|mimes:jpg,jpeg,gif,png|max:2048'
         ]);
 
@@ -346,7 +483,7 @@ class userController extends Controller
             'deskripsi' => 'required|string|max:255',
             'tahun' => 'required',
             'tautan' => 'required',
-            
+
             'image' => 'image|mimes:jpg,jpeg,gif,png|max:2048'
         ]);
 
@@ -376,7 +513,7 @@ class userController extends Controller
                 $foto = $user->id . now()->format('is') . '_' . $r->file('image')->getClientOriginalName();
                 $r->file('image')->storeAs('public/users/portofolio', $foto);
 
-                
+
                 $r->request->add(['foto' => $foto]);
 
                 $port->update($r->only('judul', 'deskripsi', 'tahun', 'tautan', 'foto'));
@@ -388,7 +525,7 @@ class userController extends Controller
                 'data' => [
                     'message' => ((bool) $port ? 'Portofolio berhasil diubah!' : 'data tidak ditemukan!')
                 ]
-                ],($port ? 201 : 400));
+            ], ($port ? 201 : 400));
         } catch (\Exception $exception) {
             DB::rollback();
 
@@ -403,7 +540,7 @@ class userController extends Controller
 
     public function portofolio_delete($id)
     {
-       
+
         DB::beginTransaction();
 
 
@@ -418,7 +555,7 @@ class userController extends Controller
                     Storage::delete('public/users/portofolio/' . $port->foto);
                 }
 
-              
+
                 $port->delete();
                 DB::commit();
             }
@@ -428,8 +565,7 @@ class userController extends Controller
                 'data' => [
                     'message' => $port ? 'Portofolio berhasil dihapus!' : 'data tidak ditemukan!'
                 ]
-            ],($port ? 201 : 400));
-
+            ], ($port ? 201 : 400));
         } catch (\Exception $exception) {
             DB::rollback();
 
@@ -446,8 +582,8 @@ class userController extends Controller
     {
         $dummy_photo = [
 
-            asset('admins/avatar/avatar-' . rand(1, 2) . '.jpg'),
-            asset('images/porto.jpg'),
+            asset('admins/img/avatar/avatar-' . rand(1, 2) . '.png'),
+            asset('images/photo_holder.png'),
 
 
 

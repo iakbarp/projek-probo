@@ -27,7 +27,7 @@ Route::group(['namespace' => 'API'], function () {
 
         Route::post('login', 'AuthController@login');
         Route::post('register', 'AuthController@register');
-        
+
         Route::post('logout', 'AuthController@logout');
         Route::post('refresh', 'AuthController@refresh');
         Route::get('me', 'AuthController@me');
@@ -47,6 +47,11 @@ Route::group(['namespace' => 'API'], function () {
 
             Route::get('/edit', 'userController@edit');
             Route::post('/update', 'userController@update');
+
+            Route::get('/negara', 'userController@negara');
+            Route::get('/kota', 'userController@kota');
+            Route::get('/bank', 'userController@bank');
+
 
 
             Route::get('/skills', 'userController@skills');
