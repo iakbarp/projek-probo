@@ -85,6 +85,7 @@
 {{--                <li><a href="{{Auth::user()->isRoot() || Auth::user()->isAdmin() ? route('admin.settings') :--}}
 {{--                route('user.pengaturan')}}"><i class="fa fa-cogs mr-2"></i>Pengaturan Akun</a></li>--}}
                     <li><a href="{{route('chat')}}">Chat</a>
+                    <li><a href="{{route('user.dompet')}}">Dompet</a>
                     </li>
                 <li>
                     <a href="#" class="btn_signOut">Keluar&nbsp;<i class="fa fa-sign-out-alt"></i></a>

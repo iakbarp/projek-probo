@@ -431,6 +431,11 @@ Route::group(['prefix' => 'akun'], function () {
             'as' => 'chat'
         ]);
 
+        Route::get('dompet', [
+            'uses' => 'DompetController@index',
+            'as' => 'user.dompet'
+        ]);
+
     });
 
 });
