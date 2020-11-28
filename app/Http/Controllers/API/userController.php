@@ -387,19 +387,65 @@ class userController extends Controller
         }
     }
 
+    public function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
     public function skills_update(Request $r)
     {
         DB::beginTransaction();
 
+
         try {
             $user = auth('api')->user();
+
+            if (!$this->isJson($r->update)) {
+                return response()->json([
+                    'error' => true,
+
+                    'message' => 'form incompleted!'
+
+                ], 422);
+            }
+
             $data = collect(json_decode($r->update));
+
+            if (!collect($data[0])->has(['id', 'nama', 'tingkatan'])) {
+                return response()->json([
+                    'error' => true,
+
+                    'message' => 'form incompleted!'
+
+                ], 422);
+            }
+
+            $ids = $data->filter(function ($item) {
+                return is_numeric($item->id);
+            })->pluck('id');
+
+
+
             $skills = Skill::where('user_id', $user->id)
-                ->whereNotIn('id', $data->pluck('id'))
+                ->when(count($ids), function ($q) use ($ids) {
+                    $q->whereNotIn('id', $ids);
+                })
                 ->delete();
 
+
+
             foreach ($data as $row) {
-                Skill::updateOrCreate($data->only('id', 'nama', 'tingkatan'));
+                $row->user_id = $user->id;
+
+                $row = collect($row);
+                $res = $row->only('nama', 'tingkatan', 'user_id')->toArray();
+
+                if ($row['id'] && $skill = Skill::find($row['id'])) {
+                    $skill->update($res);
+                } else {
+                    Skill::create($res);
+                }
             }
 
             DB::commit();
@@ -407,31 +453,34 @@ class userController extends Controller
 
             return response()->json([
                 'error' => false,
-                'data' => [
-                    'message' => 'berhasil diperbarui!'
-                ]
+
+                'message' => 'berhasil diperbarui!'
+
             ]);
         } catch (\Exception $exception) {
             DB::rollback();
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
 
     public function portofolio(Request $r)
     {
+
         $validator = Validator::make($r->all(), [
             'judul' => 'required|string|max:100',
             'deskripsi' => 'required|string|max:255',
-            'tahun' => 'required',
+            'tahun' => 'required|numeric|min:1960|max:' . now()->format('Y'),
             'tautan' => 'required',
 
-            'image' => 'image|mimes:jpg,jpeg,gif,png|max:2048'
+            'image' => 'required|image|mimes:jpg,jpeg,gif,png|max:2048'
         ]);
+
+
 
         if ($validator->fails()) {
 
@@ -442,7 +491,11 @@ class userController extends Controller
                 ]
             ], 422);
         }
+
+
         DB::beginTransaction();
+
+
 
 
         try {
@@ -459,9 +512,9 @@ class userController extends Controller
 
             return response()->json([
                 'error' => false,
-                'data' => [
-                    'message' => 'Portofolio berhasil dibuat!'
-                ]
+
+                'message' => 'Portofolio berhasil dibuat!'
+
             ]);
         } catch (\Exception $exception) {
             DB::rollback();
@@ -469,9 +522,9 @@ class userController extends Controller
 
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -506,15 +559,16 @@ class userController extends Controller
                 ->first();
 
             if ($port) {
-                if ($port->foto != '') {
-                    Storage::delete('public/users/portofolio/' . $port->foto);
+                if ($r->hasFile('image')) {
+                    if ($port->foto) {
+                        Storage::delete('public/users/portofolio/' . $port->foto);
+                    }
+
+                    $foto = $user->id . now()->format('is') . '_' . $r->file('image')->getClientOriginalName();
+                    $r->file('image')->storeAs('public/users/portofolio', $foto);
                 }
+                $r->request->add(['foto' => $r->hasFile('image') ? $foto : $port->foto]);
 
-                $foto = $user->id . now()->format('is') . '_' . $r->file('image')->getClientOriginalName();
-                $r->file('image')->storeAs('public/users/portofolio', $foto);
-
-
-                $r->request->add(['foto' => $foto]);
 
                 $port->update($r->only('judul', 'deskripsi', 'tahun', 'tautan', 'foto'));
                 DB::commit();
@@ -562,9 +616,9 @@ class userController extends Controller
 
             return response()->json([
                 'error' => !(bool) $port,
-                'data' => [
-                    'message' => $port ? 'Portofolio berhasil dihapus!' : 'data tidak ditemukan!'
-                ]
+
+                'message' => $port ? 'Portofolio berhasil dihapus!' : 'data tidak ditemukan!'
+
             ], ($port ? 201 : 400));
         } catch (\Exception $exception) {
             DB::rollback();
