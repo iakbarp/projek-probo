@@ -157,7 +157,8 @@ class tabDataController extends Controller
                 })
 
                 ->when($kat, function ($query) use ($kat) {
-                    $query->where('kat.id', $kat);
+                    $query->whereIn('kat.id', json_decode($kat));
+
                 })
 
                 // ->offset($offset ?? 0)
@@ -168,9 +169,15 @@ class tabDataController extends Controller
 
             $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'storage/layanan/thumbnail/', 0) : [];
 
+            if($kat){
+                $kat=Kategori::whereIn('id',json_decode($kat))->select('nama')->orderBy('nama')->get();
+                }else{
+                    $kat=[];
+                }
             return response()->json([
                 'error' => false,
-                'data' => $layanan
+                'data' => ['list'=>$layanan,'kategori'=>count($kat)?
+                $kat->pluck('nama'):[]]
             ]);
         } catch (Exception $e) {
             return response()->json([
