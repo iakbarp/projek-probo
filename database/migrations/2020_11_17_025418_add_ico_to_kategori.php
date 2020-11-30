@@ -14,7 +14,7 @@ class AddIcoToKategori extends Migration
     public function up()
     {
         Schema::table('kategori', function (Blueprint $table) {
-            $table->string('img')->nullable()->comment('location storage/kategori_ico');
+            $table->string('img')->nullable()->comment('location images/category-icons');
         });
     }
 

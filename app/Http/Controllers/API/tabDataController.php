@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Model\Bid;
+use App\Model\Kategori;
 use App\Model\Project;
 use App\Model\Services;
 use Exception;
@@ -17,22 +19,19 @@ class tabDataController extends Controller
     {
 
         try {
+            // $bid=collect(Bid::whereNull('tolak')->get())->pluk('proyek_id');
+            $bid = Bid::whereNotNull('tolak')->get();
             $proyek = DB::table('project')->select('project.id')
 
-                ->join('bid', function ($join) {
-                    $join->on('project.id', '=', 'bid.proyek_id')
-                        ->whereNull('bid.tolak');
-                })
-                ->groupBy('project.id')
-                ->orderBy('project.id')
-                ->get()
 
-                ->count();
+                ->whereNotIn('project.id', $bid->pluck('proyek_id'))
+
+
+                ->get()->count();
 
 
             $layanan = Services::select('id')
                 ->get()
-
                 ->count();
 
 
@@ -70,48 +69,56 @@ class tabDataController extends Controller
     public function proyek(Request $request)
     {
         try {
-            $offset = $request->offset;
+            // $offset = $request->offset;
             $limit = $request->limit;
             $q = $request->q;
             $kat = $request->kat;
 
+
+
+            $bid = Bid::whereNotNull('tolak')->get();
+
             $proyek = DB::table('project')
 
-                ->leftJoin('bid as b1', function ($join) {
-                    $join->on('project.id', '=', 'b1.proyek_id')
-                        ->whereNotNull('b1.tolak');
-                })
+
                 ->join('subkategori as sub', 'sub.id', '=', 'project.subkategori_id')
                 ->join('kategori as kat', 'sub.kategori_id', '=', 'kat.id')
 
                 ->select(
                     'project.*',
-                    'project.subkategori_id',
                     DB::raw('sub.nama as subkategori_nama'),
                     'sub.kategori_id',
                     DB::raw('kat.nama as kategori_nama'),
 
                     DB::raw('ifnull((select count(id) from bid where project.id=bid.proyek_id),0) as `jumlah_bid`')
                 )
-                ->whereNull('b1.tolak')
+                ->whereNotIn('project.id', $bid->pluck('proyek_id'))
+
                 ->when($q, function ($query) use ($q) {
                     $query->where('project.judul', 'like', "%$q%");
                 })
                 ->when($kat, function ($query) use ($kat) {
-                    $query->where('kat.id', $kat);
+                    $query->whereIn('kat.id', json_decode($kat));
                 })
-                ->groupBy('project.id')
-                ->orderBy('project.id')
+
+                ->orderBy('project.id', 'desc')
 
                 // ->offset($offset ?? 0)
                 ->limit($limit ?? 8)
                 ->get();
 
+                // return $proyek;
+
             $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
+            if($kat){
+            $kat=Kategori::whereIn('id',json_decode($kat))->select('nama')->orderBy('nama')->get();
+            }else{
+                $kat=[];
+            }
 
             return response()->json([
                 'error' => false,
-                'data' => $proyek
+                'data' => ['list'=>$proyek,'kategori'=>count($kat)?$kat->pluck('nama'):[]]
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -255,7 +262,7 @@ class tabDataController extends Controller
                 ->get();
 
 
-            $kategori = $kategori ? $this->imgCheck($kategori, 'img', 'storage/kategori_ico/', 2, false) : [];
+            $kategori = $kategori ? $this->imgCheck($kategori, 'img', 'images/category-icons/', 2, false) : [];
 
             return response()->json([
                 'error' => false,
