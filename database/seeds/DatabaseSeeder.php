@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
              UserTableSeeder::class,
              ProyekLayananSeeder::class,
+             MessageSeeder::class,
          ]);
     }
 }

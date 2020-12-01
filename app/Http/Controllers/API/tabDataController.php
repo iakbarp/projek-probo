@@ -234,7 +234,7 @@ class tabDataController extends Controller
                 ->get();
 
 
-            $frelance = $frelance ? $this->imgCheck($frelance, 'thumbnail', 'storage/proyek/thumbnail/', 1) : [];
+            $frelance = $frelance ? $this->imgCheck($frelance, 'thumbnail', 'storage/users/foto/', 1) : [];
 
             return response()->json([
                 'error' => false,

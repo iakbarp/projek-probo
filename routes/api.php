@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['namespace' => 'API'], function () {
+
     Route::group([
 
         'middleware' => 'api',
@@ -40,6 +41,11 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/layanan', 'tabDataController@layanan');
         Route::get('/frelencer', 'tabDataController@frelencer');
         Route::get('/kategori', 'tabDataController@kategori');
+
+        Route::get('message', 'messageController@index');
+        Route::get('typing', 'messageController@eventTyping');
+
+
 
         Route::group(['prefix' => 'user'], function () {
             Route::get('/', 'userController@get');

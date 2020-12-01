@@ -134,16 +134,16 @@ class ProyekLayananSeeder extends Seeder
             ]);
         }
 
-        $fq = \App\User::where('role', \App\Support\Role::OTHER)->whereHas('get_bio', function ($q) {
+        $fahmi = \App\User::where('role', \App\Support\Role::OTHER)->whereHas('get_bio', function ($q) {
             $q->orderByDesc('total_bintang_klien');
         })->whereHas('get_bid')->whereHas('get_undangan')->first();
 
-        $fq->update([
+        $fahmi->update([
             'name' => 'Fahmi rizky maulidy',
             'username' => 'fahmirm',
             'email' => 'vreallyla@gmail.com'
         ]);
-        $fq->get_bio->update([
+        $fahmi->get_bio->update([
             'tgl_lahir' => '1997-10-15',
             'jenis_kelamin' => 'Laki-laki',
             'kewarganegaraan' => 'Indonesia',
@@ -156,17 +156,17 @@ class ProyekLayananSeeder extends Seeder
             'website' => 'http://undagi.com'
         ]);
         \App\Model\Bahasa::create([
-            'user_id' => $fq->id,
+            'user_id' => $fahmi->id,
             'nama' => 'Indonesia',
             'tingkatan' => 'Menengah'
         ]);
         \App\Model\Bahasa::create([
-            'user_id' => $fq->id,
+            'user_id' => $fahmi->id,
             'nama' => 'Inggris',
             'tingkatan' => 'Menengah'
         ]);
         \App\Model\Skill::create([
-            'user_id' => $fq->id,
+            'user_id' => $fahmi->id,
             'nama' => 'Pemrograman Web',
             'tingkatan' => 'menengah'
         ]);
