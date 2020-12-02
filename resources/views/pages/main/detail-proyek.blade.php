@@ -427,7 +427,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="form-nego">
                             <div class="form-group row">
                                 <label for="BiayaProyek" class="col-sm-4 col-form-label">Biaya Proyek</label>
                                 <div class="col-sm-8">
@@ -488,7 +488,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn2" id="submit_nego"><span style="color: white">Ajukan Bid</span></button>
+                                <button type="button" class="btn2" id="submit_nego"><span style="color: white">Ajukan Bid</span></button>
                             </div>
                         </form>
                     </div>
@@ -576,6 +576,7 @@
                 if (confirm) {
                     swal({icon: "success", buttons: false});
                     window.location.href = '{{route('bid.proyek',['username' => $user->username, 'judul' => $proyek->permalink])}}';
+                    $("#form-nego input[name='_method']").val('POST');
                 }
             });
         });

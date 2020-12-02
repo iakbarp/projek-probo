@@ -65,6 +65,7 @@ class MainController extends Controller
             'proyek_id' => $proyek->id,
             'negoharga' => $request->negoharga,
             'negowaktu' => $request->negowaktu,
+            'task' => $request->task,
 
         ]);
 
