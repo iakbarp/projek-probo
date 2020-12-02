@@ -92,54 +92,7 @@
                                 </form>
 
                                 <div class="card-content">
-{{--                                    <label for="file-input">--}}
-{{--                                    <div class="card-title text-center">--}}
-{{--                                            <h4 class="aj_name" style="color: #122752" data-placement="center"--}}
-{{--                                                data-toggle="tooltip" title="Klik disini untuk mengubah foto Anda!">Ganti Profil</h4>--}}
-{{--                                        <small class="show_status" style="text-transform: none">{{$user->get_bio->status--}}
-{{--                                        != "" ? $user->get_bio->status : 'Status (-)'}}</small>--}}
-{{--                                    </label>--}}
-{{--                                    <input id="file-input" name="foto" type="file" accept="image/*">--}}
-{{--                                    <div id="progress-upload">--}}
-{{--                                        <div class="progress-bar progress-bar-info progress-bar-striped active"--}}
-{{--                                             role="progressbar" aria-valuenow="0" aria-valuemin="0"--}}
-{{--                                             aria-valuemax="100" style="background-color: #122752;z-index: 20">--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                    </div>--}}
                                     <div class="card-title">
-{{--                                        <form id="form-status" class="form-horizontal" role="form" method="POST">--}}
-{{--                                            @csrf--}}
-{{--                                            {{method_field('PUT')}}--}}
-{{--                                            <input type="hidden" name="check_form" value="status">--}}
-{{--                                            <div id="show_status_settings" class="row"--}}
-{{--                                                 style="color: #122752;cursor: pointer;font-size: 14px">--}}
-{{--                                                <div class="col-md-12 text-right">--}}
-{{--                                                    <i class="fa fa-edit mr-2"></i>UBAH STATUS--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div id="status_settings" style="display: none">--}}
-{{--                                                <div class="row form-group has-feedback">--}}
-{{--                                                    <div class="col-md-12">--}}
-{{--                                                        <input id="status" type="text" class="form-control"--}}
-{{--                                                               name="status" value="{{$user->get_bio->status}}"--}}
-{{--                                                               placeholder="Tulis status Anda disini&hellip;">--}}
-{{--                                                        <span--}}
-{{--                                                            class="glyphicon glyphicon-bullhorn form-control-feedback"></span>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-
-{{--                                                <div class="row form-group">--}}
-{{--                                                    <div class="col-md-12">--}}
-{{--                                                        <button id="btn_save_status"--}}
-{{--                                                                class="btn btn-link btn-sm btn-block"--}}
-{{--                                                                type="submit" style="border: 1px solid #ccc">--}}
-{{--                                                            <i class="fa fa-bullhorn mr-2"></i>SIMPAN PERUBAHAN--}}
-{{--                                                        </button>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </form>--}}
                                         <form class="form-horizontal" role="form" method="POST"
                                               action="{{route('user.update.profil')}}">
                                             @csrf
@@ -153,11 +106,6 @@
                                                     <br>
 {{--                                                    <hr class="mt-0">--}}
                                                     <table style="font-size: 14px; margin-top: 0" id="stats_personal_data">
-{{--                                                        <tr>--}}
-{{--                                                            <td>Motto&nbsp;</td>--}}
-{{--                                                            <td>&nbsp;</td>--}}
-{{--                                                            <td>{{$user->get_bio->status}}</td>--}}
-{{--                                                        </tr>--}}
                                                         <tr>
                                                             <td>Nama&nbsp;</td>
                                                             <td>&nbsp;</td>
@@ -305,30 +253,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-{{--                                                        <div class="row form-group">--}}
-{{--                                                            <div class="col-md-6">--}}
-{{--                                                                <label class="form-control-label" for="jenis_kelamin">Jenis--}}
-{{--                                                                    Kelamin--}}
-{{--                                                                    <span class="required">*</span></label>--}}
-{{--                                                                <div class="input-group">--}}
-{{--                                                    <span class="input-group-addon"><i--}}
-{{--                                                            class="fa fa-transgender"></i></span>--}}
-{{--                                                                    <select id="jenis_kelamin" class="form-control use-select2"--}}
-{{--                                                                            name="jenis_kelamin" required>--}}
-{{--                                                                        <option></option>--}}
-{{--                                                                        <option value="Laki-laki" {{$user->get_bio->jenis_kelamin ==--}}
-{{--                                                        "Laki-laki" ? 'selected' : ''}}>Laki-laki--}}
-{{--                                                                        </option>--}}
-{{--                                                                        <option value="Perempuan" {{$user->get_bio->jenis_kelamin ==--}}
-{{--                                                        "Perempuan" ? 'selected' : ''}}>Perempuan--}}
-{{--                                                                        </option>--}}
-{{--                                                                        <option value="lainnya"{{$user->get_bio->jenis_kelamin ==--}}
-{{--                                                        "lainnya" ? 'selected' : ''}}>Lainnya--}}
-{{--                                                                        </option>--}}
-{{--                                                                    </select>--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
                                                         <div class="row form-group has-feedback">
                                                             <div class="col-md-12">
 {{--                                                                <label class="form-control-label" for="email">Email Utama--}}
@@ -393,8 +317,8 @@
                                                         <div class="row form-group">
                                                             <div class="col-md-12">
                                                                 <div class="">
-                                                                    <select id="" class="form-control use-select2"
-                                                                            name="">
+                                                                    <select id="bank" class="form-control use-select2"
+                                                                            name="bank">
                                                                 <option disabled selected>Nama Bank</option>
 
 
@@ -409,8 +333,8 @@
                                                         <div class="row form-group">
                                                             <div class="col-md-12">
                                                                 <div class="">
-                                                                    <input id="" type="text" class="form-control"
-                                                                           name=""
+                                                                    <input id="rekening" type="text" class="form-control"
+                                                                           name="rekening"
                                                                 placeholder="Nomor Rekening" value="{{$user->get_bio->rekening}}">
                                                                 </div>
                                                             </div>
@@ -418,8 +342,8 @@
                                                         <div class="row form-group">
                                                             <div class="col-md-12">
                                                                 <div class="">
-                                                                    <input id="" type="text" class="form-control"
-                                                                           name=""
+                                                                    <input id="an" type="text" class="form-control"
+                                                                           name="an"
                                                                 placeholder="Nama Rekening" value="{{$user->get_bio->an}}">
                                                                 </div>
                                                             </div>
@@ -995,53 +919,6 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <!-- latar belakang -->
-{{--                    <div class="row">--}}
-{{--                        <div class="col-lg-12">--}}
-{{--                            <div class="card">--}}
-{{--                                <form role="form" method="POST" id="form-background" enctype="multipart/form-data">--}}
-{{--                                    @csrf--}}
-{{--                                    {{ method_field('put') }}--}}
-{{--                                    <div class="img-card image-upload">--}}
-{{--                                        <label for="input-background">--}}
-{{--                                            <img style="width: 100%" class="show_background" alt="Background"--}}
-{{--                                                 src="{{$user->get_bio->latar_belakang != null ?--}}
-{{--                                         asset('storage/users/latar_belakang/'.$user->get_bio->latar_belakang) :--}}
-{{--                                         asset('images/slider/beranda-proyek.jpg')}}" data-toggle="tooltip"--}}
-{{--                                                 title="Klik disini untuk mengubah gambar latar belakang Anda!">--}}
-{{--                                        </label>--}}
-{{--                                        <input id="input-background" name="latar_belakang" type="file" accept="image/*">--}}
-{{--                                        <div id="progress-upload2">--}}
-{{--                                            <div class="progress-bar progress-bar-info progress-bar-striped active"--}}
-{{--                                                 role="progressbar" aria-valuenow="0" aria-valuemin="0"--}}
-{{--                                                 aria-valuemax="100"--}}
-{{--                                                 style="background-color: #122752;z-index: 20">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </form>--}}
-{{--                                <div class="card-content">--}}
-{{--                                    <div class="card-title">--}}
-{{--                                        <small id="show_background_settings">--}}
-{{--                                            Latar Belakang--}}
-{{--                                            <span class="pull-right"--}}
-{{--                                                  style="cursor: pointer; color: #122752"><i class="fa fa-edit"></i>&nbsp;SUNTING</span>--}}
-{{--                                        </small>--}}
-{{--                                        <hr class="mt-0">--}}
-{{--                                        <blockquote style="text-transform: none">--}}
-{{--                                            <table style="font-size: 14px; margin-top: 0">--}}
-{{--                                                <tr>--}}
-{{--                                                    <td><i class="fa fa-image"></i></td>--}}
-{{--                                                    <td id="show_background_name">--}}
-{{--                                                        &nbsp;{{$user->get_bio->latar_belakang != "" ? $user->get_bio->latar_belakang : '(kosong)'}}--}}
-{{--                                                    </td>--}}
-{{--                                                </tr>--}}
-{{--                                            </table>--}}
-{{--                                        </blockquote>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
                     <!-- personal & kontak -->
                     <div class="row">
                         <!-- personal -->
@@ -1143,10 +1020,6 @@
                                                                     class="form-control use-select2">
                                                                 <option></option>
                                                                 <option value="dasar">Dasar</option>
-                                                                <option value="percakapan">Percakapan</option>
-                                                                <option value="lancar">Lancar</option>
-                                                                <option value="asli">Asli (Native)</option>
-                                                                <option value="pemula">Pemula</option>
                                                                 <option value="menengah">Menengah</option>
                                                                 <option value="ahli">Ahli</option>
 

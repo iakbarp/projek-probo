@@ -81,7 +81,7 @@ class ProyekController extends Controller
                 'harga' => str_replace('.', '', $request->harga),
                 'thumbnail' => $thumbnail,
                 'lampiran' => $lampiran,
-                'pribadi' => false,
+                'pribadi' => $request->pribadi,
             ]);
         } else {
             return back()->with('gagal', 'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.');
@@ -226,6 +226,7 @@ class ProyekController extends Controller
         $total_user = User::where('role', Role::OTHER)->count();
         $proyek = Project::where('permalink', $request->judul)->first();
         $bid = $proyek->get_bid;
+//        $bid = User::where('role', Role::OTHER)->count();
 
         return view('pages.main.users.klien.bid-proyek', compact('user', 'total_user', 'proyek', 'bid'));
     }

@@ -27,7 +27,7 @@ class UserController extends Controller
 
         $bahasa = Bahasa::where('user_id', $user->id)->orderByDesc('id')->get();
         $skill = Skill::where('user_id', $user->id)->orderByDesc('id')->get();
-        $proyek = Project::where('user_id', $user->id)->orderByDesc('id')->get();
+        $proyek = Project::where('user_id', $user->id)->where('pribadi', false)->orderByDesc('id')->get();
         $layanan = Services::where('user_id', $user->id)->orderByDesc('id')->get();
         $portofolio = Portofolio::where('user_id', $user->id)->orderByDesc('tahun')->get();
 
@@ -49,7 +49,7 @@ class UserController extends Controller
             $user->get_bio->total_bintang_pekerja / (count($ulasan_pekerja) + $ulasan_layanan) : 0;
 
         $kategori = Kategori::orderBy('nama')->get();
-        $auth_proyek = Project::where('user_id', Auth::id())->where('pribadi', false)->doesntHave('get_pengerjaan')->get();
+        $auth_proyek = Project::where('user_id', Auth::id())->doesntHave('get_pengerjaan')->get();
 
         return view('pages.main.users.profil-publik', compact('user', 'total_user', 'bahasa', 'skill',
             'proyek', 'layanan', 'portofolio', 'ulasan_klien', 'rating_klien', 'ulasan_pekerja', 'rating_pekerja',

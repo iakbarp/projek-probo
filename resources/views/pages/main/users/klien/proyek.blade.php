@@ -343,15 +343,27 @@
                                         @php $no = 1; @endphp
                                         @foreach($proyek as $row)
                                             @php
-                                                if($row->pribadi == false) {
+                                                if($row->pribadi) {
                                                     if(count($row->get_bid) > 0) {
                                                         $bid = count($row->get_bid).' bid';
                                                         $attr = 'disabled';
-                                                    } else {
+                                                    }
+                                                    else {
                                                         $bid = '0 bid';
                                                         $attr = '';
                                                     }
-                                                } else {
+                                                }
+                                                elseif($row->pribadi == false) {
+                                                    if(count($row->get_bid) > 0) {
+                                                        $bid = count($row->get_bid).' bid';
+                                                        $attr = 'disabled';
+                                                    }
+                                                    else {
+                                                        $bid = '0 bid';
+                                                        $attr = '';
+                                                    }
+                                                }
+                                                else {
                                                     if(!is_null($row->get_pengerjaan)) {
                                                         $attr = 'disabled';
                                                     } else {
@@ -425,9 +437,9 @@
                                                         </a>
                                                     @else
                                                         <a class="btn2 btn-link btn-sm btn-block" data-toggle="tooltip"
-                                                           title="Lihat Pekerja" style="text-transform: none"
+                                                           title="Lihat Bidder" style="text-transform: none;align-content: center"
                                                            href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
-                                                            <span style="color: white">{{$bid}}&nbsp;<i class="fa fa-paper-plane"></i></span>
+                                                            <span style="color: white">{{$bid}}&nbsp;<i class="fa fa-paper-plane"></i> </span>
                                                         </a>
                                                     @endif
                                                 </td>
@@ -570,6 +582,8 @@
                                                 </div>
                                                 <div class="row form-group">
                                                     <div class="col-lg-12 pull-right">
+                                                        <label class="form-control-label" for="jenis">
+                                                            Jenis Proyek <span class="required">*</span></label>
                                                         <select name="pribadi" id="pribadi" class="form-control use-select2" required>
                                                             <option disabled selected>Pilih Jenis</option>
                                                             <option value="0">PUBLIK</option>
@@ -933,7 +947,7 @@
                                                                 Harga/Budget Proyek</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon"><b>Rp</b></span>
-                                                                <input id="harga2" class="form-control rupiah"
+                                                                <input id="harga2" class="form-control rupiah" name="harga2"
                                                                        type="text" readonly>
                                                                 <span class="input-group-addon">
                                                         <i class="fa fa-money-bill-wave-alt"></i></span>
