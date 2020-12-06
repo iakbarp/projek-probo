@@ -42,10 +42,13 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/frelencer', 'tabDataController@frelencer');
         Route::get('/kategori', 'tabDataController@kategori');
 
-        Route::get('message', 'messageController@index');
+        Route::group(['prefix' => 'message'], function () {
+
+        Route::get('/', 'messageController@index');
         Route::get('typing', 'messageController@eventTyping');
+        Route::get('send', 'messageController@send');
 
-
+        });
 
         Route::group(['prefix' => 'user'], function () {
             Route::get('/', 'userController@get');

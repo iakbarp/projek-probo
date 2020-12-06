@@ -93,6 +93,7 @@ class messageController extends Controller
     private function getUser($user, $r)
     {
         $limit = $r->len_user;
+        $q=$r->q;
         $res = Message::where(function ($q) use ($user) {
             $q->where('user_to', $user->id);
             $q->Orwhere('user_from', $user->id);
@@ -103,10 +104,13 @@ class messageController extends Controller
             ->groupBy('user_to')
             ->groupBy('created_at')
 
-            ->limit($limit ?? 12)->get();
+            ->get();
 
         $res = DB::table('users')->whereIn('users.id', $res->pluck('user_from'))
             ->where('users.id', '!=', $user->id)
+            ->when($q,function($query)use($q){
+                $query->where('users.name','like',"%$q%");
+            })
             ->join('bio', 'bio.user_id', '=', 'users.id')
 
             ->select(
@@ -115,8 +119,9 @@ class messageController extends Controller
                 'bio.foto',
                 DB::raw('ifnull((select count(ms.id) from message ms where users.id=ms.user_from and ms.`read`=0),0) as `jumlah_unread`')
             )
+            ->limit($limit??12)
             ->get();
-        $res = $res ? $this->imgCheck($res, 'foto', 'storage/users/foto/', 1) : [];
+        $res = $res ? $this->imgCheck($res->toArray(), 'foto', 'storage/users/foto/', 1) : [];
 
         return $res;
     }
@@ -134,6 +139,7 @@ class messageController extends Controller
 
             ->select(
                 'message.id',
+                'message.image',
                 'users.name as nama',
                 'bio.foto',
                 'ms.id as id_reply',
@@ -155,42 +161,71 @@ class messageController extends Controller
             ->orderBy('message.id', 'desc')
             ->get();
 
-        $chat = $chat ? $this->imgCheck($chat, 'foto', 'storage/users/foto/', 1) : [];
+        $chat = $chat ? $this->imgCheck($chat->toArray(), 'foto', 'storage/users/foto/', 1) : [];
 
         foreach ($chat as $result) {
-            if($result->id_reply){
+            if ($result->id_reply) {
                 $result->reply = [
                     'id' => $result->id_reply,
                     'name' => $result->name_reply,
                     'message' => $result->message_reply
                 ];
-
             }
             unset($result->id_reply,
-                $result->name_reply,
-                $result->message_reply
-            );
+            $result->name_reply,
+            $result->message_reply,);
+
+            if ($result->image) {
+                unset($result->message);
+
+                $result = $result ? $this->imgCheck($result, 'image', 'storage/chat/'.$user->id.'/', 2) : [];
+
+            } else {
+                unset($result->image);
+            }
+
         }
 
         return $chat;
     }
 
 
-    private function imgCheck($data, $column, $path, $ch)
+
+    private function imgCheck($data,$column, $path, $ch = 0)
     {
-        $res = [];
+
         $dummy_photo = [
             asset('images/slider/beranda-' . rand(1, 5) . '.jpg'),
-            asset('admins/avatar/avatar-' . rand(1, 2) . '.jpg'),
+            asset('admins/img/avatar/avatar-' . '1' . '.png'),
             asset('images/notfound.png')
         ];
+        $res = $data;
 
-        foreach ($data as $i => $row) {
-            $res[$i] = $row;
 
-            $res[$i]->{$column} = $res[$i]->{$column} && File::exists($path . $res[$i]->{$column}) ?
-                asset($path . $res[$i]->{$column}) :
+        if (is_array($data)) {
+
+
+            $res = [];
+
+            foreach ($data as $i => $row) {
+
+
+                $res[$i] = $row;
+
+                $res[$i]->{$column} = $res[$i]->{$column} && File::exists($path . $res[$i]->{$column}) ?
+                    asset($path . $res[$i]->{$column}) :
+                    $dummy_photo[$ch];
+            }
+        } elseif ($data) {
+
+
+            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
+                asset($path . $res->{$column}) :
                 $dummy_photo[$ch];
+        } else {
+
+
+            $res->{$column} = $dummy_photo[$ch];
         }
 
         return $res;
