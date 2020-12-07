@@ -27,12 +27,14 @@ class messageController extends Controller
             if (count($array)) {
                 $chek = array_column($array, 'id');
                 $index = array_search($r->chat_id, $chek);
-
+                // $typing=true;
 
                 if ((is_numeric($index) ? $index >= 0 : false) && now()->lt(Carbon::parse($array[$index]['typing_at']))) {
                     $typing = true;
                 }
             }
+
+
 
             return response()->json([
                 'error' => false,
@@ -64,7 +66,7 @@ class messageController extends Controller
 
             if (!count($array)) {
 
-                $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(60)];
+                $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(4)];
             } else {
 
                 $chek = array_column($array, 'id');
@@ -72,9 +74,9 @@ class messageController extends Controller
 
                 if (is_numeric($index) ? $index >= 0 : false) {
 
-                    $array[$index] = ['id' => $user->id, 'typing_at' => now()->addSeconds(3)];
+                    $array[$index] = ['id' => $user->id, 'typing_at' => now()->addSeconds(2)];
                 } else {
-                    $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(3)];
+                    $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(2)];
                 }
             }
 
