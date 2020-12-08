@@ -34,6 +34,11 @@
                                         <h4>Data Kategori</h4>
                                     </div>
                                     <div class="card-body">
+                                        <div>
+                                            <button class="btn btn-info btn-icon icon-left" id="add_kategori"><i
+                                                    class="fa fa-plus"></i> Tambah Data
+                                            </button>
+                                        </div>
                                         <div class="table-responsive">
                                             <table class="table table-striped" id="table-1">
                                                 <thead>
@@ -80,11 +85,6 @@
                                                 @endforeach
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-info btn-icon icon-left" id="add_kategori"><i
-                                                    class="fa fa-plus"></i> Tambah Data
-                                            </button>
                                         </div>
                                     </div>
                                 </div>

@@ -894,6 +894,10 @@
                                                         (is_null($row->file_hasil) && is_null($row->tautan)) || $row->selesai == true ? 'disabled' : ''}}>
                                                         <i class="fa fa-edit" style="margin-right: 0"></i>
                                                     </button>
+                                                    <hr style="margin: .5em 0">
+                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip" title="Surat Kontrak" onclick="">
+                                                        <i class="fa fa-file" style="margin-right: 0"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -427,7 +427,9 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="form-nego">
+                        <form id="form-nego" method="post">
+                            @csrf
+                            {{ method_field('put') }}
                             <div class="form-group row">
                                 <label for="BiayaProyek" class="col-sm-4 col-form-label">Biaya Proyek</label>
                                 <div class="col-sm-8">

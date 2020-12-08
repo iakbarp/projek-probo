@@ -95,6 +95,7 @@
                                 @php $no = 1; @endphp
                                 @foreach($bid as $row)
                                     @php
+                                        $proyek->get_proyek;
                                         $pekerja = $row->get_user;
                                         $ulasan_pekerja = \App\Model\ReviewWorker::whereHas('get_pengerjaan', function ($q) use ($pekerja) {
                                             $q->where('user_id', $pekerja->id);
@@ -219,13 +220,13 @@
                                         <td style="vertical-align: middle" align="center">
 {{--                                            <i class="fa fa-star" style="color: #ffc100;margin: 0 0 0 .5rem"></i>--}}
 {{--                                            <b>{{round($rating_pekerja * 2) / 2}}</b>--}}
-                                            <b>Rp. lorem ipsum</b>
+                                            <b>Rp.{{number_format($proyek->harga,2,',','.')}}</b>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
-                                            <b>Lorem Ipsum Hari</b>
+                                            <b>{{$proyek->waktu_pengerjaan}} Hari</b>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
-                                            <b>Lorem Ipsum</b>
+                                            <b>{{$row->task}}</b>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
                                             <span class="label label-{{$class}}">{{$status}}</span>

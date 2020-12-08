@@ -39,21 +39,6 @@
     </style>
 @endpush
 @section('content')
-    <div class="breadcrumbs" style="background-image: url('{{$user->get_bio->latar_belakang != null ?
-    asset('storage/users/latar_belakang/'.$user->get_bio->latar_belakang) : asset('images/slider/beranda-proyek.jpg')}}')">
-        <div class="breadcrumbs-overlay"></div>
-        <div class="page-title">
-            <h2>Lampiran Tugas/Proyek:<br>{{$proyek->judul}}</h2>
-            <p>Halaman ini menampilkan daftar lampiran yang Anda tambah/sisipkan untuk tugas/proyek tersebut.</p>
-        </div>
-        <ul class="crumb">
-            <li><a href="{{route('beranda')}}"><i class="fa fa-home"></i></a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Dashboard Klien</a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="{{route('dashboard.klien.proyek')}}">
-                    Daftar Tugas/Proyek & Pengerjaan</a></li>
-            <li><a href="#" onclick="goToAnchor()"><i class="fa fa-angle-double-right"></i> Daftar Lampiran</a></li>
-        </ul>
-    </div>
 
     <section class="none-margin" style="padding: 40px 0 40px 0">
         <div class="container">
