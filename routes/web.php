@@ -52,7 +52,7 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
         'as' => 'detail.proyek'
     ]);
 
-    Route::get('proyek/{username}/{judul}/bid', [
+    Route::post('proyek/bid/submit', [
         'uses' => 'MainController@bidProyek',
         'as' => 'bid.proyek'
     ]);

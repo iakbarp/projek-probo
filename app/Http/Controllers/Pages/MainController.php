@@ -13,6 +13,7 @@ use App\Model\Testimoni;
 use App\Model\UlasanService;
 use App\Support\Role;
 use App\User;
+use http\Exception\BadConversionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -56,6 +57,8 @@ class MainController extends Controller
 
     public function bidProyek(Request $request)
     {
+        try {
+
         $proyek = Project::where('permalink', $request->judul)->whereHas('get_user', function ($q) use ($request) {
             $q->where('username', $request->username);
         })->first();
@@ -63,13 +66,16 @@ class MainController extends Controller
         Bid::create([
             'user_id' => Auth::id(),
             'proyek_id' => $proyek->id,
-            'negoharga' => $request->negoharga,
+            'negoharga' => str_replace(',', '.', str_replace('.','', $request->negoharga )),
             'negowaktu' => $request->negowaktu,
             'task' => $request->task,
 
         ]);
 
         return back()->with('bid', 'Bid tugas/proyek [' . $proyek->judul . '] berhasil diajukan!');
+        } catch (\Exception $exception){
+            dd($exception->getMessage());
+        }
     }
 
     public function detailLayanan(Request $request)
