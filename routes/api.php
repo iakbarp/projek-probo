@@ -44,10 +44,13 @@ Route::group(['namespace' => 'API'], function () {
 
         Route::group(['prefix' => 'message'], function () {
 
-        Route::get('/', 'messageController@index');
-        Route::get('typing', 'messageController@eventTyping');
-        Route::get('send', 'messageController@send');
+            Route::get('/', 'messageController@index');
+            Route::get('typing', 'messageController@eventTyping');
+            Route::group(['middleware' => 'optimizeImages'], function () {
 
+                Route::post('send', 'messageController@sendChat');
+           
+            });
         });
 
         Route::group(['prefix' => 'user'], function () {

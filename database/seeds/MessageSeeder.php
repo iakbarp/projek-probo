@@ -17,13 +17,13 @@ class MessageSeeder extends Seeder
             $q->orderByDesc('total_bintang_klien');
         })->whereHas('get_bid')->whereHas('get_undangan')->first();
 
-        $other=\App\User::where('id','!=',$fahmi->id)->limit(2)->get();
+        $other=\App\User::where('id','!=',$fahmi->id)->limit(20)->get();
 
 
         foreach ($other as $row){
             $ids=[$fahmi->id,$row->id];
 
-            foreach(range(0,10) as $i){
+            foreach(range(0,50) as $i){
                 $z=rand(0,1);
                 \App\Model\Message::create([
                     'user_from'=>$ids[$z],

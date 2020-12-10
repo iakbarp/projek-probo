@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Cache;
+use Illuminate\Support\Facades\Validator;
+
 
 class messageController extends Controller
 {
@@ -19,29 +22,17 @@ class messageController extends Controller
             $user = auth('api')->user();
             $loc = 'chat/' . $user->id . '_histori/';
             $path = $loc . now()->format('Y_m_d') . '.json';
-            $typing = false;
-
-
-            $array = Storage::disk('local')->exists($path) ?
-                json_decode(Storage::disk('local')->get($path), true) : [];
-            if (count($array)) {
-                $chek = array_column($array, 'id');
-                $index = array_search($r->chat_id, $chek);
-                // $typing=true;
-
-                if ((is_numeric($index) ? $index >= 0 : false) && now()->lt(Carbon::parse($array[$index]['typing_at']))) {
-                    $typing = true;
-                }
-            }
 
 
 
             return response()->json([
                 'error' => false,
                 'data' => [
+                    'test'=>Cache::has('12_to_1'),
                     'user' => $this->getUser($user, $r),
                     'chat' => ($r->chat_id ? $this->getChat($user, $r) : []),
-                    'typing' => $typing,
+                    'typing' => Cache::has('chat_'.$r->chat_id.'_to_'.$user->id),
+
                 ]
             ]);
         } catch (\Exception $e) {
@@ -57,38 +48,108 @@ class messageController extends Controller
         try {
             $user = auth('api')->user();
             $id = $r->id;
-            $loc = 'chat/' . $id . '_histori/';
-            $path = $loc . now()->format('Y_m_d') . '.json';
+            // $loc = 'chat/' . $id . '_histori/';
+            // $path = $loc . now()->format('Y_m_d') . '.json';
+
+            Cache::put('chat_'.$user->id.'_to_'.$id,true,now()->addSeconds(3));
 
 
-            $array = Storage::disk('local')->exists($path) ?
-                json_decode(Storage::disk('local')->get($path), true) : [];
+            // $array = Storage::disk('local')->exists($path) ?
+            //     json_decode(Storage::disk('local')->get($path), true) : [];
 
-            if (!count($array)) {
+            // if (!count($array)) {
 
-                $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(4)];
-            } else {
+            //     $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(4)];
+            // } else {
 
-                $chek = array_column($array, 'id');
-                $index = array_search($user->id, $chek);
+            //     $chek = array_column($array, 'id');
+            //     $index = array_search($user->id, $chek);
 
-                if (is_numeric($index) ? $index >= 0 : false) {
+            //     if (is_numeric($index) ? $index >= 0 : false) {
 
-                    $array[$index] = ['id' => $user->id, 'typing_at' => now()->addSeconds(2)];
-                } else {
-                    $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(2)];
-                }
-            }
+            //         $array[$index] = ['id' => $user->id, 'typing_at' => now()->addSeconds(3)];
+            //     } else {
+            //         $array[] = ['id' => $user->id, 'typing_at' => now()->addSeconds(3)];
+            //     }
+            // }
 
-            Storage::delete($loc . now()->subDay() . '.json');
-            Storage::put($loc . now()->format('Y_m_d') . '.json', json_encode($array));
+            // Storage::delete($loc . now()->subDay() . '.json');
+            // Storage::put($loc . now()->format('Y_m_d') . '.json', json_encode($array));
 
-            return response()->json(['error' => false, 'message' => 'berhasil update!']);
+            return response()->json(['error' => false, 'message' => 'berhasil update!',
+         
+            
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function sendChat(Request $r)
+    {
+
+        $validator = Validator::make($r->all(), [
+            'chat_id' => 'required|exists:users,id',
+            'image'=>'mimes:jpg',
+            'message'=>'string',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+        try{
+        $id=$r->chat_id;
+        $user=auth('api')->user();
+        $msg=$r->message;
+
+        if ($r->file('image')){
+            $picture=$r->file('image');
+            $imageName=now()->format('ymd').'_'.now()->format('His').'_'.sprintf("%02d", rand(0,99)).'.'.$picture->extension();
+            Storage::disk('public')->put('chat/'.$user->id.'/' . $imageName, $picture);
+        }
+
+        if ($r->file('image')||$msg){
+            // return response()->json([
+            //     'user_to'=>$id,
+            //     'user_from'=>$user->id,
+            //     'message'=>$msg?$msg:null,
+            //     'image'=>isset($imageName)?$imageName:null,
+            // ]);
+            Message::create([
+                
+                'message'=>($msg?$msg:null),
+                'image'=>(isset($imageName)?$imageName:null),
+                'read'=>0,
+                'user_to'=>$id,
+                'user_from'=>$user->id,
+            ]);
+
+            return response()->json([
+                'error' => false, 
+                'message' => 'berhasil kirim chat!',
+            ]);
+        }else{
+            return response()->json([
+                'error' => true,
+                'message' => 'Harap isi field',
+            ], 500);
+        }
+        
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage(),
+            ], 501);
         }
     }
 
@@ -100,16 +161,18 @@ class messageController extends Controller
             $q->where('user_to', $user->id);
             $q->Orwhere('user_from', $user->id);
         })
-            ->orderBy('created_at', 'desc')
+        
+            ->orderBy('id', 'desc')
             ->select('user_from', 'user_to', 'created_at')
-            ->groupBy('user_from')
-            ->groupBy('user_to')
-            ->groupBy('created_at')
 
             ->get();
 
-        $res = DB::table('users')->whereIn('users.id', $res->pluck('user_from'))
-            ->where('users.id', '!=', $user->id)
+            // return  $user;
+
+        $res = DB::table('users')
+        ->where('users.id', '!=', $user->id)
+            ->whereIn('users.id', collect($res->pluck('user_to'))->unique())
+            
             ->when($q,function($query)use($q){
                 $query->where('users.name','like',"%$q%");
             })
@@ -123,6 +186,8 @@ class messageController extends Controller
             )
             ->limit($limit??12)
             ->get();
+
+
         $res = $res ? $this->imgCheck($res->toArray(), 'foto', 'storage/users/foto/', 1) : [];
 
         return $res;
@@ -133,6 +198,8 @@ class messageController extends Controller
         $limit = $r->len_chat;
         $chat_to = $r->chat_id;
 
+        
+     
         $chat = DB::table('message')
             ->leftJoin('bio', 'bio.user_id', '=', 'message.user_from')
             ->join('users', 'users.id', '=', 'message.user_from')
@@ -162,6 +229,12 @@ class messageController extends Controller
             ->limit($limit ?? 12)
             ->orderBy('message.id', 'desc')
             ->get();
+            
+            $to_read= Message::where('user_from',$chat_to)
+            ->where('user_to',$user->id)
+            ->where('read','0');
+       
+            $to_read->update(['read'=>'1']);
 
         $chat = $chat ? $this->imgCheck($chat->toArray(), 'foto', 'storage/users/foto/', 1) : [];
 
