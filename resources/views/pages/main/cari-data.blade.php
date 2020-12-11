@@ -352,7 +352,13 @@
 
                     '<p class="list-price" style="display: ' + user + ';margin-bottom: .5em">' +
                     '<span class="list-date rate">' + val.subkategori + '</span>' + val.rate +
-                    '<br><sub class="list-category">' + val.username + ': <span>' + val.kategori + ' layanan</span></sub></p>' +
+                    '<br><sub class="list-category">' + val.username + '</sub>' +
+                    '<br>' +
+                    '<br><b class="fa fa-home" style="color: black">&nbsp;'+val._alamat+'</b>' +
+                    '<br><b class="fa fa-tools" style="color: black">&nbsp;' + val.kategori + ' layanan</b>' +
+                    '<br><b class="fa fa-calendar" style="color: black">&nbsp;Bergabung Sejak&nbsp;'+val.bergabung+'</b>' +
+                    '<br><b class="fa fa-clock" style="color: black">&nbsp;Terakhir Dilihat&nbsp;'+val.dilihat+'</b>' +
+                    '</p>' +
                     '<br><sub>'+val._deskripsi+'</sub>'+
                     '</div>' +
                     '<b style="font-size: 20px;font-family: Arial;color: #0073ff" class="pull-right">' + val.judul + '</b></p>'+
