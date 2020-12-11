@@ -79,6 +79,9 @@ class CariController extends Controller
                 $kategori = $sub->get_kategori->nama;
                 $subkategori = $sub->nama;
                 $judul = $row['judul'];
+                $alamat = 0;
+                $bergabung = 0;
+                $dilihat =0;
                 $deskripsi = Str::words($row['deskripsi'], 20, '...');
             } elseif ($filter == 'layanan') {
                 $url = route('detail.layanan', ['username' => $user->username, 'judul' => $row['permalink']]);
@@ -90,16 +93,22 @@ class CariController extends Controller
                 $kategori = $sub->get_kategori->nama;
                 $subkategori = $sub->nama;
                 $judul = $row['judul'];
+                $alamat = 0;
+                $bergabung =0;
+                $dilihat = 0;
                 $deskripsi = Str::words($row['deskripsi'], 20, '...');
             } else {
                 $url = route('profil.user', ['username' => $user->username]);
-                $thumbnail = is_null($bio->latar_belakang) ? asset('images/slider/changwook.jpg') :
-                    asset('storage/users/latar_belakang/' . $bio->latar_belakang);
+                $thumbnail = is_null($bio->foto) ? asset('admins/img/avatar/7.png') :
+                    asset('storage/users/foto/' . $bio->foto);
                 $total_bid = 0;
                 $deadline = 0;
                 $harga = 0;
                 $kategori = count($user->get_service);
                 $judul = $user->name;
+                $alamat = is_null($bio->alamat) ? 'Belum menambahkan alamatnya.' : $bio->alamat;
+                $bergabung = $user->created_at->formatLocalized('%d %B %Y');
+                $dilihat = $user->updated_at->diffForHumans();
                 $deskripsi = is_null($bio->summary) ? $user->name . ' belum menuliskan <em>summary</em> atau ringkasan resumenya.' :
                     Str::words($bio->summary, 20, '...');
 
@@ -151,7 +160,10 @@ class CariController extends Controller
                 'subkategori' => $subkategori,
                 'rate' => '<b>' . (round($rating_pekerja * 2) / 2) . '</b> (' . count($ulasan_pekerja) . ' ulasan)',
                 'judul' => $judul,
+                '_alamat' => $alamat,
                 '_deskripsi' => $deskripsi,
+                'bergabung' => $bergabung,
+                'dilihat' => $dilihat,
             );
 
             $data['data'][$i] = array_replace($arr, $data['data'][$i]);
