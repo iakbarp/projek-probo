@@ -190,6 +190,7 @@ class tabDataController extends Controller
     public function frelencer(Request $request)
     {
         try {
+            $user=auth('api')->user();
             $offset = $request->offset;
             $limit = $request->limit;
             $q = $request->q;
@@ -205,15 +206,15 @@ class tabDataController extends Controller
                     $join->on('users.id', '=', 'bid.proyek_id');
                     $join->on('bid.tolak', '=', DB::raw('0'));
                 })
-                ->when($q, function ($query) use ($q) {
-                    $query->where('users.name', 'like', "%$q%");
+
+                ->where(function ($qury) {
+                    $qury->whereNotNull('service.user_id');
+                    $qury->orWhereNotNull('bid.user_id');
                 })
-                ->where(function ($q) {
-                    $q->whereNotNull('service.user_id');
-                    $q->orWhereNotNull('bid.user_id');
-                })
+
                 ->select(
-                    'users.*',
+                    'users.id',
+                    'users.name',
 
                     DB::raw('count(pr.id) as jumlah_proyek'),
                     // DB::raw('(select foto from bio where bio.user_id=users.id) as thumbnail'),
@@ -223,22 +224,38 @@ class tabDataController extends Controller
 
             $frelance = DB::table(DB::raw("({$sub->toSql()}) as sub"))
                 ->join('bio', 'bio.user_id', '=', 'sub.id')
+                ->leftJoin('kota', 'kota.id', '=', 'bio.kota_id')
+                ->leftJoin('provinsi as pr', 'kota.provinsi_id', '=', 'pr.id')
+                // ->leftJoin('testimoni as ts', 'ts.user_id', '=', 'sub.id')
                 ->select(
                     'sub.*',
-                    'bio.foto as thumbnail',
-                    'bio.summary as deskripsi'
+                    'bio.foto',
+                    'bio.summary as deskripsi',
+                    DB::raw("if(bio.alamat is null,null,CONcat(if(kota.nama is null,'',kota.nama),if(pr.nama is null,'',concat(', ',pr.nama)))) alamat"),
+                    // DB::raw("if(bio.alamat is null,null,CONcat(bio.alamat,if(kota.nama is null,'',concat(', ',kota.nama)),if(pr.nama is null,'',concat(', ',pr.nama)))) alamat"),
+                    DB::raw('(SELECT format(AVG(bintang),1)  FROM `testimoni` where user_id=sub.id) as bintang'),
+                    DB::raw('(SELECT count(bintang)  FROM `testimoni` where user_id=sub.id) as ulasan'),
+                    DB::raw('(SELECT count(id)  FROM `bid` where user_id=sub.id and tolak=0) as proyek'),
+                    'bio.created_at',
+                    'bio.updated_at',
+
                 )
+                ->when($q, function ($query) use ($q) {
+                    $query->where('sub.name', 'like', "%$q%");
+                })
+                ->where('sub.id','!=',$user->id)
 
                 // ->offset($offset ?? 0)
-                ->limit($limit ?? 8)
+                ->limit($limit ?? 20)
                 ->get();
 
 
-            $frelance = $frelance ? $this->imgCheck($frelance, 'thumbnail', 'storage/users/foto/', 1) : [];
+            $frelance = $frelance ? $this->imgCheck($frelance, 'foto', 'storage/users/foto/', 1) : [];
 
+            $frelance=collect($frelance)->chunk(2);
             return response()->json([
                 'error' => false,
-                'data' => $frelance
+                'data' => ["list"=>$frelance->all()]
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -288,7 +305,7 @@ class tabDataController extends Controller
         $res = [];
         $dummy_photo = [
             asset('images/slider/beranda-' . rand(1, 5) . '.jpg'),
-            asset('admins/avatar/avatar-' . rand(1, 2) . '.jpg'),
+            asset('admins/img/avatar/avatar-' . rand(1, 2) . '.png'),
             asset('images/notfound.png')
         ];
 
