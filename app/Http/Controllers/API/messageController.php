@@ -28,10 +28,10 @@ class messageController extends Controller
             return response()->json([
                 'error' => false,
                 'data' => [
-                    'test'=>Cache::has('12_to_1'),
+                    'test' => Cache::has('12_to_1'),
                     'user' => $this->getUser($user, $r),
                     'chat' => ($r->chat_id ? $this->getChat($user, $r) : []),
-                    'typing' => Cache::has('chat_'.$r->chat_id.'_to_'.$user->id),
+                    'typing' => Cache::has('chat_' . $r->chat_id . '_to_' . $user->id),
 
                 ]
             ]);
@@ -51,7 +51,7 @@ class messageController extends Controller
             // $loc = 'chat/' . $id . '_histori/';
             // $path = $loc . now()->format('Y_m_d') . '.json';
 
-            Cache::put('chat_'.$user->id.'_to_'.$id,true,now()->addSeconds(3));
+            Cache::put('chat_' . $user->id . '_to_' . $id, true, now()->addSeconds(3));
 
 
             // $array = Storage::disk('local')->exists($path) ?
@@ -76,10 +76,7 @@ class messageController extends Controller
             // Storage::delete($loc . now()->subDay() . '.json');
             // Storage::put($loc . now()->format('Y_m_d') . '.json', json_encode($array));
 
-            return response()->json(['error' => false, 'message' => 'berhasil update!',
-         
-            
-            ]);
+            return response()->json(['error' => false, 'message' => 'berhasil update!',]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -93,8 +90,8 @@ class messageController extends Controller
 
         $validator = Validator::make($r->all(), [
             'chat_id' => 'required|exists:users,id',
-            'image'=>'mimes:jpg',
-            'message'=>'string',
+            'image' => 'mimes:jpg,jpeg',
+            'message' => 'string',
         ]);
 
         if ($validator->fails()) {
@@ -106,46 +103,44 @@ class messageController extends Controller
                 ]
             ], 422);
         }
-        try{
-        $id=$r->chat_id;
-        $user=auth('api')->user();
-        $msg=$r->message;
+        try {
+            $id = $r->chat_id;
+            $user = auth('api')->user();
+            $msg = $r->message;
 
-        if ($r->file('image')){
-            $picture=$r->file('image');
-            $imageName=now()->format('ymd').'_'.now()->format('His').'_'.sprintf("%02d", rand(0,99)).'.'.$picture->extension();
-            Storage::disk('public')->put('chat/'.$user->id.'/' . $imageName, $picture);
-        }
+            if ($r->file('image')) {
+                $picture = $r->file('image');
+                $imageName = now()->format('ymd') . '_' . now()->format('His') . '_' . sprintf("%02d", rand(0, 99)) . '.' . $picture->extension();
+                $picture->storeAs('chat/' . $user->id, $imageName, 'public');
+            }
 
-        if ($r->file('image')||$msg){
-            // return response()->json([
-            //     'user_to'=>$id,
-            //     'user_from'=>$user->id,
-            //     'message'=>$msg?$msg:null,
-            //     'image'=>isset($imageName)?$imageName:null,
-            // ]);
-            Message::create([
-                
-                'message'=>($msg?$msg:null),
-                'image'=>(isset($imageName)?$imageName:null),
-                'read'=>0,
-                'user_to'=>$id,
-                'user_from'=>$user->id,
-            ]);
+            if ($r->file('image') || $msg) {
+                // return response()->json([
+                //     'user_to'=>$id,
+                //     'user_from'=>$user->id,
+                //     'message'=>$msg?$msg:null,
+                //     'image'=>isset($imageName)?$imageName:null,
+                // ]);
+                Message::create([
 
-            return response()->json([
-                'error' => false, 
-                'message' => 'berhasil kirim chat!',
-            ]);
-        }else{
-            return response()->json([
-                'error' => true,
-                'message' => 'Harap isi field',
-            ], 500);
-        }
-        
-        }
-        catch (\Exception $e) {
+                    'message' => ($msg ? $msg : ''),
+                    'image' => (isset($imageName) ? $imageName : null),
+                    'read' => 0,
+                    'user_to' => $id,
+                    'user_from' => $user->id,
+                ]);
+
+                return response()->json([
+                    'error' => false,
+                    'message' => 'berhasil kirim chat!',
+                ]);
+            } else {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Harap isi field',
+                ], 500);
+            }
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'message' => $e->getMessage(),
@@ -155,42 +150,53 @@ class messageController extends Controller
 
     private function getUser($user, $r)
     {
+        $resNew = $checker = [];
         $limit = $r->len_user;
-        $q=$r->q;
+        $q = $r->q;
         $res = Message::where(function ($q) use ($user) {
             $q->where('user_to', $user->id);
             $q->Orwhere('user_from', $user->id);
         })
-        
+
             ->orderBy('id', 'desc')
             ->select('user_from', 'user_to', 'created_at')
 
             ->get();
 
-            // return  $user;
+        foreach ($res as $i => $dt) {
+            $id = $dt->user_to == $user->id ? $dt->user_from : $dt->user_to;
+            $key = array_search($id, $checker);
 
-        $res = DB::table('users')
-        ->where('users.id', '!=', $user->id)
-            ->whereIn('users.id', collect($res->pluck('user_to'))->unique())
-            
-            ->when($q,function($query)use($q){
-                $query->where('users.name','like',"%$q%");
-            })
-            ->join('bio', 'bio.user_id', '=', 'users.id')
+            if (!is_numeric($key)) {
+                $checker[] = $id;
 
-            ->select(
-                'users.id',
-                'users.name',
-                'bio.foto',
-                DB::raw('ifnull((select count(ms.id) from message ms where users.id=ms.user_from and ms.`read`=0),0) as `jumlah_unread`')
-            )
-            ->limit($limit??12)
-            ->get();
+                $r = collect(DB::table('users')
+                    ->where('users.id', $id)
 
+                    ->when($q, function ($query) use ($q) {
+                        $query->where('users.name', 'like', "%$q%");
+                    })
+                    ->join('bio', 'bio.user_id', '=', 'users.id')
 
-        $res = $res ? $this->imgCheck($res->toArray(), 'foto', 'storage/users/foto/', 1) : [];
+                    ->select(
+                        'users.id',
+                        'users.name',
+                        'bio.foto',
+                        DB::raw('ifnull((select count(ms.id) from message ms where users.id=ms.user_from and ms.`read`=0),0) as `jumlah_unread`')
+                    )
 
-        return $res;
+                    ->first())->toArray();
+
+                if ($r) {
+                    $resNew[] = collect($this->imgCheck((object)$r, 'foto', 'storage/users/foto/', 1))->toArray();
+                }
+                if (count($resNew) == ($limit ? $limit : 12)) {
+                    break;
+                }
+            }
+        }
+
+        return $resNew;
     }
 
     private function getChat($user, $r)
@@ -198,8 +204,8 @@ class messageController extends Controller
         $limit = $r->len_chat;
         $chat_to = $r->chat_id;
 
-        
-     
+
+
         $chat = DB::table('message')
             ->leftJoin('bio', 'bio.user_id', '=', 'message.user_from')
             ->join('users', 'users.id', '=', 'message.user_from')
@@ -229,12 +235,12 @@ class messageController extends Controller
             ->limit($limit ?? 12)
             ->orderBy('message.id', 'desc')
             ->get();
-            
-            $to_read= Message::where('user_from',$chat_to)
-            ->where('user_to',$user->id)
-            ->where('read','0');
-       
-            $to_read->update(['read'=>'1']);
+
+        $to_read = Message::where('user_from', $chat_to)
+            ->where('user_to', $user->id)
+            ->where('read', '0');
+
+        $to_read->update(['read' => '1']);
 
         $chat = $chat ? $this->imgCheck($chat->toArray(), 'foto', 'storage/users/foto/', 1) : [];
 
@@ -253,12 +259,10 @@ class messageController extends Controller
             if ($result->image) {
                 unset($result->message);
 
-                $result = $result ? $this->imgCheck($result, 'image', 'storage/chat/'.$user->id.'/', 2) : [];
-
+                $result = $result ? $this->imgCheck($result, 'image', 'storage/chat/' . $user->id . '/', 2) : [];
             } else {
                 unset($result->image);
             }
-
         }
 
         return $chat;
@@ -266,7 +270,7 @@ class messageController extends Controller
 
 
 
-    private function imgCheck($data,$column, $path, $ch = 0)
+    private function imgCheck($data, $column, $path, $ch = 0)
     {
 
         $dummy_photo = [
