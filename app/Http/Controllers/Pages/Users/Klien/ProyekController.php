@@ -44,12 +44,16 @@ class ProyekController extends Controller
 
     public function tambahProyek(Request $request)
     {
-        $cek = Project::where('user_id', Auth::id())->where('permalink', $request->judul)->first();
+        $judul=preg_replace("![^a-z0-9]+!i", "-", strtolower($request->judul));
+
+        $cek = Project::where('user_id', Auth::id())->where('permalink', $judul)->first();
+
+
         if (!$cek) {
             if ($request->hasFile('thumbnail')) {
                 $this->validate($request, ['thumbnail' => 'image|mimes:jpg,jpeg,gif,png|max:2048']);
                 $thumbnail = $request->file('thumbnail')->getClientOriginalName();
-                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', $thumbnail);
+                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
             } else {
                 $thumbnail = null;
             }
@@ -63,7 +67,7 @@ class ProyekController extends Controller
                 $lampiran = [];
                 $i = 0;
                 foreach ($request->file('lampiran') as $file) {
-                    $file->storeAs('public/proyek/lampiran', $file->getClientOriginalName());
+                    $file->storeAs('public/proyek/lampiran', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$file->getClientOriginalName());
                     $lampiran[$i] = $file->getClientOriginalName();
                     $i = 1 + $i;
                 }
@@ -75,7 +79,7 @@ class ProyekController extends Controller
                 'user_id' => Auth::id(),
                 'subkategori_id' => $request->subkategori_id,
                 'judul' => $request->judul,
-                'permalink' => preg_replace("![^a-z0-9]+!i", "-", strtolower($request->judul)),
+                'permalink' =>  $judul,
                 'deskripsi' => $request->deskripsi,
                 'waktu_pengerjaan' => $request->waktu_pengerjaan,
                 'harga' => str_replace('.', '', $request->harga),

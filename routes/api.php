@@ -49,7 +49,7 @@ Route::group(['namespace' => 'API'], function () {
             Route::group(['middleware' => 'optimizeImages'], function () {
 
                 Route::post('send', 'messageController@sendChat');
-           
+
             });
         });
 
@@ -82,6 +82,8 @@ Route::group(['namespace' => 'API'], function () {
 
             Route::group(['prefix' => 'proyek','namespace' => 'Users\Klien'], function () {
             Route::get('/', 'ProyekController@dashboard');
+            Route::post('/', 'ProyekController@tambahProyek');
+            Route::delete('/{proyek_id}', 'ProyekController@tambahProyek');
 
             });
 
