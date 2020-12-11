@@ -220,10 +220,10 @@
                                         <td style="vertical-align: middle" align="center">
 {{--                                            <i class="fa fa-star" style="color: #ffc100;margin: 0 0 0 .5rem"></i>--}}
 {{--                                            <b>{{round($rating_pekerja * 2) / 2}}</b>--}}
-                                            <b>Rp.{{number_format($proyek->harga,2,',','.')}}</b>
+                                            <b>Rp.{{number_format($row->negoharga,2,',','.')}}</b>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
-                                            <b>{{$proyek->waktu_pengerjaan}} Hari</b>
+                                            <b>{{$row->negowaktu}} Hari</b>
                                         </td>
                                         <td style="vertical-align: middle" align="center">
                                             <b>{{$row->task}}</b>

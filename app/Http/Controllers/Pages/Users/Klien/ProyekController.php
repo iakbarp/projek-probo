@@ -236,6 +236,8 @@ class ProyekController extends Controller
         $bid = Bid::find($request->id);
         $bid->update(['tolak' => false]);
         Bid::where('id', '!=', $request->id)->where('proyek_id', $bid->proyek_id)->update(['tolak' => true]);
+        $proyek = Project::find($bid->proyek_id);
+        $proyek->update(['harga' => $bid->negoharga,'waktu_pengerjaan'=> $bid->negowaktu]);
         $pengerjaan = Pengerjaan::create([
             'user_id' => $bid->user_id,
             'proyek_id' => $bid->proyek_id,

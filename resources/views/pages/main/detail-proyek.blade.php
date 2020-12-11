@@ -88,7 +88,8 @@
                                                 <button id="btn_bid" style="border: 1px solid #eee"
                                                         class="btn2 btn-sm btn-block"
                                                     {{$cek > 0 ? 'disabled' : ''}}>
-                                                    <span style="color: white;">{{$cek > 0 ? 'BID TELAH DIAJUKAN' : 'BID'}}&nbsp;<i class="fa fa-paper-plane mr-2"></i></span>
+                                                    <span style="color: white;">{{$cek > 0 ? 'BID TELAH DIAJUKAN' : 'BID'}}&nbsp;<i
+                                                            class="fa fa-paper-plane mr-2"></i></span>
                                                 </button>
                                             </div>
                                         </div>
@@ -391,9 +392,9 @@
                                                                             </span>
                                                                     </p>
                                                                     <blockquote class="sub-menu-blockquote">
-{{--                                                                        {!! !is_null($pekerja->get_bio->summary) ?--}}
-{{--                                                                        $pekerja->get_bio->summary : $pekerja->name.--}}
-{{--                                                                        ' belum menuliskan apapun di profilnya.' !!}--}}
+                                                                        {{--                                                                        {!! !is_null($pekerja->get_bio->summary) ?--}}
+                                                                        {{--                                                                        $pekerja->get_bio->summary : $pekerja->name.--}}
+                                                                        {{--                                                                        ' belum menuliskan apapun di profilnya.' !!}--}}
                                                                         Harga : RP. 5.000.000,00
                                                                         <br>
                                                                         Batas Waktu : 7 Hari
@@ -427,19 +428,25 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="form-nego" method="post">
+                        <form class="form-horizontal" role="form" method="POST" id="form-nego"
+                              action="{{route('bid.proyek',['username' => $user->username, 'judul' => $proyek->permalink])}}">
                             @csrf
-                            {{ method_field('put') }}
+                            <input type="hidden" name="_method">
+                            <input type="hidden" name="id">
+                            {{--                            {{ method_field('put') }}--}}
                             <div class="form-group row">
                                 <label for="BiayaProyek" class="col-sm-4 col-form-label">Biaya Proyek</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="negoharga" placeholder="Biaya" name="negoharga">
+                                    <input type="text" class="form-control" id="negoharga" placeholder="Nego Biaya"
+                                           name="negoharga" onkeypress="return numberOnly(event, false)" value="{{number_format($proyek->harga,2,',','.')}}">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="BatasWaktu" class="col-sm-4 col-form-label">Batas Waktu</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="negowaktu" name="negowaktu" placeholder="Waktu">
+                                    <input type="text" class="form-control" id="negowaktu" name="negowaktu"
+                                           placeholder="Nego Waktu" onkeypress="return numberOnly(event, false)"
+                                    value="{{$proyek->waktu_pengerjaan}}">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -450,47 +457,67 @@
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <div style="background-color: #E1E2DF;width: 525px;height: 250px;overflow: scroll;border: 1px solid black;padding: 2px 40px">
-                                            <h2>PERJANJIAN KERJA PROYEK</h2>
-                                            <small>{{$proyek->judul}}</small>
+                                    <div
+                                        style="background-color: #E1E2DF;width: 525px;height: 250px;overflow: scroll;border: 1px solid black;padding: 2px 40px">
+                                        <h2>PERJANJIAN KERJA PROYEK</h2>
+                                        <small>{{$proyek->judul}}</small>
 
-                                            <h2>Deskripsi</h2>
-                                        Perjanjian dalam pembuatan project ini dibuat serta dilaksanakan dan oleh antara Project Owner untuk selanjutnya disebut sebagai Pihak Pertama dan Freelancer untuk selanjutnya disebut sebagai Pihak Kedua. Pihak Pertama adalah pihak yang menyediakan proyek untuk nantinya dikerjakan oleh Pihak Kedua. Sedangkan Pihak Kedua adalah pihak yang mengerjakan proyek yang telah disediakan oleh Pihak Pertama. Para Pihak dengan ini setuju dan sepakat untuk melakukan perjanjian berdasarkan syarat dan ketentuan sebagai berikut:
+                                        <h2>Deskripsi</h2>
+                                        Perjanjian dalam pembuatan project ini dibuat serta dilaksanakan dan oleh antara
+                                        Project Owner untuk selanjutnya disebut sebagai Pihak Pertama dan Freelancer
+                                        untuk selanjutnya disebut sebagai Pihak Kedua. Pihak Pertama adalah pihak yang
+                                        menyediakan proyek untuk nantinya dikerjakan oleh Pihak Kedua. Sedangkan Pihak
+                                        Kedua adalah pihak yang mengerjakan proyek yang telah disediakan oleh Pihak
+                                        Pertama. Para Pihak dengan ini setuju dan sepakat untuk melakukan perjanjian
+                                        berdasarkan syarat dan ketentuan sebagai berikut:
 
-                                            <h2>I. HAK DAN KEWAJIBAN PIHAK PERTAMA</h2>
-                                            <h3>Hak</h3>
-                                        1.	Menambahkan atau mengarahkan pihak kedua dalam pengembangan proyek agar dapat diimplementasikan.
-                                        2.	Menjadi pemilik atas seluruh proyek yang telah selesai.
-
-                                        <h3>Kewajiban</h3>
-                                        1.	Memberikan pembayaran sesuai dengan kesepakatan untuk setiap proyek yang berhasil dikerjakan sesuai dengan minimum requirement dan pengajuan tambahan yang diajukan oleh pekerja.
-                                        2.	Memberikan konsultasi dan arahan mengenai pengembangan proyek agar dapat diimplementasikan.
-
-                                        <h2>I.	HAK DAN KEWAJIBAN PIHAK KEDUA</h2>
+                                        <h2>I. HAK DAN KEWAJIBAN PIHAK PERTAMA</h2>
                                         <h3>Hak</h3>
-                                        1.	Mendapatkan arahan dan konsultasi dari pihak pertama sebagai project owner.
-                                        2.	Mendapatkan pembayaran sesuai dengan kesepakatan untuk proyek yang sukses dikerjakan sesuai dengan kesepakatan.
+                                        1. Menambahkan atau mengarahkan pihak kedua dalam pengembangan proyek agar dapat
+                                        diimplementasikan.
+                                        2. Menjadi pemilik atas seluruh proyek yang telah selesai.
 
                                         <h3>Kewajiban</h3>
-                                        1.	Menyelesaikan proyek sesuai dengan minimum requirement dan kontrak yang telah dibuat.
-                                        2.	Mengumpulkan seluruh kelengkapan dari produk proyek yang telah disepakati, serta source code dan aplikasi yang  telah dibuat (jika proyek yang dikerjakan berupa pengembangan aplikasi).
-                                        3.	Dilarang menggunakan atau mereproduksi keseluruhan proyek untuk digunakan kepentingan tanpa persetujuan Project Owner.
-                                        4.	Mengikuti aturan yang telah dikeluarkan oleh pihak pertama.
+                                        1. Memberikan pembayaran sesuai dengan kesepakatan untuk setiap proyek yang
+                                        berhasil dikerjakan sesuai dengan minimum requirement dan pengajuan tambahan
+                                        yang diajukan oleh pekerja.
+                                        2. Memberikan konsultasi dan arahan mengenai pengembangan proyek agar dapat
+                                        diimplementasikan.
+
+                                        <h2>I. HAK DAN KEWAJIBAN PIHAK KEDUA</h2>
+                                        <h3>Hak</h3>
+                                        1. Mendapatkan arahan dan konsultasi dari pihak pertama sebagai project owner.
+                                        2. Mendapatkan pembayaran sesuai dengan kesepakatan untuk proyek yang sukses
+                                        dikerjakan sesuai dengan kesepakatan.
+
+                                        <h3>Kewajiban</h3>
+                                        1. Menyelesaikan proyek sesuai dengan minimum requirement dan kontrak yang telah
+                                        dibuat.
+                                        2. Mengumpulkan seluruh kelengkapan dari produk proyek yang telah disepakati,
+                                        serta source code dan aplikasi yang telah dibuat (jika proyek yang dikerjakan
+                                        berupa pengembangan aplikasi).
+                                        3. Dilarang menggunakan atau mereproduksi keseluruhan proyek untuk digunakan
+                                        kepentingan tanpa persetujuan Project Owner.
+                                        4. Mengikuti aturan yang telah dikeluarkan oleh pihak pertama.
 
                                         <h2>III. KETENTUAN PEMBAYARAN</h2>
-                                        Project Owner harus membayar hasil pengerjaan proyek oleh Freelancer sesuai dengan kesepakatan antara kedua belah pihak yang sudah ditetapkan ketika menyetujui pelelangan proyek.
+                                        Project Owner harus membayar hasil pengerjaan proyek oleh Freelancer sesuai
+                                        dengan kesepakatan antara kedua belah pihak yang sudah ditetapkan ketika
+                                        menyetujui pelelangan proyek.
 
                                         <h2>IV. SANKSI</h2>
                                         Sanksi diserahkan seluruhnya sesuai keputusan dari project owner.
                                     </div>
                                     <label for="bid" class="pull-right"
                                            style="text-transform: none">
-                                        <input type="checkbox" style="background-color: grey" required>	&nbsp;Ya, Saya setuju dengan kontrak ini
+                                        <input type="checkbox" style="background-color: grey" required> &nbsp;Ya, Saya
+                                        setuju dengan kontrak ini
                                     </label>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn2" id="submit_nego"><span style="color: white">Ajukan Bid</span></button>
+                                <button type="button" class="btn2" id="submit_nego"><span style="color: white">Ajukan Bid</span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -539,7 +566,7 @@
             @if($user->id == Auth::id())
             swal('PERHATIAN!', 'Maaf, Anda tidak bisa mengajukan bid untuk tugas/proyek Anda sendiri.', 'warning');
             @else
-                $("#modal_nego").modal("show");
+            $("#modal_nego").modal("show");
             {{--swal({--}}
             {{--    title: 'Konfirmasi bid proyek',--}}
             {{--    text: 'Apakah Anda yakin akan mengajukan bid untuk tugas/proyek "{{$proyek->judul}}" ' +--}}
@@ -577,8 +604,10 @@
             }).then((confirm) => {
                 if (confirm) {
                     swal({icon: "success", buttons: false});
-                    window.location.href = '{{route('bid.proyek',['username' => $user->username, 'judul' => $proyek->permalink])}}';
-                    $("#form-nego input[name='_method']").val('POST');
+                    {{--                    window.location.href = '{{route('bid.proyek',['username' => $user->username, 'judul' => $proyek->permalink])}}';--}}
+                    {{--                    $("#form-nego").attr('action', window.location.href = '{{route('bid.proyek',['username' => $user->username, 'judul' => $proyek->permalink])}}');--}}
+                    {{--                    $("#form-nego input[name='_method']").val('POST');--}}
+                    $("#form-nego").submit();
                 }
             });
         });

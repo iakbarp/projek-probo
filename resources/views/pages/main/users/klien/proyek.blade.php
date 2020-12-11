@@ -525,7 +525,8 @@
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><b>Rp</b></span>
                                                             <input id="harga" class="form-control rupiah" name="harga"
-                                                                   type="text" placeholder="0" required>
+                                                                   type="text" placeholder="0" onkeypress="return numberOnly(event, false)"
+                                                                   required>
                                                             <span class="input-group-addon"><i
                                                                     class="fa fa-money-bill-wave-alt"></i></span>
                                                         </div>
