@@ -86,6 +86,7 @@ class ProyekController extends Controller
                 'thumbnail' => $thumbnail,
                 'lampiran' => $lampiran,
                 'pribadi' => $request->pribadi,
+                'selesai' => false,
             ]);
         } else {
             return back()->with('gagal', 'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.');
@@ -245,7 +246,6 @@ class ProyekController extends Controller
         $pengerjaan = Pengerjaan::create([
             'user_id' => $bid->user_id,
             'proyek_id' => $bid->proyek_id,
-            'selesai' => false
         ]);
 
         return redirect()->route('dashboard.klien.proyek', ['id' => $pengerjaan->id,

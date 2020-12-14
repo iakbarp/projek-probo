@@ -437,8 +437,10 @@
                             <div class="form-group row">
                                 <label for="BiayaProyek" class="col-sm-4 col-form-label">Biaya Proyek</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="negoharga" placeholder="Nego Biaya"
-                                           name="negoharga" onkeypress="return numberOnly(event, false)" value="{{number_format($proyek->harga,2,',','.')}}">
+{{--                                    <input type="text" class="form-control" id="negoharga" placeholder="Nego Biaya"--}}
+{{--                                           name="negoharga" onkeypress="return numberOnly(event, false)" value="{{number_format($proyek->harga,2,',','.')}}">--}}
+                                    <input type="text" class="form-control rupiah" id="negoharga" placeholder="Nego Biaya"
+                                           name="negoharga" onkeypress="return numberOnly(event, false)" value="{{number_format($proyek->harga,0,'','.')}}">
                                 </div>
                             </div>
                             <div class="form-group row">

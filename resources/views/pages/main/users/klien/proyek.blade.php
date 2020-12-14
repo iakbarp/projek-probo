@@ -838,6 +838,10 @@
                                                     </div>
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
+                                                    <button class="btn btn-link btn-sm btn-block" title="Lihat Progress Pengerjaan"
+                                                       data-toggle="tooltip" onclick="lihatProgress">
+                                                        <i class="far fa-file" style="margin-right: 0"></i></button>
+                                                    <hr style="margin: .5em 0">
                                                     <a class="btn btn-link btn-sm btn-block" title="Lihat Proyek"
                                                        data-toggle="tooltip" href="{{route('detail.proyek',
                                                                ['username' => $user->username,
@@ -1630,6 +1634,7 @@
                 swal('PERHATIAN!', 'Anda belum memilih metode pembayaran!', 'warning');
             }
         });
+        <!-- lihat progress -->
 
         <!-- bukti pembayaran -->
         function buktiPembayaran(id, invoice, url, data_url, harga) {

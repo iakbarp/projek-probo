@@ -568,12 +568,12 @@
                                                                         (kosong)
                                                                     @endif
                                                                 </li>
-                                                                <li><b>PROGRESS PENGERJAAN</b></li>
-                                                                <li>
-                                                                    <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">
-                                                                        <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>
-                                                                    </div>
-                                                                </li>
+{{--                                                                <li><b>PROGRESS PENGERJAAN</b></li>--}}
+{{--                                                                <li>--}}
+{{--                                                                    <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
+{{--                                                                        <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
+{{--                                                                    </div>--}}
+{{--                                                                </li>--}}
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -663,6 +663,22 @@
                                                 <td style="vertical-align: middle" align="center">
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
+                                                            <button class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                                    title="Update Progress"
+                                                                    onclick="updateProgress('{{$row->id}}',
+                                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
+                                                                        '{{$row->get_project->judul}}')"
+                                                                {{is_null($row->get_project->get_pembayaran) ||
+                                                                (!is_null($row->get_project->get_pembayaran) &&
+                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
+                                                                $row->selesai == true ? 'disabled' : ''}}>
+                                                                <i class="fa fa-upload" style="margin-right: 0"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <hr style="margin: .5em 0">
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
                                                             <a class="btn btn-link btn-sm" href="{{route('detail.proyek',
                                                                ['username' => $row->get_project->get_user->username,
                                                                'judul' => $row->get_project->permalink])}}"
@@ -728,6 +744,50 @@
                                     </div>
                                 </div>
 
+                                <div id="update-progress" style="display: none">
+                                    <div class="card">
+                                        <form class="form-horizontal" role="form"
+                                              enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="card-content">
+                                                <div class="card-title">
+                                                    <div class="row form-group">
+                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
+                                                             alt="Thumbnail"
+                                                             src="{{$row->get_project->thumbnail != "" ?
+                                                                     asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
+                                                                     : asset('images/slider/beranda-1.jpg')}}">
+                                                        <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
+                                                        <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}&nbsp;HARI)</b>
+                                                        <br>
+                                                        <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
+                                                        </b>
+                                                    </div>
+                                                    <hr class="mt-0">
+                                                    <div class="row form-group">
+                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
+                                                             alt="Thumbnail"
+                                                             src="{{$row->get_project->thumbnail != "" ?
+                                                                     asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
+                                                                     : asset('images/slider/beranda-1.jpg')}}">
+                                                        <span>PROGRESS PENGERJAAN #1</span>
+                                                        <br>
+                                                        <span>DESKRIPSI</span>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <div class="col-lg-12">
+                                                            <button type="reset" class="btn btn-link btn-sm"
+                                                                    style="border: 1px solid #ccc">
+                                                                <i class="fa fa-undo mr-2"></i>KEMBALI
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
                                 <div id="update-hasil" style="display: none">
                                     <div class="card">
                                         <form class="form-horizontal" role="form" method="POST"
@@ -777,29 +837,37 @@
                                                         </div>
                                                     </div>
                                                     <div class="row form-group">
-                                                        <div class="col-md-6 has-feedback">
-                                                            <label for="progress"
-                                                                   class="form-control-label">Progress Sementara</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i
-                                                                        class="fa fa-percent"></i></span>
-                                                            <input type="text" disabled
-                                                                   class="form-control"
-                                                                   placeholder="http://example.com">
-                                                        </div>
-                                                        </div>
-                                                        <div class="col-md-6 has-feedback">
-                                                            <label for="update-progress"
-                                                                   class="form-control-label">Progress Terbaru</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i
-                                                                        class="fa fa-percent"></i></span>
-                                                                <input type="text"
-                                                                       class="form-control"
-                                                                       placeholder="80">
-                                                            </div>
+                                                        <div class="col-md-12">
+                                                            <label for="deskripsi" class="form-control-label">Deskripsi
+                                                                <span class="required">*</span></label>
+                                                            <textarea id="deskripsi" name="deskripsi"
+                                                                      class="form-control"></textarea>
                                                         </div>
                                                     </div>
+{{--                                                    <div class="row form-group">--}}
+{{--                                                        <div class="col-md-6 has-feedback">--}}
+{{--                                                            <label for="progress"--}}
+{{--                                                                   class="form-control-label">Progress Sementara</label>--}}
+{{--                                                            <div class="input-group">--}}
+{{--                                                                <span class="input-group-addon"><i--}}
+{{--                                                                        class="fa fa-percent"></i></span>--}}
+{{--                                                            <input type="text" disabled--}}
+{{--                                                                   class="form-control"--}}
+{{--                                                                   placeholder="http://example.com">--}}
+{{--                                                        </div>--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="col-md-6 has-feedback">--}}
+{{--                                                            <label for="update-progress"--}}
+{{--                                                                   class="form-control-label">Progress Terbaru</label>--}}
+{{--                                                            <div class="input-group">--}}
+{{--                                                                <span class="input-group-addon"><i--}}
+{{--                                                                        class="fa fa-percent"></i></span>--}}
+{{--                                                                <input type="text"--}}
+{{--                                                                       class="form-control"--}}
+{{--                                                                       placeholder="80">--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
                                                     <div class="row form-group">
                                                         <div class="col-lg-12">
                                                             <button type="reset" class="btn btn-link btn-sm"
@@ -1224,6 +1292,55 @@
                 }
             });
         }
+
+        function updateProgress(id, tautan, action, judul) {
+            $("#judul").text(judul);
+            $("#tautan").val(tautan);
+            $("#dt-pengerjaan").toggle(300);
+            $("#update-progress").toggle(300);
+            $("#update-progress form").attr('action', action);
+
+            $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
+        }
+
+        $("#update-progress button[type=reset]").on('click', function () {
+            $("#judul").text(null);
+            $("#txt_file_hasil, #attach-file_hasil, #tautan").val(null);
+            $("#txt_file_hasil[data-toggle=tooltip]").attr('data-original-title',
+                'Ekstensi yang diizinkan: jpg, jpeg, gif, png, pdf. Ukuran yang diizinkan: < 5 MB');
+            $("#dt-pengerjaan").toggle(300);
+            $("#update-progress").toggle(300);
+            $("#update-progress form").removeAttr('action');
+
+            $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
+        });
+
+        $("#tautan").on("keyup", function () {
+            var $uri = $(this).val().substr(0, 4) != 'http' ? 'http://' + $(this).val() : $(this).val();
+            $(this).val($uri);
+        });
+
+        $(".browse_file_hasil").on('click', function () {
+            $("#attach-file_hasil").trigger('click');
+        });
+
+        $("#attach-file_hasil").on('change', function () {
+            var files = $(this).prop("files"), names = $.map(files, function (val) {
+                return val.name;
+            });
+            $("#txt_file_hasil").val(names);
+            $("#txt_file_hasil[data-toggle=tooltip]").attr('data-original-title', names);
+            $("#count_file_hasil").text($(this).get(0).files.length + " file dipilih!");
+        });
+
+        $("#update-progress form").on('submit', function (e) {
+            e.preventDefault();
+            if (!$("#attach-file_hasil").val()) {
+                swal('PERHATIAN!', 'File hasil pengerjaan tugas/proyek tidak boleh kosong!', 'warning');
+            } else {
+                $(this)[0].submit();
+            }
+        });
 
         function updateHasil(id, tautan, action, judul) {
             $("#judul").text(judul);

@@ -109,9 +109,10 @@ class ProyekController extends Controller
             $file_hasil = null;
         }
 
-        $pengerjaan->update([
+        $pengerjaan->create([
             'file_hasil' => $file_hasil,
             'tautan' => $request->tautan,
+            'deskripsi' => $request->deskripsi,
         ]);
 
         return back()->with('pengerjaan', 'Hasil pengerjaan tugas/proyek [' . $pengerjaan->get_project->judul . '] berhasil diperbarui!');

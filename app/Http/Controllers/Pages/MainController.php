@@ -66,7 +66,7 @@ class MainController extends Controller
         Bid::create([
             'user_id' => Auth::id(),
             'proyek_id' => $proyek->id,
-            'negoharga' => str_replace(',', '.', str_replace('.','', $request->negoharga )),
+            'negoharga' => str_replace('.', '',$request->negoharga),
             'negowaktu' => $request->negowaktu,
             'task' => $request->task,
 
