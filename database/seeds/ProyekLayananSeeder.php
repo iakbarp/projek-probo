@@ -33,6 +33,8 @@ class ProyekLayananSeeder extends Seeder
             \App\Model\Project::create([
                 'user_id' => $klien->id,
                 'judul' => $title2,
+                'selesai' => true,
+
                 'permalink' => preg_replace("![^a-z0-9]+!i", "-", strtolower($title2)),
                 'deskripsi' => '<p>' . $faker->paragraph . '</p>',
                 'waktu_pengerjaan' => rand(1, 10),
@@ -61,8 +63,8 @@ class ProyekLayananSeeder extends Seeder
             $pengerjaan = \App\Model\Pengerjaan::create([
                 'user_id' => $user_id,
                 'proyek_id' => $proyek->id,
-                'selesai' => true,
                 'tautan' => $faker->imageUrl(),
+                'deskripsi'=> $faker->sentence(),
             ]);
 
             \App\Model\Pembayaran::create([

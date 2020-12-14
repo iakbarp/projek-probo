@@ -52,7 +52,7 @@ class ProyekController extends Controller
                     DB::raw("(SELECT count(id) FROM bid where bid.proyek_id=project.id) total_bid"),
                     "thumbnail",
                     "lampiran",
-                    DB::raw("if(bid.proyek_id is not null, true,false) as editable")
+                    DB::raw("if(bid.proyek_id is null, true,false) as editable")
                 )
                 ->limit($limit_proyek ? $limit_proyek : 20)
                 ->get();
@@ -171,10 +171,7 @@ class ProyekController extends Controller
                         ->when($search_proyek, function ($q) use ($search_proyek) {
                             $q->where('judul', 'like', "%$search_proyek%");
                         })->get()->count(),
-                    'Pengerjaan_count' => Pengerjaan::whereIn('proyek_id', collect($proyek)->pluck('id'))
-                        ->when($search_pengerjaan, function ($q) use ($search_pengerjaan) {
-                            $q->where('judul', 'like', "%$search_pengerjaan%");
-                        })->get()->count(),
+                    'Pengerjaan_count' => $i,
                 ]
             ], 200);
         } catch (\Exception $exception) {
