@@ -45,12 +45,14 @@ class ProyekController extends Controller
                     'kat.id as kategori_id',
                     'kat.nama as kategori_nama',
                     "judul",
+                    "project.harga",
                     "permalink",
                     "deskripsi",
                     "waktu_pengerjaan",
                     DB::raw("(SELECT count(id) FROM bid where bid.proyek_id=project.id) total_bid"),
                     "thumbnail",
                     "lampiran",
+                    DB::raw("if(bid.proyek_id is not null, true,false) as editable")
                 )
                 ->limit($limit_proyek ? $limit_proyek : 20)
                 ->get();
@@ -95,12 +97,14 @@ class ProyekController extends Controller
 
             foreach ($proyek as $dt) {
                 $d = DB::table('pengerjaan as a')
-                ->select('a.*',DB::raw('ifnull(format(AVG(b.bintang),1),0.0) bintang'))
+                ->select('a.*',
+                DB::raw('(select ifnull(format(AVG(b.bintang),1),0.0) from ulasan_pekerja as b where a.id=b.pengerjaan_id) as bintang'))
                 ->where('proyek_id', $dt['id'])
                 // ->where('a.selesai',DB::raw('1'))
-                ->leftJoin('ulasan_pekerja as b','a.id','=','b.pengerjaan_id')
-                ->groupBy('a.id')
-                ->groupBy('b.pengerjaan_id')
+                // ->leftJoin('ulasan_pekerja as b','a.id','=','b.pengerjaan_id')
+                // ->groupBy('a.id')
+                // ->groupBy('b.pengerjaan_id')
+                ->orderBy('id','desc')
                 ->first();
 
 
