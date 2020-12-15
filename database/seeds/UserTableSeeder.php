@@ -61,6 +61,11 @@ class UserTableSeeder extends Seeder
                         'deskripsi' => $faker->sentence,
                         'bintang' => $arr[array_rand($arr)]
                     ]);
+
+                    \App\Model\Dompet::create([
+                       'user_id' => $user->id,
+
+                    ]);
                 }
             }
         }

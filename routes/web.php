@@ -435,6 +435,14 @@ Route::group(['prefix' => 'akun'], function () {
             'uses' => 'DompetController@index',
             'as' => 'user.dompet'
         ]);
+//        Route::get('dompet/saldo', [
+//            'uses' => 'DompetController@dompetUser',
+//            'as' => 'user.saldo'
+//        ]);
+        Route::put('dompet/update', [
+            'uses' => 'DompetController@updatePengaturan',
+            'as' => 'user.dompet.update.pengaturan'
+        ]);
 
     });
 
