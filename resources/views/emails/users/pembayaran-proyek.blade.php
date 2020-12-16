@@ -392,10 +392,17 @@
                                                     <tr>
                                                         <td>
                                                             <small style="line-height: 2em">
-                                                                <strong style="font-size: 22px">Mohon untuk segera
-                                                                    menyelesaikan pembayaran Anda</strong><br>
-                                                                Checkout pesanan berhasil dilakukan pada tanggal
-                                                                {{$data->created_at->isoFormat('DD MMMM YYYY [pukul] HH:mm')}}
+                                                                @if ($data->selesai == false && $data->bukti_pembayaran == null) {
+                                                                    <b style="font-size: 22px">Mohon untuk segera
+                                                                        menyeleseaikan pembayaran Anda</b><br>
+                                                                    Checkout berhasil
+                                                                    pada {{now()->formatLocalized('%d %B %Y – %H:%M')}}
+                                                                @else
+                                                                    <b style="font-size: 22px">Kami akan mengirimkan
+                                                                        produk yang Anda pesan sesegera mungkin</b><br>
+                                                                    Terima kasih telah menyelesaikan transaksi
+                                                                    di {{env('APP_TITLE')}}
+                                                                @endif
                                                             </small>
                                                         </td>
                                                     </tr>
@@ -506,23 +513,27 @@
                                                     <tr>
                                                         <td>
                                                             <small><b>Metode Pembayaran</b>
-                                                                <sub>ATM/Transfer Bank</sub></small>
+                                                                <sub>{{strtoupper(str_replace('_',' ',$payment['type']))}}</sub>
+                                                            </small>
                                                             <hr class="hr-divider">
                                                             <table>
                                                                 <tr>
                                                                     <td width="50%">
-                                                                        <img
-                                                                            src="{{env('APP_URL').'/images/payment/'.$bank.'.png'}}"
-                                                                            style="width: 90%;" alt="{{$bank}}">
+                                                                        <img alt="{{$payment['bank']}}"
+                                                                             style="width: 90%;"
+                                                                             src="{{asset('images/paymentMethod/'.$payment['bank'].'.png')}}">
                                                                     </td>
-                                                                    <td>
-                                                                        <small
-                                                                            style="line-height: 1.5em;font-size: 14px">
-                                                                            <b style="font-size: 16px">
-                                                                                {{number_format($rekening,0," "," ")}}
-                                                                            </b><br>a/n {{env('APP_NAME')}}
-                                                                        </small>
-                                                                    </td>
+                                                                    @if($payment['type'] == 'credit_card' || $payment['type'] == 'bank_transfer' || $payment['type'] == 'cstore')
+                                                                        <td>
+                                                                            <small
+                                                                                style="line-height: 1.5em;font-size: 14px">
+                                                                                <b style="font-size: 16px">{{$payment['account']}}</b>
+                                                                                @if($payment['type'] == 'bank_transfer')
+                                                                                    <br>a/n {{env('APP_TITLE')}}
+                                                                                @endif
+                                                                            </small>
+                                                                        </td>
+                                                                    @endif
                                                                 </tr>
                                                             </table>
                                                         </td>

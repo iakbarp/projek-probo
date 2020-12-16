@@ -30,7 +30,7 @@
         @endif
     });
 
-    var recaptcha_register, recaptchaCallback = function () {
+    /*var recaptcha_register, recaptchaCallback = function () {
         recaptcha_register = grecaptcha.render(document.getElementById('recaptcha-register'), {
             'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
             'callback': 'enable_btnRegister',
@@ -44,7 +44,7 @@
 
     function disabled_btnRegister() {
         $("#btn_register").attr('disabled', 'disabled');
-    }
+    }*/
 
     $("#reg_username").on('blur', function () {
         $.get('akun/cek/' + $("#reg_username").val(), function (data) {
@@ -64,10 +64,10 @@
     });
 
     $("#form-register").on("submit", function (e) {
-        if (grecaptcha.getResponse(recaptcha_register).length === 0) {
+        /*if (grecaptcha.getResponse(recaptcha_register).length === 0) {
             e.preventDefault();
             swal('PERHATIAN!', 'Mohon klik kotak dialog reCAPTCHA berikut.', 'warning');
-        }
+        }*/
 
         if ($.trim($("#reg_email,#reg_name,#reg_username,#reg_password,#reg_password_confirm").val()) === "") {
             return false;
