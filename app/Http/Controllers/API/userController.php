@@ -235,12 +235,14 @@ class userController extends Controller
             $bio->email = $user->email;
             $bio->bank = Bank::find($bio->bank, ['id', 'nama', 'kode']);
             $bio->kota_provinsi = Kota::find($bio->kota_id, ['id', 'nama', 'provinsi_id']);
-            $bio->kota_provinsi->nama_provinsi = Provinsi::find($bio->kota_provinsi->provinsi_id)->nama;
-
+            if ($bio->kota_provinsi) {
+                $bio->kota_provinsi->nama_provinsi = Provinsi::find($bio->kota_provinsi->provinsi_id)->nama;
+            }
             $bio->makeHidden(['id', 'user_id', 'latar_belakang', 'created_at', 'updated_at', 'summary', 'kota_id']);
             $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
             $bio->kewarganegaraan = Negara::where('nama', $bio->kewarganegaraan)->first()
-                ->makeHidden(['created_at', 'updated_at']);
+                // ->makeHidden(['created_at', 'updated_at'])
+            ;
             //   return response()->json($bio);
 
             return response()->json([

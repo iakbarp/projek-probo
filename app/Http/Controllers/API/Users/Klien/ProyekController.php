@@ -55,6 +55,7 @@ class ProyekController extends Controller
                     DB::raw("if(bid.proyek_id is null, true,false) as editable")
                 )
                 ->limit($limit_proyek ? $limit_proyek : 20)
+                ->orderBy('id','desc')
                 ->get();
 
             foreach ($proyek as $dt) {
@@ -220,8 +221,8 @@ class ProyekController extends Controller
 
                 if ($request->hasFile('thumbnail')) {
 
-                    $thumbnail = $request->file('thumbnail')->getClientOriginalName();
-                    $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $thumbnail);
+                    $thumbnail =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' .$request->file('thumbnail')->getClientOriginalName();
+                    $request->file('thumbnail')->storeAs('public/proyek/thumbnail', $thumbnail);
                 } else {
                     $thumbnail = null;
                 }
@@ -231,8 +232,9 @@ class ProyekController extends Controller
                     $lampiran = [];
                     $i = 0;
                     foreach ($request->file('lampiran') as $file) {
-                        $file->storeAs('public/proyek/lampiran', sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $file->getClientOriginalName());
-                        $lampiran[$i] = $file->getClientOriginalName();
+                        $lampiran[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' .$file->getClientOriginalName();
+
+                        $file->storeAs('public/proyek/lampiran',  $lampiran[$i]);
                         $i = 1 + $i;
                     }
                 } else {
@@ -254,9 +256,9 @@ class ProyekController extends Controller
             } else {
                 return response()->json([
                     'error' => true,
-                    'data' => [
+
                         'message' =>  'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
-                    ]
+
                 ], 400);
             }
         } catch (\Exception $exception) {

@@ -7,6 +7,7 @@ use App\Model\Bid;
 use App\Model\Kategori;
 use App\Model\Project;
 use App\Model\Services;
+use App\Model\SubKategori;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -299,6 +300,61 @@ class tabDataController extends Controller
             ], 500);
         }
     }
+
+    public function grupKategori(Request $r)
+    {
+        $id = $r->id;
+        $q = $r->q;
+
+        try {
+            $kategori = Kategori::select('id', 'nama') ->orderBy('nama')->get()->toArray();
+            $kategori = collect($kategori);
+
+
+            $keyed = $kategori->map(function ($item, $i) use ($id, $q) {
+                $kota = SubKategori::select(
+                    'id',
+                    'nama',
+                    DB::raw("if(id='$id',true,false) as selected")
+                )->where('kategori_id', $item['id'])
+                    ->when($q, function ($query) use ($q) {
+                        $query->where('nama', 'like', "%$q%");
+                    })
+                    ->orderBy('nama')
+                    ->get();
+
+
+                return  [
+                    'id' => $item['id'],
+                    'nama' => $item['nama'],
+                    'sub' => $kota->count() ? $kota : null,
+                ];
+            });
+            $kota = [];
+            foreach ($keyed->whereNotNull('sub')->all() as $row) {
+                $kota[] = $row;
+            }
+
+
+
+
+
+            return response()->json(
+                [
+                    'error' => false,
+                    'data' => $kota,
+                ]
+            );
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ], 400);
+        }
+    }
+
 
     private function imgCheck($data, $column, $path, $ch, $desk = true)
     {

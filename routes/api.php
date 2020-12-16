@@ -41,6 +41,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/layanan', 'tabDataController@layanan');
         Route::get('/frelencer', 'tabDataController@frelencer');
         Route::get('/kategori', 'tabDataController@kategori');
+        Route::get('/grup_kategori', 'tabDataController@grupKategori');
 
         Route::group(['prefix' => 'message'], function () {
 
