@@ -259,24 +259,24 @@
 
                                                 <div id="error_new_pass" class="row form-group has-feedback">
                                                     <div class="col-md-12">
-                                                        <input placeholder="Pin baru" id="password" type="password"
-                                                               class="form-control" name="new_password" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)" required>
+                                                        <input placeholder="Pin baru" id="pin" type="password"
+                                                               class="form-control" name="new_pin" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)" required>
                                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"
                                                               style="pointer-events: all;cursor: pointer"></span>
-                                                        @if ($errors->has('new_password'))
+                                                        @if ($errors->has('new_pin'))
                                                             <span class="help-block">
                                                 <strong
-                                                    class="strong-error">{{ $errors->first('new_password') }}</strong>
+                                                    class="strong-error">{{ $errors->first('new_pin') }}</strong>
                                             </span>
                                                         @endif
                                                     </div>
                                                     <br>
                                                     <div class="col-md-12">
-                                                        <input placeholder="Ulangi Pin baru" id="password-confirm"
+                                                        <input placeholder="Ulangi Pin baru" id="pin-confirm"
                                                                type="password"
-                                                               class="form-control" name="password_confirmation" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)"
+                                                               class="form-control" name="pin_confirmation" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)"
                                                                required
-                                                               onkeyup="return checkPassword()">
+                                                               onkeyup="return checkPin()">
                                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"
                                                               style="pointer-events: all;cursor: pointer"></span>
                                                         <span class="help-block">
@@ -314,6 +314,7 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <!-- Topup -->
+                    @foreach($dompet as $row)
                     <div class="row card-data">
                         <div class="col-lg-12">
                             <div class="card" style="background-color: #2979FF;color: white">
@@ -324,10 +325,10 @@
                                         <table>
                                             <tr>
                                             <td>
-                                                <b data-scrollbar style="text-transform: none; font-size: 40px;margin-right: 5em">SALDO ANDA :</b>
+                                                <b data-scrollbar style="text-transform: none; font-size: 35px;margin-right: 5em">SALDO ANDA :</b>
                                             </td>
                                             <td>
-                                                <b data-scrollbar style="text-transform: none; font-size: 35px">Rp. 1.500.000</b>
+                                                <b data-scrollbar style="text-transform: none; font-size: 35px">Rp. {{number_format($row->saldo,2,',','.')}}</b>
                                             </td>
                                             </tr>
                                         </table>
@@ -346,6 +347,7 @@
                             </div>
                         </div>
                     </div>
+                    @endforeach
                     <div class="row card-data">
                         <div class="col-lg-12">
                             <div class="card">
@@ -502,12 +504,12 @@
             $('#password-confirm').togglePassword();
         });
 
-        function checkPassword() {
-            var new_pas = $("#password").val(),
-                re_pas = $("#password-confirm").val();
+        function checkPin() {
+            var new_pas = $("#pin").val(),
+                re_pas = $("#pin-confirm").val();
             if (new_pas != re_pas) {
                 $("#error_new_pass").addClass('has-error');
-                $(".aj_new_pass").text("Konfirmasi password harus sama dengan password baru Anda!").parent().show();
+                $(".aj_new_pass").text("Konfirmasi pin harus sama dengan pin baru Anda!").parent().show();
                 $("#btn_save_password").attr('disabled', 'disabled');
             } else {
                 $("#error_new_pass").removeClass('has-error');
@@ -518,7 +520,7 @@
         $("#form-password").on("submit", function (e) {
             $.ajax({
                 type: 'POST',
-                url: '{{route('user.update.pengaturan')}}',
+                url: '{{route('user.dompet.update.pengaturan')}}',
                 data: new FormData($("#form-password")[0]),
                 contentType: false,
                 processData: false,
