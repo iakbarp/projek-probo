@@ -1,5 +1,6 @@
 <?php
 
+use App\Model\PengerjaanProgress;
 use Illuminate\Database\Seeder;
 
 class ProyekLayananSeeder extends Seeder
@@ -33,7 +34,6 @@ class ProyekLayananSeeder extends Seeder
             \App\Model\Project::create([
                 'user_id' => $klien->id,
                 'judul' => $title2,
-                'selesai' => true,
 
                 'permalink' => preg_replace("![^a-z0-9]+!i", "-", strtolower($title2)),
                 'deskripsi' => '<p>' . $faker->paragraph . '</p>',
@@ -64,8 +64,11 @@ class ProyekLayananSeeder extends Seeder
                 'user_id' => $user_id,
                 'proyek_id' => $proyek->id,
                 'tautan' => $faker->imageUrl(),
-                'deskripsi'=> $faker->sentence(),
+                // 'deskripsi'=> $faker->sentence(),
+                'selesai' => true,
+
             ]);
+
 
             \App\Model\Pembayaran::create([
                 'proyek_id' => $proyek->id,

@@ -13,10 +13,10 @@ class AddDeskripsiToPengerjaan extends Migration
      */
     public function up()
     {
-        Schema::table('pengerjaan', function (Blueprint $table) {
-            $table->string('deskripsi')->nullable();
+        // Schema::table('pengerjaan', function (Blueprint $table) {
+        //     $table->string('deskripsi')->nullable();
 
-        });
+        // });
     }
 
     /**
@@ -26,9 +26,9 @@ class AddDeskripsiToPengerjaan extends Migration
      */
     public function down()
     {
-        Schema::table('pengerjaan', function (Blueprint $table) {
-            $table->dropColumn('selesai');
-            
-        });
+        // Schema::table('pengerjaan', function (Blueprint $table) {
+        //     $table->dropColumn('selesai');
+
+        // });
     }
 }

@@ -13,10 +13,10 @@ class RemoveSelesaiToPengerjaan extends Migration
      */
     public function up()
     {
-        Schema::table('pengerjaan', function (Blueprint $table) {
-            $table->dropColumn('selesai');
+        // Schema::table('pengerjaan', function (Blueprint $table) {
+        //     $table->dropColumn('selesai');
 
-        });
+        // });
     }
 
     /**
@@ -26,10 +26,10 @@ class RemoveSelesaiToPengerjaan extends Migration
      */
     public function down()
     {
-        Schema::table('pengerjaan', function (Blueprint $table) {
-            $table->boolean('selesai')->default(false);
+        // Schema::table('pengerjaan', function (Blueprint $table) {
+        //     $table->boolean('selesai')->default(false);
 
 
-        });
+        // });
     }
 }

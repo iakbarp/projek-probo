@@ -79,12 +79,23 @@ Route::group(['namespace' => 'API'], function () {
             });
         });
 
+
+        Route::group(['prefix' => 'public'], function () {
+            Route::get('/', 'publicPreviewController@get');
+            Route::get('/proyek', 'publicPreviewController@proyek');
+            Route::get('/layanan', 'publicPreviewController@layanan');
+
+        });
+
         Route::group(['prefix' => 'klien'], function () {
 
             Route::group(['prefix' => 'proyek','namespace' => 'Users\Klien'], function () {
             Route::get('/', 'ProyekController@dashboard');
             Route::post('/', 'ProyekController@tambahProyek');
-            Route::delete('/{proyek_id}', 'ProyekController@tambahProyek');
+            Route::post('/lampiran', 'ProyekController@tambahLampiran');
+            Route::delete('/lampiran', 'ProyekController@deleteLampiran');
+            Route::post('/{proyek_id}', 'ProyekController@updateProyek');
+            Route::delete('/{proyek_id}', 'ProyekController@deleteProyek');
 
             });
 

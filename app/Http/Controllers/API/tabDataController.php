@@ -199,7 +199,7 @@ class tabDataController extends Controller
             $sub = DB::table('users')
                 ->leftJoin('service', 'users.id', '=', 'service.user_id')
 
-                ->leftJoin('pengerjaan as pr', function ($join) {
+                ->leftJoin('project as pr', function ($join) {
                     $join->on('users.id', '=', 'pr.user_id');
                     $join->on('pr.selesai', '=', DB::raw('1'));
                 })

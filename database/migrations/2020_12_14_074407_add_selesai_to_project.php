@@ -13,10 +13,10 @@ class AddSelesaiToProject extends Migration
      */
     public function up()
     {
-        Schema::table('project', function (Blueprint $table) {
-            $table->boolean('selesai')->default(false);
+        // Schema::table('project', function (Blueprint $table) {
+        //     $table->boolean('selesai')->default(false);
 
-        });
+        // });
     }
 
     /**
@@ -26,8 +26,8 @@ class AddSelesaiToProject extends Migration
      */
     public function down()
     {
-        Schema::table('project', function (Blueprint $table) {
-            $table->dropColumn('selesai');
-        });
+        // Schema::table('project', function (Blueprint $table) {
+        //     $table->dropColumn('selesai');
+        // });
     }
 }

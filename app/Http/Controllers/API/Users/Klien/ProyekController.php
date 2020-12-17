@@ -49,13 +49,14 @@ class ProyekController extends Controller
                     "permalink",
                     "deskripsi",
                     "waktu_pengerjaan",
+                    DB::raw("if(pribadi=1,'privat','publik') as`jenis`"),
                     DB::raw("(SELECT count(id) FROM bid where bid.proyek_id=project.id) total_bid"),
                     "thumbnail",
                     "lampiran",
                     DB::raw("if(bid.proyek_id is null, true,false) as editable")
                 )
                 ->limit($limit_proyek ? $limit_proyek : 20)
-                ->orderBy('id','desc')
+                ->orderBy('project.updated_at', 'desc')
                 ->get();
 
             foreach ($proyek as $dt) {
@@ -66,12 +67,12 @@ class ProyekController extends Controller
                 }
                 $dt->lampiran = $lamp;
 
-                $dt->kategori = $dt->subkategori_id ? [
+                $dt->subkategori = $dt->subkategori_id ? [
                     'id' => $dt->subkategori_id,
                     'nama' => $dt->subkategori_nama,
                 ] : null;
 
-                $dt->subkategori = $dt->kategori_id ? [
+                $dt->kategori = $dt->kategori_id ? [
                     'id' => $dt->kategori_id,
                     'nama' => $dt->kategori_nama,
                 ] : null;
@@ -98,15 +99,17 @@ class ProyekController extends Controller
 
             foreach ($proyek as $dt) {
                 $d = DB::table('pengerjaan as a')
-                ->select('a.*',
-                DB::raw('(select ifnull(format(AVG(b.bintang),1),0.0) from ulasan_pekerja as b where a.id=b.pengerjaan_id) as bintang'))
-                ->where('proyek_id', $dt['id'])
-                // ->where('a.selesai',DB::raw('1'))
-                // ->leftJoin('ulasan_pekerja as b','a.id','=','b.pengerjaan_id')
-                // ->groupBy('a.id')
-                // ->groupBy('b.pengerjaan_id')
-                ->orderBy('id','desc')
-                ->first();
+                    ->select(
+                        'a.*',
+                        DB::raw('(select ifnull(format(AVG(b.bintang),1),0.0) from ulasan_pekerja as b where a.id=b.pengerjaan_id) as bintang')
+                    )
+                    ->where('proyek_id', $dt['id'])
+                    // ->where('a.selesai',DB::raw('1'))
+                    // ->leftJoin('ulasan_pekerja as b','a.id','=','b.pengerjaan_id')
+                    // ->groupBy('a.id')
+                    // ->groupBy('b.pengerjaan_id')
+                    ->orderBy('id', 'desc')
+                    ->first();
 
 
                 if ($d) {
@@ -120,14 +123,14 @@ class ProyekController extends Controller
                         ->where('users.id', $d->user_id)
 
                         ->leftJoin('bio', 'bio.user_id', '=', 'users.id')
-                        ->select('users.id', 'users.name as nama', 'bio.foto','bio.status')
+                        ->select('users.id', 'users.name as nama', 'bio.foto', 'bio.status')
                         ->first();
-                    $pekerjas->bintang=$d->bintang;
+                    $pekerjas->bintang = $d->bintang;
                     $pekerjas = $this->imgCheck($pekerjas, 'foto', 'storage/users/foto');
 
                     $ulasan_pekerja = DB::table('ulasan_pekerja')
                         ->where('user_id', $user->id)
-                        ->where('pengerjaan_id',$d->id)
+                        ->where('pengerjaan_id', $d->id)
                         ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                         ->orderBy('id', 'desc')->first();
 
@@ -149,12 +152,12 @@ class ProyekController extends Controller
                     $pekerja->id = $user->id;
                     $pekerja->nama = $bio->nama;
                     $pekerja->foto = $bio->foto;
-                    $pekerja->bintang = $ulasan_pekerja?$ulasan_pekerja->bintang:null;
-                    $pekerja->deskripsi = $ulasan_pekerja?$ulasan_pekerja->deskripsi:null;
+                    $pekerja->bintang = $ulasan_pekerja ? $ulasan_pekerja->bintang : null;
+                    $pekerja->deskripsi = $ulasan_pekerja ? $ulasan_pekerja->deskripsi : null;
 
                     $Pengerjaan[$i] = $dt;
                     $Pengerjaan[$i]['pengerjaan'] = $d;
-                    $Pengerjaan[$i]['pengerjaan']->pekerja=$pekerjas;
+                    $Pengerjaan[$i]['pengerjaan']->pekerja = $pekerjas;
                     $ulasan = $Pengerjaan[$i]['pengerjaan']->ulasan = [];
                     $ulasan['ulasan_pekerja'] = $pekerja;
                     $ulasan['ulasan_klien'] = $klien;
@@ -221,7 +224,7 @@ class ProyekController extends Controller
 
                 if ($request->hasFile('thumbnail')) {
 
-                    $thumbnail =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' .$request->file('thumbnail')->getClientOriginalName();
+                    $thumbnail =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $request->file('thumbnail')->getClientOriginalName();
                     $request->file('thumbnail')->storeAs('public/proyek/thumbnail', $thumbnail);
                 } else {
                     $thumbnail = null;
@@ -232,7 +235,7 @@ class ProyekController extends Controller
                     $lampiran = [];
                     $i = 0;
                     foreach ($request->file('lampiran') as $file) {
-                        $lampiran[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' .$file->getClientOriginalName();
+                        $lampiran[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $file->getClientOriginalName();
 
                         $file->storeAs('public/proyek/lampiran',  $lampiran[$i]);
                         $i = 1 + $i;
@@ -257,32 +260,34 @@ class ProyekController extends Controller
                 return response()->json([
                     'error' => true,
 
-                        'message' =>  'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
+                    'message' =>  'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
 
                 ], 400);
             }
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
+
                     'message' => $exception->getMessage()
-                ]
+
             ], 400);
         }
     }
 
-    public function updateProyek($proyek_id, Request $request)
+    public function updateProyek(Request $request)
     {
 
 
         $user = auth('api')->user();
         $judul = preg_replace("![^a-z0-9]+!i", "-", strtolower($request->judul));
-        $before = Project::findOrFail($proyek_id);
 
         try {
+            $before = Project::query()->findOrFail($request->proyek_id);
+
 
             $cek = Project::where('user_id', $user->id)->where('permalink', $judul)
                 ->where('permalink', '!=', $before->permalink)
+                // ->where('')
                 ->first();
 
 
@@ -313,15 +318,15 @@ class ProyekController extends Controller
                 if ($request->hasFile('thumbnail')) {
                     Storage::delete('public/proyek/thumbnail/' . $before->thumbnail);
 
-                    $thumbnail = $request->file('thumbnail')->getClientOriginalName();
-                    $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $thumbnail);
+                    $thumbnail = sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $request->file('thumbnail')->getClientOriginalName();
+                    $request->file('thumbnail')->storeAs('public/proyek/thumbnail', $thumbnail);
                 } else {
-                    $thumbnail = null;
+                    $thumbnail = $before->thumbnail;
                 }
 
 
 
-                Project::create([
+                $before->update([
                     'user_id' => $user->id,
                     'subkategori_id' => $request->kategori,
                     'judul' => $request->judul,
@@ -333,21 +338,26 @@ class ProyekController extends Controller
                     // 'lampiran' => $lampiran,
                     'pribadi' => $request->jenis == 'privat' ? 1 : 0,
                 ]);
+                return response()->json([
+                    'error' => false,
+                    "data" => ['message' => 'berhasil diubah!']
+
+                ]);
             } else {
                 return response()->json([
                     'error' => true,
-                    'data' => [
-                        'message' =>  'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
-                    ]
+
+                    'message' =>  'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
+
                 ], 400);
             }
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
-            ], 400);
+
+                'message' => $exception->getMessage()
+
+            ], 500);
         }
     }
 
@@ -359,7 +369,7 @@ class ProyekController extends Controller
             $cek = Project::where('user_id', $user->id)
                 ->where('id', $proyek_id)->first();
 
-            if (!$cek) {
+            if ($cek) {
 
 
                 if ($cek->thumbnail != "") {
@@ -384,10 +394,130 @@ class ProyekController extends Controller
             } else {
                 return response()->json([
                     'error' => true,
-                    'data' => [
-                        'message' =>  'Tugas/Proyek tidak ditemukan!'
-                    ]
+
+                    'message' =>  'Tugas/Proyek tidak ditemukan!'
+
                 ], 400);
+            }
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
+    public function tambahLampiran(Request $request)
+    {
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;
+
+
+        try {
+
+            $validator = Validator::make($request->all(), [
+                'lampiran' => 'required|array',
+                'lampiran.*' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120',
+
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json([
+                    'error' => true,
+                    'data' => [
+                        'message' => $validator->errors()
+                    ]
+                ], 422);
+            }
+
+            $cek = Project::query()->where('user_id', $user->id)
+                ->where('id', $proyek_id)->first();
+
+            if ($cek) {
+                $lampiran = $cek->lampiran;
+                $lampiran_length = is_array($lampiran) ? count($lampiran) : [];
+
+                if ($request->hasFile('lampiran')) {
+
+                    $i = $lampiran_length;
+                    foreach ($request->file('lampiran') as $file) {
+                        $lampiran[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $file->getClientOriginalName();
+
+                        $file->storeAs('public/proyek/lampiran',  $lampiran[$i]);
+                        $i = 1 + $i;
+                    }
+                }
+
+                if ($lampiran !== $i) {
+                    $cek->update(['lampiran' => $lampiran]);
+                }
+
+                return response()->json([
+                    'error' => false,
+
+                    'message' =>  'Lampiran berhasil ditambah!'
+
+                ]);
+            } else {
+                return response()->json([
+                    'error' => true,
+
+                    'message' =>  'Tugas/Proyek tidak ditemukan!'
+
+                ], 400);
+            }
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ]);
+        }
+    }
+
+    public function deleteLampiran(Request $request)
+    {
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;
+        $nama = $request->nama_lampiran;
+
+
+
+        try {
+            $cek = Project::query()->where('user_id', $user->id)
+                ->where('id', $proyek_id)->first();
+
+            if ($cek) {
+                $lampiran = [];
+
+                $i = 0;
+                if (is_array($cek->lampiran)) {
+                    foreach ($cek->lampiran as $file) {
+                        if (is_numeric(strpos($file, $nama))) {
+                            Storage::delete('public/proyek/lampiran/' . $file);
+                        } else {
+                            $lampiran[] = $file;
+                        }
+                    }
+                }
+
+
+                if ($lampiran !== $i) {
+                    $cek->update(['lampiran' => $lampiran]);
+                }
+
+                return response()->json([
+                    'error' => false,
+                    'data' => [
+                        'message' =>  'Lampiran berhasil dihapus!',
+                        'lampiran' => $lampiran
+                    ]
+
+                ]);
             }
         } catch (\Exception $exception) {
             return response()->json([

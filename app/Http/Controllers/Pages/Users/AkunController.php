@@ -26,7 +26,7 @@ class AkunController extends Controller
         $bahasa = Bahasa::where('user_id', Auth::id())->orderByDesc('id')->get();
         $skill = Skill::where('user_id', Auth::id())->orderByDesc('id')->get();
         $portofolio = Portofolio::where('user_id', Auth::id())->orderByDesc('tahun')->get();
-        
+
         return view('pages.main.users.sunting-profil', compact('user', 'negara', 'provinsi',
             'bahasa', 'skill', 'portofolio','bank'));
     }
