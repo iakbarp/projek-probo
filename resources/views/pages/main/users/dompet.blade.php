@@ -226,7 +226,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
-                                <form class="form-horizontal" role="form" method="POST" id="form-password">
+                                <form class="form-horizontal" role="form" method="POST" id="form-pin">
                                     @csrf
                                     {{ method_field('put') }}
                                     <div class="card-content">
@@ -241,9 +241,9 @@
                                                 </div>
                                             </div>
 
-                                            <small style="cursor: pointer; color: #122752" id="show_password_settings">Ubah Pin
+                                            <small style="cursor: pointer; color: #122752" id="show_pin_settings">Ubah Pin
                                             </small>
-                                            <div id="password_settings" style="display: none">
+                                            <div id="pin_settings" style="display: none">
                                                 <div id="error_curr_pass" class="row form-group has-feedback">
                                                     <div class="col-md-12">
                                                         <input placeholder="Konfirmasi Password" id="check_password" type="password"
@@ -285,7 +285,7 @@
                                         </span>
                                                     </div>
 
-                                                    <div class="col-md-12" id="btn_save_password">
+                                                    <div class="col-md-12" id="btn_save_pin">
                                                         <button class="pull-right"
                                                                 style="border: 1px solid #ccc;color: #333;background: #247bff;
     text-transform: uppercase;
@@ -314,11 +314,12 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <!-- Topup -->
-                    @foreach($dompet as $row)
+                    @foreach($saldo as $row)
                     <div class="row card-data">
                         <div class="col-lg-12">
                             <div class="card" style="background-color: #2979FF;color: white">
                                 <div class="card-content">
+
                                     <div class="card-title">
                                         <b class="fa fa-wallet" style="font-size: 30px"></b>&nbsp;<small style="font-size: 30px">UNDAGI PAY</small>
                                         <hr class="mt-0">
@@ -394,13 +395,13 @@
                                 <label for="Konfirmasi Pin" class="col-sm-4 col-form-label">Konfirmasi Pin</label>
                                 <div class="col-sm-8">
                                     <b>KONFIRMASI PIN</b>
-                                    <input type="password" class="form-control" id="pin" name="Pin" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)">
+                                    <input type="password" class="form-control" id="pin" name="pin" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)">
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn2" id="submit_withdraw"><span style="color: white">Konfirmasi</span></button>
+                        <button type="button" class="btn2" id="verifikasi_pin"><span style="color: white">Konfirmasi</span></button>
                     </div>
                 </div>
             </div>
@@ -415,35 +416,41 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        @foreach($dompet as $row)
+                        <form class="form-horizontal" role="form" method="POST" id="form-withdraw"
+                              action="{{route('user.withdraw.saldo')}}">
+                            @csrf
+                            <input type="hidden" name="_method">
+                            <input type="hidden" name="id">
                             <div class="form-group row">
                                 <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Withdraw</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="withdraw" placeholder="Rp. " name="withdraw" onkeypress="return numberOnly(event, false)">
+                                    <input type="text" class="form-control" id="jumlah" placeholder="Rp. " name="jumlah" onkeypress="return numberOnly(event, false)" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="NamaBank" class="col-sm-4 col-form-label">Bank Tujuan</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="bank" name="bank" disabled>
+                                    <input type="text" class="form-control" id="bank" name="bank" value="{{$row->get_user->get_bio->get_bank->nama}}" disabled>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="Nomor Rekening" class="col-sm-4 col-form-label">Nomor Rekening</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="rekening" name="rekening" disabled>
+                                    <input type="text" class="form-control" id="rekening" name="rekening" value="{{$row->get_user->get_bio->rekening}}" disabled>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="Atas Nama" class="col-sm-4 col-form-label">Atas Nama</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="an" name="an" disabled>
+                                    <input type="text" class="form-control" id="an" name="an" value="{{$row->get_user->get_bio->an}}" disabled>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn2" id="submit_withdraw"><span style="color: white">Withdraw</span></button>
+                                <button type="button" class="btn2" id="submit_withdraw"><span style="color: white">Withdraw</span></button>
                             </div>
                         </form>
+                            @endforeach
                     </div>
                 </div>
             </div>
@@ -462,16 +469,17 @@
             $("#modal_topup").modal("show");
         });
         var $btn_withdraw = $("#btn_withdraw");
+        var $verifikasiPin = $("#verifikasi_pin");
         var $submitWithdraw = $("#submit_withdraw");
         $btn_withdraw.on('click', function () {
             $("#konfirmasi_pin").modal("show");
         });
 
-        $submitWithdraw.on('click', function () {
+        $verifikasiPin.on('click', function () {
             $("#modal_withdraw").modal("show");
         });
 
-        $("#show_password_settings").on('click', function () {
+        $("#show_pin_settings").on('click', function () {
             $(this).text(function (i, v) {
                 return v === "UBAH PIN" ? "Ubah Pin ?" : "UBAH PIN";
             });
@@ -481,11 +489,11 @@
                 this.style.color = "#7f7f7f";
             }
 
-            $("#password_settings").toggle(300);
-            if ($("#btn_save_password").attr('disabled')) {
-                $("#btn_save_password").removeAttr('disabled');
+            $("#pin_settings").toggle(300);
+            if ($("#btn_save_pin").attr('disabled')) {
+                $("#btn_save_pin").removeAttr('disabled');
             } else {
-                $("#btn_save_password").attr('disabled', 'disabled');
+                $("#btn_save_pin").attr('disabled', 'disabled');
             }
         });
 
@@ -494,14 +502,14 @@
             $('#check_password').togglePassword();
         });
 
-        $('#password + .glyphicon').on('click', function () {
+        $('#pin + .glyphicon').on('click', function () {
             $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
-            $('#password').togglePassword();
+            $('#pin').togglePassword();
         });
 
-        $('#password-confirm + .glyphicon').on('click', function () {
+        $('#pin-confirm + .glyphicon').on('click', function () {
             $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
-            $('#password-confirm').togglePassword();
+            $('#pin-confirm').togglePassword();
         });
 
         function checkPin() {
@@ -510,18 +518,20 @@
             if (new_pas != re_pas) {
                 $("#error_new_pass").addClass('has-error');
                 $(".aj_new_pass").text("Konfirmasi pin harus sama dengan pin baru Anda!").parent().show();
-                $("#btn_save_password").attr('disabled', 'disabled');
+                $("#btn_save_pin").attr('disabled', 'disabled');
             } else {
                 $("#error_new_pass").removeClass('has-error');
                 $(".aj_new_pass").text("").parent().hide();
-                $("#btn_save_password").removeAttr('disabled');
+                $("#btn_save_pin").removeAttr('disabled');
             }
         }
-        $("#form-password").on("submit", function (e) {
+
+
+        $("#form-pin").on("submit", function (e) {
             $.ajax({
                 type: 'POST',
                 url: '{{route('user.dompet.update.pengaturan')}}',
-                data: new FormData($("#form-password")[0]),
+                data: new FormData($("#form-pin")[0]),
                 contentType: false,
                 processData: false,
                 success: function (data) {
@@ -533,15 +543,15 @@
                         $(".aj_new_pass").text("").parent().hide();
 
                     } else if (data == 1) {
-                        swal('Pengaturan Akun', 'Konfirmasi kata sandi Anda tidak cocok!', 'error');
+                        swal('Pengaturan Akun', 'Konfirmasi pin Anda tidak cocok!', 'error');
                         $("#error_curr_pass").removeClass('has-error');
                         $("#error_new_pass").addClass('has-error');
                         $(".aj_pass").text("").parent().hide();
                         $(".aj_new_pass").text("Konfirmasi kata sandi Anda tidak cocok!").parent().show();
 
                     } else {
-                        swal('Pengaturan Akun', 'Kata sandi Anda berhasil diperbarui!', 'success');
-                        $("#form-password").trigger("reset");
+                        swal('Pengaturan Akun', 'Pin Anda berhasil diperbarui!', 'success');
+                        $("#form-pind").trigger("reset");
                         $("#error_curr_pass").removeClass('has-error');
                         $("#error_new_pass").removeClass('has-error');
                         $(".aj_pass").text("").parent().hide();
@@ -554,6 +564,25 @@
                 }
             });
             return false;
+        });
+
+        $submitWithdraw.on('click', function () {
+            swal({
+                title: 'Withdraw',
+                text: 'Apakah anda yakin ?',
+                icon: '{{asset('images/red-icon.png')}}',
+                dangerMode: true,
+                buttons: ["Tidak", "Ya"],
+                closeOnEsc: false,
+                closeOnClickOutside: false,
+            }).then((confirm) => {
+                if (confirm) {
+                    swal({icon: "success", buttons: false});
+                    $("#form-withdraw").attr('action', '{{route('user.withdraw.saldo')}}');
+                    // $("#form-withdraw input[name='_method']").val('POST');
+                    $("#form-withdraw").submit();
+                }
+            });
         });
     </script>
 @endpush

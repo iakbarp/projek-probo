@@ -220,13 +220,25 @@
                                         <td style="vertical-align: middle" align="center">
 {{--                                            <i class="fa fa-star" style="color: #ffc100;margin: 0 0 0 .5rem"></i>--}}
 {{--                                            <b>{{round($rating_pekerja * 2) / 2}}</b>--}}
+                                            @if($row->negoharga == NULL)
+                                                <b>Rp.{{number_format($proyek->harga,2,',','.')}}</b>
+                                            @else
                                             <b>Rp.{{number_format($row->negoharga,2,',','.')}}</b>
+                                            @endif
                                         </td>
                                         <td style="vertical-align: middle" align="center">
-                                            <b>{{$row->negowaktu}} Hari</b>
+                                            @if($row->negowaktu == NULL)
+                                                <b>{{$proyek->waktu_pengerjaan}} Hari</b>
+                                            @else
+                                                <b>{{$row->negowaktu}} Hari</b>
+                                            @endif
                                         </td>
                                         <td style="vertical-align: middle" align="center">
+                                            @if($row->task == NULL)
+                                                <b>Tidak ada task khusus</b>
+                                            @else
                                             <b>{{$row->task}}</b>
+                                            @endif
                                         </td>
                                         <td style="vertical-align: middle" align="center">
                                             <span class="label label-{{$class}}">{{$status}}</span>

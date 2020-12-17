@@ -582,12 +582,12 @@
                                                                         (kosong)
                                                                     @endif
                                                                 </li>
-                                                                <li><b>Progress Pengerjaan</b></li>
-                                                                <li>
-                                                                    <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">
-                                                                        <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>
-                                                                    </div>
-                                                                </li>
+{{--                                                                <li><b>Progress Pengerjaan</b></li>--}}
+{{--                                                                <li>--}}
+{{--                                                                    <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
+{{--                                                                        <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
+{{--                                                                    </div>--}}
+{{--                                                                </li>--}}
                                                             </ul>
                                                         </div>
                                                     </div>

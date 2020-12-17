@@ -444,6 +444,10 @@ Route::group(['prefix' => 'akun'], function () {
             'as' => 'user.dompet.update.pengaturan'
         ]);
 
+        Route::post('dompet/withdraw',[
+            'uses' => 'DompetController@withdrawSaldo',
+            'as' => 'user.withdraw.saldo'
+        ]);
     });
 
 });
