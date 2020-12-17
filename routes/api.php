@@ -104,4 +104,30 @@ Route::group(['namespace' => 'API'], function () {
         Route::group(['prefix' => 'pekerja'], function () {
         });
     });
+
+    Route::group(['prefix' => 'midtrans'], function () {
+
+        Route::get('snap', [
+            'uses' => 'MidtransController@snap',
+            'as' => 'get.midtrans.snap'
+        ]);
+
+        Route::group(['prefix' => 'callback'], function () {
+
+            /*Route::get('finish', [
+                'uses' => 'MidtransController@finishCallback',
+                'as' => 'get.midtrans-callback.finish'
+            ]);
+            Route::get('unfinish', [
+                'uses' => 'MidtransController@unfinishCallback',
+                'as' => 'get.midtrans-callback.unfinish'
+            ]);*/
+
+            Route::post('payment', [
+                'uses' => 'MidtransController@notificationCallback',
+                'as' => 'post.midtrans-callback.notification'
+            ]);
+        });
+    });
+
 });

@@ -186,6 +186,44 @@
             padding: 20px 30px;
             text-transform: none;
         }
+
+        .card-label {
+            width: 100%;
+        }
+
+        .card-label .card-title {
+            text-transform: none;
+        }
+
+        .card-rb {
+            display: none;
+        }
+
+        .card-input {
+            cursor: pointer;
+            border: 1px solid #eee;
+            -webkit-transition: all .2s ease-in-out;
+            -moz-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+            opacity: .6;
+            border-radius: 4px;
+        }
+
+        .card-input:hover {
+            border-color: #2a79ff;
+            opacity: .8;
+        }
+
+        .card-rb:checked + .card-input {
+            border-color: #2a79ff;
+            opacity: 1;
+        }
+
+        .card-input .card-title {
+            font-weight: 600 !important;
+            font-size: 15px;
+            text-transform: none !important;
+        }
     </style>
 @endpush
 @section('content')
@@ -916,7 +954,8 @@
                                             @csrf
                                             {{method_field('put')}}
                                             <input type="hidden" name="id">
-                                            <input type="hidden" name="rekening">
+                                            <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                                            <input type="hidden" name="cek" value="project">
                                             <div class="card-content">
                                                 <div class="card-title">
                                                     <small id="judul-bayar"></small>
@@ -951,7 +990,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row form-group">
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-6">
                                                             <label for="harga2" class="form-control-label">
                                                                 Harga/Budget Proyek</label>
                                                             <div class="input-group">
@@ -962,7 +1001,7 @@
                                                         <i class="fa fa-money-bill-wave-alt"></i></span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-7">
+                                                        <div class="col-md-6">
                                                             <label class="form-control-label" for="jumlah_pembayaran">
                                                                 Jumlah Pembayaran <span
                                                                     class="required">*</span></label>
@@ -978,71 +1017,68 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-12">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="486" height="134" viewBox="0 0 486 134">
-                                                                <defs>
-                                                                    <filter id="Rectangle_125" x="0" y="0" width="137" height="134" filterUnits="userSpaceOnUse">
-                                                                        <feOffset dy="3" input="SourceAlpha"/>
-                                                                        <feGaussianBlur stdDeviation="3" result="blur"/>
-                                                                        <feFlood flood-opacity="0.251"/>
-                                                                        <feComposite operator="in" in2="blur"/>
-                                                                        <feComposite in="SourceGraphic"/>
-                                                                    </filter>
-                                                                </defs>
-                                                                <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Rectangle_125)">
-                                                                    <g id="Rectangle_125-2" data-name="Rectangle 125" transform="translate(9 6)" fill="#2979ff" stroke="#707070" stroke-width="1">
-                                                                        <rect width="119" height="116" stroke="none"/>
-                                                                        <rect x="0.5" y="0.5" width="118" height="115" fill="none"/>
-                                                                    </g>
-                                                                </g>
-                                                                <image id="iconmonstr-credit-card-6-240" width="62" height="62" transform="translate(37 33)" xlink:href="data:image/png;base64,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"/>
-                                                                <text id="UNDAGI_PAY" data-name="UNDAGI PAY" transform="translate(141 37)" font-size="29" font-family="LeelawadeeUI-Bold, Leelawadee UI" font-weight="700" letter-spacing="0.01em"><tspan x="0" y="0">UNDAGI PAY</tspan></text>
-                                                                <text id="UNDAGI-PAY_merupakan_Lorem_ipsum_dolor_sit_amet_consetetur_sadipscing_elitr_sed_diam_nonumy_eirmod_tempor_invidunt_ut_labore_et_dolore_magna_aliquyam_erat_sed_diam_voluptua._At_vero_eos_et_accusam_et_justo_duo_dolores_et_ea_rebum._Stet_clita_kasd_guberg" data-name="UNDAGI-PAY merupakan Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd guberg" transform="translate(141 56)" font-size="10" font-family="ArialMT, Arial"><tspan x="0" y="9">UNDAGI-PAY merupakan Lorem ipsum dolor sit amet, consetetur sadipscing </tspan><tspan x="0" y="20">elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna </tspan><tspan x="0" y="31">aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo </tspan><tspan x="0" y="42">dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est </tspan></text>
-                                                            </svg>
-
-                                                            <div class="pm-selector">
-                                                                <div class="col-md-12">
-
+                                                        <div class="col-md-6">
+                                                            <label class="card-label mb-0" for="pay_undagi">
+                                                                <input id="pay_undagi" class="card-rb" type="radio"
+                                                                       name="payment_method" value="undagi">
+                                                                <div class="card card-input">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="media p-4">
+                                                                                <div class="media-left media-middle"
+                                                                                     style="width: 20%">
+                                                                                    <img class="media-object" alt="icon"
+                                                                                         src="{{asset('images/logo/undagi_pay.png')}}">
+                                                                                </div>
+                                                                                <div class="ml-2 media-body">
+                                                                                    <h5 class="mt-0 mb-1">
+                                                                                        <i class="fa fa-wallet mr-2"></i>UNDAGI PAY
+                                                                                    </h5>
+                                                                                    <blockquote class="mb-0"
+                                                                                                style="font-size: 14px;text-transform: none;border-color: #eee">
+                                                                                        <p align="justify">
+                                                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                                        </p>
+                                                                                    </blockquote>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <br>
-                                                                <input class="pm-radioButton" id="pm-bca" type="radio"
-                                                                       name="metode_pembayaran" value="bca">
-                                                                <label class="pm-label" for="pm-bca"
-                                                                       onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                                       style="background-image: url({{asset('images/payment/bca.png')}});"></label>
-
-                                                                <input class="pm-radioButton" id="pm-bni" type="radio"
-                                                                       name="metode_pembayaran" value="bni">
-                                                                <label class="pm-label" for="pm-bni"
-                                                                       onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                                       style="background-image: url({{asset('images/payment/bni.png')}});"></label>
-
-                                                                <input class="pm-radioButton" id="pm-bri" type="radio"
-                                                                       name="metode_pembayaran" value="bri">
-                                                                <label class="pm-label" for="pm-bri"
-                                                                       onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                                       style="background-image: url({{asset('images/payment/bri.png')}});"></label>
-
-                                                                <input class="pm-radioButton" id="pm-btn" type="radio"
-                                                                       name="metode_pembayaran" value="btn">
-                                                                <label class="pm-label" for="pm-btn"
-                                                                       onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                                       style="background-image: url({{asset('images/payment/btn.png')}});"></label>
-
-                                                                <input class="pm-radioButton" id="pm-mandiri"
-                                                                       type="radio"
-                                                                       name="metode_pembayaran" value="mandiri">
-                                                                <label class="pm-label" for="pm-mandiri"
-                                                                       onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                                       style="background-image: url({{asset('images/payment/mandiri.png')}});"></label>
-                                                            </div>
-                                                            <div id="pm-details"
-                                                                 class="alert alert-warning text-justify"
-                                                                 style="font-size: 14px;text-transform:none;display:none"></div>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="card-label mb-0" for="pay_midtrans">
+                                                                <input id="pay_midtrans" class="card-rb" type="radio"
+                                                                       name="payment_method" value="midtrans">
+                                                                <div class="card card-input">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="media p-4">
+                                                                                <div class="media-left media-middle"
+                                                                                     style="width: 20%">
+                                                                                    <img class="media-object" alt="icon"
+                                                                                         src="{{asset('images/logo/midtrans_pay.png')}}">
+                                                                                </div>
+                                                                                <div class="ml-2 media-body">
+                                                                                    <h5 class="mt-0 mb-1">
+                                                                                        <i class="fa fa-wallet mr-2"></i>MIDTRANS
+                                                                                    </h5>
+                                                                                    <blockquote class="mb-0"
+                                                                                                style="font-size: 14px;text-transform: none;border-color: #eee">
+                                                                                        <p align="justify">
+                                                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                                        </p>
+                                                                                    </blockquote>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
                                                         </div>
                                                     </div>
-                                                    <br>
-                                                    <div class="row form-group">
+                                                    <div class="row">
                                                         <div class="col-lg-12">
                                                             <button type="reset" class="btn btn-link btn-sm"
                                                                     style="border: 1px solid #ccc">
@@ -1051,20 +1087,20 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row form-group">
+                                                {{--<div class="row form-group">
                                                     <div class="col-lg-12">
                                                         <button class="btn2 btn-link btn-sm"
                                                                 style="border: 1px solid #ccc;display: block;margin-left: auto;margin-right: auto">
                                                             <span style="color: white"> <i class="fa fa-wallet mr-2"></i>Bayar Sekarang</span>
                                                         </button>
                                                     </div>
-                                                </div>
+                                                </div>--}}
                                             </div>
-{{--                                            <div class="card-read-more">--}}
-{{--                                                <button class="btn btn-link btn-block">--}}
-{{--                                                    <i class="fa fa-wallet"></i>&nbsp;BAYAR SEKARANG--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
+                                            <div class="card-read-more">
+                                                <button type="submit" class="btn btn-link btn-block" style="border: none">
+                                                    <i class="fa fa-wallet"></i>&nbsp;BAYAR SEKARANG
+                                                </button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -1250,6 +1286,8 @@
     <script src="{{asset('vendor/lightgallery/dist/js/lightgallery-all.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
+    {{--<script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_CLIENT_KEY')}}"></script>--}}
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
     <script>
         $(function () {
             var export_proyek = 'Daftar Tugas/Proyek ({{now()->format('j F Y')}})',
@@ -1592,48 +1630,81 @@
             $("#pm-details").hide();
         }
 
-        function paymentMethod(rekening) {
-            if ($("input[name=dp]").is(":checked")) {
-                $("#pay-form input[name=rekening]").val(rekening);
-                $("#pm-details").show().html(
-                    'Jumlah yang harus Anda transfer ke nomor rekening <u>' + rekening + '</u> ' +
-                    '(a/n <u>{{env('APP_NAME')}}</u>) adalah sebesar ' +
-                    '<u>Rp' + thousandSeparator(parseInt($("#jumlah_pembayaran").val().split('.').join(''))) + ',00</u>.');
-            } else {
-                $(".pm-radioButton").prop("checked", false).trigger('change');
-                $("#pm-details").hide();
-                $("#pay-form button[type=submit]").click();
-            }
-        }
-
         $("#pay-form").on('submit', function (e) {
             e.preventDefault();
-            if ($(".pm-radioButton").is(":checked")) {
-                swal({
-                    title: 'Apakah anda yakin?',
-                    text: 'Kami akan mengirimkan rincian tagihan pembayaran melalui email ' +
-                        'sesaat setelah Anda menekan tombol "Ya" berikut!',
-                    icon: 'warning',
-                    dangerMode: true,
-                    closeOnEsc: false,
-                    closeOnClickOutside: false,
-                    buttons: {
-                        cancel: "Tidak",
-                        confirm: {
-                            text: "Ya",
-                            closeModal: false,
-                        }
-                    }
-                }).then((confirm) => {
-                    if (confirm) {
-                        $(this)[0].submit();
-                    }
-                });
+            if ($(".card-rb").is(":checked")) {
+                if($("#pay_undagi").is(":checked")) {
+                    // bayar undagi
+                } else {
+                    clearTimeout(this.delay);
+                    this.delay = setTimeout(function () {
+                        $.ajax({
+                            url: '{{route('get.midtrans.snap')}}',
+                            type: "GET",
+                            data: $("#pay-form").serialize(),
+                            beforeSend: function () {
+                                $("#pay-form button[type=submit]").prop("disabled", true)
+                                    .html('LOADING&hellip; <span class="spinner-border spinner-border-sm float-right" role="status" aria-hidden="true"></span>');
+                            },
+                            complete: function () {
+                                $("#pay-form button[type=submit]").prop("disabled", false)
+                                    .html('BAYAR SEKARANG <i class="fa fa-chevron-right float-right"></i>');
+                            },
+                            success: function (data) {
+                                snap.pay(data, {
+                                    language: '{{app()->getLocale()}}',
+                                    onSuccess: function (result) {
+                                        responseMidtrans('finish', result);
+                                    },
+                                    onPending: function (result) {
+                                        responseMidtrans('unfinish', result);
+                                    },
+                                    onError: function (result) {
+                                        swal('Oops..', result.status_message, 'error');
+                                    }
+                                });
+                            },
+                            error: function () {
+                                swal('Oops..', 'Terjadi kesalahan! Silahkan, segarkan browser Anda.', 'error');
+                            }
+                        });
+                    }.bind(this), 800);
+                }
 
             } else {
                 swal('PERHATIAN!', 'Anda belum memilih metode pembayaran!', 'warning');
             }
         });
+
+        function responseMidtrans(url, result) {
+            if (result.payment_type == 'credit_card' || result.payment_type == 'bank_transfer' || result.payment_type == 'echannel') {
+                swal({
+                    title: 'Loading...',
+                    text: 'Mohon tunggu, transaksi Anda sedang diproses',
+                    icon: 'warning',
+                    buttons: false,
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    timer: 2000
+                });
+                setTimeout(function () {
+                    swal({
+                        title: "SUKSES!",
+                        text: 'Transaksi berhasil! Semoga Anda dan keluarga sehat selalu :) #dirumahaja',
+                        icon: 'success',
+                        buttons: false,
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                        timer: 3000
+                    });
+                    setTimeout(function () {
+                        location.href = '{{url()->current()}}'
+                    }, 3000);
+                }, 2000);
+            } else {
+                swal('Oops..', 'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.', 'error');
+            }
+        }
         <!-- lihat progress -->
 
         <!-- bukti pembayaran -->

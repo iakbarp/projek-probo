@@ -11,19 +11,22 @@ use Illuminate\Queue\SerializesModels;
 class PembayaranProyekMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $data, $sisa, $bank, $rekening;
+
+    public $code, $data, $payment, $filename, $instruction, $pembayaran, $sisa_pembayaran;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $sisa, $bank, $rekening)
+    public function __construct($code, $data, $payment, $instruction, $pembayaran, $sisa_pembayaran)
     {
+        $this->code = $code;
         $this->data = $data;
-        $this->sisa = $sisa;
-        $this->bank = $bank;
-        $this->rekening = $rekening;
+        $this->payment = $payment;
+        $this->instruction = $instruction;
+        $this->pembayaran = $pembayaran;
+        $this->sisa_pembayaran = $sisa_pembayaran;
     }
 
     /**
@@ -34,13 +37,24 @@ class PembayaranProyekMail extends Mailable
     public function build()
     {
         $data = $this->data;
-        $sisa = $this->sisa;
-        $bank = $this->bank;
-        $rekening = $this->rekening;
+        $payment = $this->payment;
+        $code = $this->code;
+        $pembayaran = $this->pembayaran;
+        $sisa_pembayaran = $this->sisa_pembayaran;
         $invoice = '#INV/' . Carbon::parse($this->data->created_at)->format('Ymd') . '/' . $this->data->id;
+        if ($data->selesai == false && $data->bukti_pembayaran == null) {
+            $subject = 'Menunggu Pembayaran ' . strtoupper(str_replace('_', ' ', $payment['type'])) .
+                ' #' . $code;
+        } else {
+            $subject = 'Checkout Pesanan dengan ID Pembayaran #' . $code . ' Berhasil Dikonfirmasi pada ' .
+                Carbon::parse($data->created_at)->formatLocalized('%d %B %Y – %H:%M');
+        }
 
-        return $this->subject('Menunggu Pembayaran ATM/Transfer Bank ' . $this->bank . ' untuk Pesanan ' . $invoice)
-            ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
-            ->view('emails.users.pembayaran-proyek', compact('data', 'sisa', 'bank', 'rekening', 'invoice'));
+        if (!is_null($this->instruction)) {
+            $this->attach(public_path('storage/users/invoice/' . $data->user_id . '/' . $this->instruction));
+        }
+
+        return $this->from(env('MAIL_USERNAME'), env('APP_TITLE'))->subject($subject)
+            ->view('emails.users.invoice', compact('code', 'data', 'payment', 'pembayaran', 'sisa_pembayaran', 'invoice'));
     }
 }
