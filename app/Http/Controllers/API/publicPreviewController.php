@@ -26,7 +26,7 @@ class publicPreviewController extends Controller
             $user = auth('api')->user();
             $its_me = true;
 
-            if ($user->id != $id) {
+            if ($user->id != $id && $id) {
                 $its_me = false;
                 $user = User::findOrFail($id);
             }
@@ -71,9 +71,126 @@ class publicPreviewController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
+    public function ulasan(Request $request)
+    {
+        try {
+            $id = $request->id;
+            $user = auth('api')->user();
+            $its_me = true;
+
+            if ($user->id != $id && $id) {
+                $its_me = false;
+                $user = User::findOrFail($id);
+            }
+
+            $bio = $this->getBio($user);
+
+            $ulasan_klien = Review::whereHas('get_project', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+                ->leftJoin('users as u', function ($joins) {
+                    $joins->on('ulasan_klien.user_id', '=', 'u.id');
+                })
+                ->leftJoin('bio as b', function ($joins) {
+                    $joins->on('ulasan_klien.user_id', '=', 'b.id');
+                })
+                ->select(
+                    "ulasan_klien.id",
+                    DB::raw("u.name as nama"),
+                    "b.foto",
+                    "ulasan_klien.deskripsi",
+                    "ulasan_klien.bintang",
+                )
+                ->get();
+
+            $ulasan_klien = $this->imgCheck($ulasan_klien->toArray(), 'foto', 'storage/users/foto/');
+
+            $ulasan_pekerja = ReviewWorker::whereHas('get_pengerjaan', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+                ->leftJoin('users as u', function ($joins) {
+                    $joins->on('ulasan_pekerja.user_id', '=', 'u.id');
+                })
+                ->leftJoin('bio as b', function ($joins) {
+                    $joins->on('ulasan_pekerja.user_id', '=', 'b.id');
+                })
+                ->select(
+                    "ulasan_pekerja.id",
+                    DB::raw("u.name as nama"),
+                    "b.foto",
+                    "ulasan_pekerja.deskripsi",
+                    "ulasan_pekerja.bintang",
+                )
+                ->get();
+            $ulasan_pekerja = $this->imgCheck($ulasan_pekerja->toArray(), 'foto', 'storage/users/foto/');
+
+
+
+
+
+
+
+            return response()->json([
+                'error' => false,
                 'data' => [
-                    'message' => $exception->getMessage()
+                    'user' => $bio,
+                    'ulasan_klien' => $ulasan_klien,
+                    'ulasan_pekerja' => $ulasan_pekerja,
+                    'its_me' => $its_me,
                 ]
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
+    public function portfolio(Request $request)
+    {
+        try {
+            $id = $request->id;
+            $user = auth('api')->user();
+            $its_me = true;
+
+            if ($user->id != $id && $id) {
+                $its_me = false;
+                $user = User::findOrFail($id);
+            }
+
+            $bio = $this->getBio($user);
+
+            $port = Portofolio::where('user_id', $user->id)->get();
+            // $port=$this->imgCheck($port->toArray(), 'foto', 'storage/users/portfolio/', 1);
+
+            $port = $this->imgCheck($port->toArray(), 'foto', 'storage/users/portofolio/');
+
+
+
+            return response()->json([
+                'error' => false,
+                'data' => [
+                    'user' => $bio,
+                    'portfolio' => $port,
+                    'its_me' => $its_me,
+                ]
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -85,7 +202,7 @@ class publicPreviewController extends Controller
             $user = auth('api')->user();
             $its_me = true;
 
-            if ($user->id != $id) {
+            if ($user->id != $id && $id) {
                 $its_me = false;
                 $user = User::findOrFail($id);
             }
@@ -159,9 +276,9 @@ class publicPreviewController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -173,14 +290,14 @@ class publicPreviewController extends Controller
             $user = auth('api')->user();
             $its_me = true;
 
-            if ($user->id != $id) {
+            if ($user->id != $id && $id) {
                 $its_me = false;
                 $user = User::findOrFail($id);
             }
 
             $bio = $this->getBio($user);
             $layanan = Services::where('user_id', $user->id)
-                ->orderBy('project.updated_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->get();
 
             $layanan = $this->get_kategori_img($layanan);
@@ -198,9 +315,9 @@ class publicPreviewController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
-                'data' => [
-                    'message' => $exception->getMessage()
-                ]
+
+                'message' => $exception->getMessage()
+
             ], 400);
         }
     }
@@ -211,10 +328,10 @@ class publicPreviewController extends Controller
 
         $bio = Bio::query()
             ->leftJoin('kota as kt', 'kt.id', '=', 'bio.kota_id')
-            ->leftJoin('service as s', 's.user_id', '=', 'bio.user_id')
             ->where('bio.user_id', $user->id)->select(
-                DB::raw('count(s.id) as jumlah_layanan'),
+
                 'alamat',
+                'foto',
                 'tgl_lahir',
                 'jenis_kelamin',
                 'kewarganegaraan',
@@ -224,8 +341,10 @@ class publicPreviewController extends Controller
                 'bio.created_at',
                 'bio.updated_at'
             )
-            ->groupBy('bio.user_id', 's.user_id', 'kt.id')
+            ->groupBy('bio.user_id',  'kt.id')
             ->first();
+        $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/', 0);
+
         $bio->nama = $user->name;
         $bio->id = $user->id;
         $bio->email = $user->email;

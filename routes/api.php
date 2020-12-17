@@ -84,6 +84,8 @@ Route::group(['namespace' => 'API'], function () {
             Route::get('/', 'publicPreviewController@get');
             Route::get('/proyek', 'publicPreviewController@proyek');
             Route::get('/layanan', 'publicPreviewController@layanan');
+            Route::get('/portfolio', 'publicPreviewController@portfolio');
+            Route::get('/ulasan', 'publicPreviewController@ulasan');
 
         });
 
