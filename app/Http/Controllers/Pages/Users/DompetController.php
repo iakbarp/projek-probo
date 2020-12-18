@@ -90,7 +90,7 @@ class DompetController extends Controller
 
             Withdraw::create([
                 'user_id' => Auth::id(),
-                'jumlah' => $request->jumlah,
+                'jumlah' => str_replace('.', '',$request->jumlah),
                 'konfirmasi' => false,
             ]);
 

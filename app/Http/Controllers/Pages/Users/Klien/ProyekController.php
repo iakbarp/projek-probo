@@ -10,6 +10,7 @@ use App\Model\Pembayaran;
 use App\Model\Pengerjaan;
 use App\Model\Project;
 use App\Model\ReviewWorker;
+use App\Model\Saldo;
 use App\Support\Role;
 use App\User;
 use Illuminate\Http\Request;
@@ -37,9 +38,10 @@ class ProyekController extends Controller
         $req_data_url = $request->data_url;
         $req_harga = $request->harga;
         $req_judul = $request->judul;
+        $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
 
         return view('pages.main.users.klien.proyek', compact('user', 'kategori', 'proyek', 'pengerjaan',
-            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul'));
+            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo'));
     }
 
     public function tambahProyek(Request $request)
@@ -274,6 +276,7 @@ class ProyekController extends Controller
                     'proyek_id' => $pengerjaan->proyek_id,
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
+                    'bukti_pembayaran' => 'bukti.jpg'
                 ]);
             } else {
                 $pembayaran = Pembayaran::where('proyek_id', $pengerjaan->proyek_id)->first();

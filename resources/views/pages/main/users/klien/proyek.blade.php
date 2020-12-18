@@ -468,8 +468,8 @@
                                                     </div>
                                                     <hr>
                                                     @if($row->pribadi == false)
-                                                        <a class="btn2 btn-link btn-sm btn-block" data-toggle="tooltip"
-                                                           title="Lihat Bidder" style="text-transform: none;align-content: center"
+                                                        <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                           title="Lihat Bidder" style="text-transform: none;align-content: center;background: #2879fe"
                                                            href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
                                                             <span style="color: white">{{$bid}}&nbsp;<i class="fa fa-paper-plane"></i> </span>
                                                         </a>
@@ -1018,6 +1018,7 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-6">
+                                                            @foreach($saldo as $row)
                                                             <label class="card-label mb-0" for="pay_undagi">
                                                                 <input id="pay_undagi" class="card-rb" type="radio"
                                                                        name="payment_method" value="undagi">
@@ -1033,6 +1034,7 @@
                                                                                 <div class="ml-2 media-body">
                                                                                     <h5 class="mt-0 mb-1">
                                                                                         <i class="fa fa-wallet mr-2"></i>UNDAGI PAY
+                                                                                        <small class="pull-right">Saldo : {{number_format($row->saldo,2,',','.')}}</small>
                                                                                     </h5>
                                                                                     <blockquote class="mb-0"
                                                                                                 style="font-size: 14px;text-transform: none;border-color: #eee">
@@ -1046,6 +1048,7 @@
                                                                     </div>
                                                                 </div>
                                                             </label>
+                                                                @endforeach
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="card-label mb-0" for="pay_midtrans">
@@ -1544,7 +1547,7 @@
             swal({
                 title: 'Hapus Tugas/Proyek',
                 text: 'Apakah Anda yakin akan menghapus tugas/proyek "' + judul + '"? Anda tidak dapat mengembalikannya!',
-                icon: 'warning',
+                icon: '{{asset('images/red-icon.png')}}',
                 dangerMode: true,
                 buttons: ["Tidak", "Ya"],
                 closeOnEsc: false,
@@ -1635,6 +1638,26 @@
             if ($(".card-rb").is(":checked")) {
                 if($("#pay_undagi").is(":checked")) {
                     // bayar undagi
+                    swal({
+                        title: 'Apakah anda yakin?',
+                        text: 'Kami akan mengirimkan rincian tagihan pembayaran melalui email ' +
+                            'sesaat setelah Anda menekan tombol "Ya" berikut!',
+                        icon: '{{asset('images/red-icon.png')}}',
+                        dangerMode: true,
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                        buttons: {
+                            cancel: "Tidak",
+                            confirm: {
+                                text: "Ya",
+                                closeModal: false,
+                            }
+                        }
+                    }).then((confirm) => {
+                        if (confirm) {
+                            $(this)[0].submit();
+                        }
+                    });
                 } else {
                     clearTimeout(this.delay);
                     this.delay = setTimeout(function () {

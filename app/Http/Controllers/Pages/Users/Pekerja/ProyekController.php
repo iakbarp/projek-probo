@@ -44,6 +44,8 @@ class ProyekController extends Controller
             Pengerjaan::create([
                 'user_id' => $undangan->user_id,
                 'proyek_id' => $undangan->proyek_id,
+                'negoharga' => $undangan->get_project->harga,
+                'negowaktu' => $undangan->get_project->waktu_pengerjaan,
             ]);
             $jenis = 'privat';
 
@@ -51,6 +53,8 @@ class ProyekController extends Controller
             Bid::create([
                 'user_id' => $undangan->user_id,
                 'proyek_id' => $undangan->proyek_id,
+                'negoharga' => $undangan->get_project->harga,
+                'negowaktu' => $undangan->get_project->waktu_pengerjaan,
             ]);
             $jenis = 'publik';
         }

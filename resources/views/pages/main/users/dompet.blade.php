@@ -247,7 +247,7 @@
                                                 <div id="error_curr_pass" class="row form-group has-feedback">
                                                     <div class="col-md-12">
                                                         <input placeholder="Konfirmasi Password" id="check_password" type="password"
-                                                               class="form-control" name="password" minlength="6" maxlength="6" required
+                                                               class="form-control" name="password" required
                                                                autofocus>
                                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"
                                                               style="pointer-events: all;cursor: pointer"></span>
@@ -335,7 +335,7 @@
                                         </table>
                                     </div>
                                     <div style="margin-right: 5em">
-                                    <button id="" class="btn" type="button"
+                                    <button id="btn_topup" class="btn" type="button"
                                             style="padding: 10px 40px;border-radius: 5px"
                                             title="Topup">
                                         <i style="color:#2979FF;" class="fa fa-plus-circle mr-2"></i><b style="color: #2979FF">&nbsp;TOPUP</b></button>
@@ -354,7 +354,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-title">
-                                        <small>Transaksi</small>
+                                        <small>Transaksi Terakhir</small>
                                         <hr class="mt-0">
                                         <table>
                                             <tr>
@@ -425,7 +425,7 @@
                             <div class="form-group row">
                                 <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Withdraw</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="jumlah" placeholder="Rp. " name="jumlah" onkeypress="return numberOnly(event, false)" required>
+                                    <input type="text" class="form-control rupiah" id="jumlah" placeholder="Rp. " name="jumlah" onkeypress="return numberOnly(event, false)" maxlength="10" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -455,6 +455,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal" tabindex="-1" role="dialog" id="modal_topup">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img src="{{asset('images/logo/undagi_logo.png')}}" width="120">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @foreach($dompet as $row)
+                            <form class="form-horizontal" role="form" method="POST" id="form-topup"
+                                  action="{{route('user.withdraw.saldo')}}">
+                                @csrf
+                                <input type="hidden" name="_method">
+                                <input type="hidden" name="id">
+                                <div class="form-group row">
+                                    <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Topup</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control rupiah" id="jumlah" placeholder="Rp. " name="jumlah" onkeypress="return numberOnly(event, false)" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn2" id=""><span style="color: white">Checkout</span></button>
+                                </div>
+                            </form>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 @endsection
 @push('scripts')
@@ -469,10 +500,15 @@
             $("#modal_topup").modal("show");
         });
         var $btn_withdraw = $("#btn_withdraw");
+        var $btn_topup =$("#btn_topup");
         var $verifikasiPin = $("#verifikasi_pin");
         var $submitWithdraw = $("#submit_withdraw");
         $btn_withdraw.on('click', function () {
             $("#konfirmasi_pin").modal("show");
+        });
+
+        $btn_topup.on('click', function () {
+            $("#modal_topup").modal("show");
         });
 
         $verifikasiPin.on('click', function () {
