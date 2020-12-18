@@ -12,6 +12,7 @@ use App\Model\Portofolio;
 use App\Model\Project;
 use App\Model\Review;
 use App\Model\ReviewWorker;
+use App\Model\Saldo;
 use App\Model\Services;
 use App\Model\Skill;
 use App\Model\Bid;
@@ -191,6 +192,11 @@ class User extends Authenticatable implements JWTSubject
     public function get_undangan()
     {
         return $this->hasMany(Undangan::class, 'user_id');
+    }
+
+    public function get_saldo()
+    {
+        return $this->hasMany(Saldo::class, 'user_id');
     }
 
     public function get_pengerjaan_layanan()

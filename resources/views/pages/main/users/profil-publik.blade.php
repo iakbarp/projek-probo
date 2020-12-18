@@ -94,11 +94,11 @@
                                                 <button id="btn_hire" class="btn2" type="button"
                                                         data-toggle="tooltip" style="margin-right: .5em;padding: 10px 40px;border-radius: 15px"
                                                         title="Pekerjakan {{$user->name}} untuk menyelesaikan tugas/proyek privat Anda!">
-                                                    <b style="color: white">UNDANG SAYA&nbsp;</b><i style="color:white;" class="fa fa-envelope mr-2"></i></button>
+                                                    <b style="color: white">PILIH SAYA&nbsp;</b><i style="color:white;" class="fa fa-paper-plane mr-2"></i></button>
                                                 <button id="btn_invite_to_bid" class="btn2" type="button"
                                                         data-toggle="tooltip" style="padding: 10px 40px;border-radius: 15px"
                                                         title="Ajak {{$user->name}} ke salah satu bid tugas/proyek Anda!">
-                                                    <b style="color: white">PILIH SAYA&nbsp;</b><i style="color:white;" class="fa fa-paper-plane mr-2"></i></button>
+                                                    <b style="color: white">UNDANG SAYA&nbsp;</b><i style="color:white;" class="fa fa-envelope mr-2"></i></button>
                                             </span>
                     </div>
                 </div>

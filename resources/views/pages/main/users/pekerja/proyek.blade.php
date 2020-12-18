@@ -1268,7 +1268,7 @@
                 icon: '{{asset('images/red-icon.png')}}',
                 dangerMode: true,
                 buttons: {
-                    // cancel: 'Batal',
+                    cancel: 'Batal',
                     reject: {
                         text: 'Tolak',
                         value: 'tolak',

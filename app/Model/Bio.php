@@ -20,4 +20,10 @@ class Bio extends Model
     {
         return $this->belongsTo(Kota::class, 'kota_id');
     }
+
+    public function get_bank()
+    {
+        return $this->belongsTo(Bank::class, 'bank');
+
+    }
 }

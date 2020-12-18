@@ -185,6 +185,44 @@
             padding: 20px 30px;
             text-transform: none;
         }
+
+        .card-label {
+            width: 100%;
+        }
+
+        .card-label .card-title {
+            text-transform: none;
+        }
+
+        .card-rb {
+            display: none;
+        }
+
+        .card-input {
+            cursor: pointer;
+            border: 1px solid #eee;
+            -webkit-transition: all .2s ease-in-out;
+            -moz-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+            opacity: .6;
+            border-radius: 4px;
+        }
+
+        .card-input:hover {
+            border-color: #2a79ff;
+            opacity: .8;
+        }
+
+        .card-rb:checked + .card-input {
+            border-color: #2a79ff;
+            opacity: 1;
+        }
+
+        .card-input .card-title {
+            font-weight: 600 !important;
+            font-size: 15px;
+            text-transform: none !important;
+        }
     </style>
 @endpush
 @section('content')
@@ -415,12 +453,12 @@
                                                             (kosong)
                                                         @endif
                                                     </li>
-                                                    <li><b>Progress Pengerjaan</b></li>
-                                                    <li>
-                                                        <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">
-                                                            <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>
-                                                        </div>
-                                                    </li>
+{{--                                                    <li><b>Progress Pengerjaan</b></li>--}}
+{{--                                                    <li>--}}
+{{--                                                        <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
+{{--                                                            <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </li>--}}
 
                                                 </ul>
                                             </div>
@@ -619,42 +657,65 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="payment_methods" class="control-label">
-                                                    Metode Pembayaran <span class="required">*</span></label>
-                                                <div class="pm-selector">
-                                                    <input class="pm-radioButton" id="pm-bca" type="radio"
-                                                           name="metode_pembayaran" value="bca">
-                                                    <label class="pm-label" for="pm-bca"
-                                                           onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                           style="background-image: url({{asset('images/payment/bca.png')}});"></label>
-
-                                                    <input class="pm-radioButton" id="pm-bni" type="radio"
-                                                           name="metode_pembayaran" value="bni">
-                                                    <label class="pm-label" for="pm-bni"
-                                                           onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                           style="background-image: url({{asset('images/payment/bni.png')}});"></label>
-
-                                                    <input class="pm-radioButton" id="pm-bri" type="radio"
-                                                           name="metode_pembayaran" value="bri">
-                                                    <label class="pm-label" for="pm-bri"
-                                                           onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                           style="background-image: url({{asset('images/payment/bri.png')}});"></label>
-
-                                                    <input class="pm-radioButton" id="pm-btn" type="radio"
-                                                           name="metode_pembayaran" value="btn">
-                                                    <label class="pm-label" for="pm-btn"
-                                                           onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                           style="background-image: url({{asset('images/payment/btn.png')}});"></label>
-
-                                                    <input class="pm-radioButton" id="pm-mandiri" type="radio"
-                                                           name="metode_pembayaran" value="mandiri">
-                                                    <label class="pm-label" for="pm-mandiri"
-                                                           onclick="paymentMethod('{{\Faker\Factory::create()->bankAccountNumber}}')"
-                                                           style="background-image: url({{asset('images/payment/mandiri.png')}});"></label>
-                                                </div>
-                                                <div id="pm-details" class="alert alert-warning text-justify"
-                                                     style="font-size: 14px;text-transform:none;display:none"></div>
+                                            <div class="col-md-6">
+                                                <label class="card-label mb-0" for="pay_undagi">
+                                                    <input id="pay_undagi" class="card-rb" type="radio"
+                                                           name="payment_method" value="undagi">
+                                                    <div class="card card-input">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="media p-4">
+                                                                    <div class="media-left media-middle"
+                                                                         style="width: 20%">
+                                                                        <img class="media-object" alt="icon"
+                                                                             src="{{asset('images/logo/undagi_pay.png')}}">
+                                                                    </div>
+                                                                    <div class="ml-2 media-body">
+                                                                        <h5 class="mt-0 mb-1">
+                                                                            <i class="fa fa-wallet mr-2"></i>UNDAGI PAY
+                                                                        </h5>
+                                                                        <blockquote class="mb-0"
+                                                                                    style="font-size: 14px;text-transform: none;border-color: #eee">
+                                                                            <p align="justify">
+                                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                            </p>
+                                                                        </blockquote>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="card-label mb-0" for="pay_midtrans">
+                                                    <input id="pay_midtrans" class="card-rb" type="radio"
+                                                           name="payment_method" value="midtrans">
+                                                    <div class="card card-input">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="media p-4">
+                                                                    <div class="media-left media-middle"
+                                                                         style="width: 20%">
+                                                                        <img class="media-object" alt="icon"
+                                                                             src="{{asset('images/logo/midtrans_pay.png')}}">
+                                                                    </div>
+                                                                    <div class="ml-2 media-body">
+                                                                        <h5 class="mt-0 mb-1">
+                                                                            <i class="fa fa-wallet mr-2"></i>MIDTRANS
+                                                                        </h5>
+                                                                        <blockquote class="mb-0"
+                                                                                    style="font-size: 14px;text-transform: none;border-color: #eee">
+                                                                            <p align="justify">
+                                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                            </p>
+                                                                        </blockquote>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
                                             </div>
                                         </div>
                                         <br>
@@ -667,20 +728,20 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="row form-group">
-                                            <div class="col-lg-12">
-                                                <button class="btn2 btn-sm" style="margin:auto; display:block;">
-                                                    <i style="color: white" class="fa fa-wallet"></i><small style="color: white">&nbsp;BAYAR SEKARANG</small>
-                                                </button>
-                                            </div>
-                                        </div>
+{{--                                        <div class="row form-group">--}}
+{{--                                            <div class="col-lg-12">--}}
+{{--                                                <button class="btn2 btn-sm" style="margin:auto; display:block;">--}}
+{{--                                                    <i style="color: white" class="fa fa-wallet"></i><small style="color: white">&nbsp;BAYAR SEKARANG</small>--}}
+{{--                                                </button>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
-{{--                                <div class="card-read-more">--}}
-{{--                                    <button class="btn btn-link btn-block">--}}
-{{--                                        <i class="fa fa-wallet"></i>&nbsp;BAYAR SEKARANG--}}
-{{--                                    </button>--}}
-{{--                                </div>--}}
+                                <div class="card-read-more">
+                                    <button type="submit" class="btn btn-link btn-block" style="border: none">
+                                        <i class="fa fa-wallet"></i>&nbsp;BAYAR SEKARANG
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -716,13 +777,13 @@
                                                         <div id="response" class="hidden">
                                                             <div id="messages"></div>
                                                         </div>
-                                                        <div id="progress-upload">
-                                                            <div
-                                                                class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"
-                                                                role="progressbar" aria-valuenow="0"
-                                                                aria-valuemin="0" aria-valuemax="100">
-                                                            </div>
-                                                        </div>
+{{--                                                        <div id="progress-upload">--}}
+{{--                                                            <div--}}
+{{--                                                                class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"--}}
+{{--                                                                role="progressbar" aria-valuenow="0"--}}
+{{--                                                                aria-valuemin="0" aria-valuemax="100">--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
                                                     </label>
                                                 </div>
                                             </div>
@@ -1045,32 +1106,79 @@
 
         $("#pay-form").on('submit', function (e) {
             e.preventDefault();
-            if ($(".pm-radioButton").is(":checked")) {
-                swal({
-                    title: 'Apakah anda yakin?',
-                    text: 'Kami akan mengirimkan rincian tagihan pembayaran melalui email ' +
-                        'sesaat setelah Anda menekan tombol "Ya" berikut!',
-                    icon: 'warning',
-                    dangerMode: true,
-                    closeOnEsc: false,
-                    closeOnClickOutside: false,
-                    buttons: {
-                        cancel: "Tidak",
-                        confirm: {
-                            text: "Ya",
-                            closeModal: false,
-                        }
-                    }
-                }).then((confirm) => {
-                    if (confirm) {
-                        $(this)[0].submit();
-                    }
-                });
+            if ($(".card-rb").is(":checked")) {
+                if($("#pay_undagi").is(":checked")) {
+                    // bayar undagi
+                } else {
+                    clearTimeout(this.delay);
+                    this.delay = setTimeout(function () {
+                        $.ajax({
+                            url: '{{route('get.midtrans.snap')}}',
+                            type: "GET",
+                            data: $("#pay-form").serialize(),
+                            beforeSend: function () {
+                                $("#pay-form button[type=submit]").prop("disabled", true)
+                                    .html('LOADING&hellip; <span class="spinner-border spinner-border-sm float-right" role="status" aria-hidden="true"></span>');
+                            },
+                            complete: function () {
+                                $("#pay-form button[type=submit]").prop("disabled", false)
+                                    .html('BAYAR SEKARANG <i class="fa fa-chevron-right float-right"></i>');
+                            },
+                            success: function (data) {
+                                snap.pay(data, {
+                                    language: '{{app()->getLocale()}}',
+                                    onSuccess: function (result) {
+                                        responseMidtrans('finish', result);
+                                    },
+                                    onPending: function (result) {
+                                        responseMidtrans('unfinish', result);
+                                    },
+                                    onError: function (result) {
+                                        swal('Oops..', result.status_message, 'error');
+                                    }
+                                });
+                            },
+                            error: function () {
+                                swal('Oops..', 'Terjadi kesalahan! Silahkan, segarkan browser Anda.', 'error');
+                            }
+                        });
+                    }.bind(this), 800);
+                }
 
             } else {
                 swal('PERHATIAN!', 'Anda belum memilih metode pembayaran!', 'warning');
             }
         });
+
+        function responseMidtrans(url, result) {
+            if (result.payment_type == 'credit_card' || result.payment_type == 'bank_transfer' || result.payment_type == 'echannel') {
+                swal({
+                    title: 'Loading...',
+                    text: 'Mohon tunggu, transaksi Anda sedang diproses',
+                    icon: 'warning',
+                    buttons: false,
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    timer: 2000
+                });
+                setTimeout(function () {
+                    swal({
+                        title: "SUKSES!",
+                        text: 'Transaksi berhasil! Semoga Anda dan keluarga sehat selalu :) #dirumahaja',
+                        icon: 'success',
+                        buttons: false,
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                        timer: 3000
+                    });
+                    setTimeout(function () {
+                        location.href = '{{url()->current()}}'
+                    }, 3000);
+                }, 2000);
+            } else {
+                swal('Oops..', 'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.', 'error');
+            }
+        }
 
         <!-- bukti pembayaran -->
         function buktiPembayaran(id, invoice, url, data_url, harga) {

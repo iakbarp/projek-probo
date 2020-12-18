@@ -10,10 +10,12 @@ use App\Model\Portofolio;
 use App\Model\Project;
 use App\Model\Review;
 use App\Model\ReviewWorker;
+use App\Model\Saldo;
 use App\Model\Services;
 use App\Model\Skill;
 use App\Model\UlasanService;
 use App\Model\Undangan;
+use App\Model\Withdraw;
 use App\Support\Role;
 use App\User;
 use Highlight\Mode;
@@ -56,62 +58,47 @@ class DompetController extends Controller
         $auth_proyek = Project::where('user_id', Auth::id())->where('pribadi', false)->doesntHave('get_pengerjaan')->get();
 
         $dompet = Dompet::where('user_id', $user->id)->orderByDesc('id')->get();
+        $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
 
         return view('pages.main.users.dompet', compact('user', 'total_user', 'bahasa', 'skill',
             'proyek', 'layanan', 'portofolio', 'ulasan_klien', 'rating_klien', 'ulasan_pekerja', 'rating_pekerja',
-            'kategori', 'auth_proyek','dompet'));
+            'kategori', 'auth_proyek','dompet','saldo'));
     }
 
     public function updatePengaturan(Request $request)
     {
         $user = User::findOrFail(Auth::id());
+        $dompet = Dompet::where('user_id', $user->id);
 
-        if ($request->hasFile('foto')) {
-            $this->validate($request, ['foto' => 'image|mimes:jpg,jpeg,gif,png|max:2048']);
-
-            $name = $request->file('foto')->getClientOriginalName();
-
-            if ($user->get_bio->foto != '') {
-                Storage::delete('public/users/foto/' . $user->get_bio->foto);
-            }
-
-            if ($request->file('foto')->isValid()) {
-                $request->foto->storeAs('public/users/foto', $name);
-                $user->get_bio->update(['foto' => $name]);
-                return asset('storage/users/foto/' . $name);
-            }
-
-        } else {
-            if ($request->has('username')) {
-                $check = User::where('username', $request->username)->first();
-
-                if (!$check || $request->username == Auth::user()->username) {
-                    $user->update(['username' => $request->username]);
-                    return $user->username;
-                } else {
-                    return 0;
-                }
-
-            } else {
                 if (!Hash::check($request->password, $user->password)) {
                     return 0;
                 } else {
                     if ($request->new_pin != $request->pin_confirmation) {
                         return 1;
                     } else {
-                        $user->update(['pin' => bcrypt($request->new_pin)]);
+                        $dompet->update(['pin' => bcrypt($request->new_pin)]);
                         return 2;
                     }
                 }
-            }
-        }
     }
 
-//    public function dompetUser()
-//    {
-//        $user = Auth::user();
-//        $dompet = Dompet::where('user_id', $user->id)->orderByDesc('id')->get();
-//
-//        return view('pages.main.users.dompet', compact('user', 'dompet'));
-//    }
+    public function withdrawSaldo(Request $request)
+    {
+        try {
+            $user = User::findOrFail(Auth::id());
+            $dompet = Dompet::where('user_id', $user->id);
+
+            Withdraw::create([
+                'user_id' => Auth::id(),
+                'jumlah' => str_replace('.', '',$request->jumlah),
+                'konfirmasi' => false,
+            ]);
+
+            return back()->with('withdraw', 'Withdraw sebesar [' . $request->jumlah . '] berhasil diajukan!');
+        } catch (\Exception $exception){
+            dd($exception->getMessage());
+        }
+
+    }
+
 }
