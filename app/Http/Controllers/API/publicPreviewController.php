@@ -12,6 +12,7 @@ use App\Model\ReviewWorker;
 use App\Model\Services;
 use App\Model\Skill;
 use App\Model\SubKategori;
+use App\Model\UlasanService;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,20 @@ class publicPreviewController extends Controller
             $ulasan_pekerja = ReviewWorker::whereHas('get_pengerjaan', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             })->get()->count();
+            $ulasan_service = UlasanService::query()
+
+                ->join('pengerjaan_layanan as pl', function ($joins) {
+                    $joins->on('ulasan_service.pengerjaan_layanan_id', '=', 'pl.id');
+                })
+                ->join('service as sc', function ($joins) use ($user) {
+                    $joins->on('sc.id', '=', 'pl.service_id');
+                    $joins->on('sc.user_id', '=', DB::raw($user->id));
+                })
+                ->select(
+                    "ulasan_service.id",
+
+                )
+                ->get()->count();
 
 
 
@@ -64,7 +79,7 @@ class publicPreviewController extends Controller
                     'jumlah_layanan' => $layanan,
                     'jumlah_proyek' => $proyek,
                     'jumlah_portfolio' => $port,
-                    'jumlah_ulasan' => $ulasan_pekerja + $ulasan_klien,
+                    'jumlah_ulasan' => $ulasan_pekerja + $ulasan_klien + $ulasan_service,
                     'its_me' => $its_me,
                 ]
             ]);
@@ -104,13 +119,18 @@ class publicPreviewController extends Controller
                 ->select(
                     "ulasan_klien.id",
                     DB::raw("u.name as nama"),
+                    DB::raw("'Klien' as ulasan"),
+
                     "b.foto",
                     "ulasan_klien.deskripsi",
                     "ulasan_klien.bintang",
+                    "ulasan_klien.created_at",
+
                 )
                 ->get();
 
             $ulasan_klien = $this->imgCheck($ulasan_klien->toArray(), 'foto', 'storage/users/foto/');
+            $ulasan_klien = collect($ulasan_klien);
 
             $ulasan_pekerja = ReviewWorker::whereHas('get_pengerjaan', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
@@ -124,25 +144,59 @@ class publicPreviewController extends Controller
                 ->select(
                     "ulasan_pekerja.id",
                     DB::raw("u.name as nama"),
+                    DB::raw("'Pekerja' as ulasan"),
                     "b.foto",
                     "ulasan_pekerja.deskripsi",
                     "ulasan_pekerja.bintang",
+                    "ulasan_pekerja.created_at",
+
                 )
                 ->get();
             $ulasan_pekerja = $this->imgCheck($ulasan_pekerja->toArray(), 'foto', 'storage/users/foto/');
+            $ulasan_pekerja = collect($ulasan_pekerja);
+            $ulasan_service = UlasanService::query()
+                ->leftJoin('users as u', function ($joins) {
+                    $joins->on('ulasan_service.user_id', '=', 'u.id');
+                })
+                ->leftJoin('bio as b', function ($joins) {
+                    $joins->on('ulasan_service.user_id', '=', 'b.id');
+                })
+                ->join('pengerjaan_layanan as pl', function ($joins) {
+                    $joins->on('ulasan_service.pengerjaan_layanan_id', '=', 'pl.id');
+                })
+                ->join('service as sc', function ($joins) use ($user) {
+                    $joins->on('sc.id', '=', 'pl.service_id');
+                    $joins->on('sc.user_id', '=', DB::raw($user->id));
+                })
+                ->select(
+                    "ulasan_service.id",
+                    DB::raw("u.name as nama"),
+                    DB::raw("'Layanan' as ulasan"),
 
+                    "b.foto",
+                    "ulasan_service.deskripsi",
+                    "ulasan_service.bintang",
+                    "ulasan_service.created_at",
+                )
+                ->get();
+            $ulasan_service = $this->imgCheck($ulasan_service->toArray(), 'foto', 'storage/users/foto/');
+            $ulasan_service = collect($ulasan_service);
+            // dd($ulasan_service);
 
-
-
-
-
+            $ulasan_pekerja->merge($ulasan_klien);
+            $ulasan_pekerja = collect($ulasan_pekerja->all())->merge($ulasan_service);
+            $ulasan_pekerja = collect($ulasan_pekerja->all())->sortByDesc('created_at');
+            $data = [];
+            foreach ($ulasan_pekerja->all() as $row) {
+                $data[] = $row;
+            }
 
             return response()->json([
                 'error' => false,
                 'data' => [
                     'user' => $bio,
-                    'ulasan_klien' => $ulasan_klien,
-                    'ulasan_pekerja' => $ulasan_pekerja,
+                    'ulasan' => $data,
+
                     'its_me' => $its_me,
                 ]
             ]);
@@ -170,7 +224,10 @@ class publicPreviewController extends Controller
 
             $bio = $this->getBio($user);
 
-            $port = Portofolio::where('user_id', $user->id)->get();
+            $port = portofolio::orderBy(
+                'tahun',
+                'desc'
+            )->get()->makeHidden(['user_id']);
             // $port=$this->imgCheck($port->toArray(), 'foto', 'storage/users/portfolio/', 1);
 
             $port = $this->imgCheck($port->toArray(), 'foto', 'storage/users/portofolio/');
@@ -296,9 +353,24 @@ class publicPreviewController extends Controller
             }
 
             $bio = $this->getBio($user);
-            $layanan = Services::where('user_id', $user->id)
+            $layanan = DB::table('service')
+                ->select(
+                    'service.*',
+                    DB::raw('ifnull((select count(id) from pengerjaan_layanan where
+            service.id=pengerjaan_layanan.service_id
+            and pengerjaan_layanan.selesai=1
+            ),0) as `jumlah_klien`
+
+            ')
+
+                )
+                ->where('user_id', $user->id)
+                // ->offset($offset ?? 0)
                 ->orderBy('updated_at', 'desc')
+
+
                 ->get();
+
 
             $layanan = $this->get_kategori_img($layanan);
 
@@ -328,6 +400,7 @@ class publicPreviewController extends Controller
 
         $bio = Bio::query()
             ->leftJoin('kota as kt', 'kt.id', '=', 'bio.kota_id')
+            ->leftJoin('bank as b', 'b.id', '=', 'bio.bank')
             ->where('bio.user_id', $user->id)->select(
 
                 'alamat',
@@ -338,6 +411,9 @@ class publicPreviewController extends Controller
                 'kt.nama as kota',
                 'summary',
                 'website',
+                'rekening',
+                DB::raw("ifnull(b.nama,'-') as bank"),
+                DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
                 'bio.created_at',
                 'bio.updated_at'
             )

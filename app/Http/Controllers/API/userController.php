@@ -34,7 +34,7 @@ class userController extends Controller
             $user->bio = Bio::where('user_id', $user->id)->first();
             $user->skills = Skill::where('user_id', $user->id)->get()->makeHidden(['user_id', 'created_at', 'updated_at']);
             $user->portofolio = portofolio::where('user_id', $user->id)->orderBy(
-                'tahun'
+                'tahun','desc'
             )->get()->makeHidden(['user_id']);
 
             $user->makeHidden(['id', 'created_at', 'deleted_at', 'updated_at', 'role']);
