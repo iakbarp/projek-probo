@@ -45,4 +45,9 @@ class Project extends Model
     {
         return $this->hasOne(Review::class, 'proyek_id');
     }
+
+    public function get_pengerjaan_progress()
+    {
+        return $this->hasOne(PengerjaanProgress::class, 'proyek_id');
+    }
 }

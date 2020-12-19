@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Model\Bio;
+use App\Model\Dompet;
 use App\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -92,6 +93,8 @@ class RegisterController extends Controller
         ]);
 
         Bio::create(['user_id' => $user->id]);
+
+        Dompet::create(['user_id' => $user->id]);
 
         return $user;
     }

@@ -276,7 +276,8 @@ class ProyekController extends Controller
                     'proyek_id' => $pengerjaan->proyek_id,
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
-                    'bukti_pembayaran' => 'bukti.jpg'
+//                    'bukti_pembayaran' => 'bukti.jpg',
+                    'isDompet' => true
                 ]);
             } else {
                 $pembayaran = Pembayaran::where('proyek_id', $pengerjaan->proyek_id)->first();
@@ -284,12 +285,13 @@ class ProyekController extends Controller
                 $pembayaran->update([
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                    'bukti_pembayaran' => null,
+                    'bukti_pembayaran' => 'bukti.jpg',
+                    'isDompet' => true
                 ]);
             }
 
-            Mail::to($pembayaran->get_project->get_user->email)
-                ->send(new PembayaranProyekMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
+//            Mail::to($pembayaran->get_project->get_user->email)
+//                ->send(new PembayaranProyekMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
 
             return back()->with('pengerjaan', 'Silahkan cek email Anda dan selesaikan pembayaran Anda sebelum batas waktu yang ditentukan! Terimakasih :)');
         }

@@ -297,6 +297,11 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'pekerja.update-pengerjaan.proyek'
                 ]);
 
+                Route::put('pengerjaan/{id}/updateprogress',[
+                   'uses' => 'ProyekController@updatePengerjaanProgressProyek',
+                    'as' => 'pekerja-update-progress.proyek'
+                ]);
+
                 Route::post('pengerjaan/{id}/ulas', [
                     'uses' => 'ProyekController@ulasPengerjaanProyek',
                     'as' => 'pekerja.ulas-pengerjaan.proyek'

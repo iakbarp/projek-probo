@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\Users\PembayaranLayananMail;
 use App\Model\PembayaranLayanan;
 use App\Model\PengerjaanLayanan;
+use App\Model\Saldo;
 use App\Model\UlasanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,7 @@ class LayananController extends Controller
         $req_url = $request->url;
         $req_data_url = $request->data_url;
         $req_harga = $request->harga;
+        $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
         if ($request->has('pesanan_id')) {
             $find = PengerjaanLayanan::find($request->pesanan_id);
         } else {
@@ -35,7 +37,7 @@ class LayananController extends Controller
         }
 
         return view('pages.main.users.klien.layanan', compact('user', 'pesanan',
-            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'find'));
+            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'find', 'saldo'));
     }
 
     public function batalkanPesanan($id)
@@ -67,6 +69,7 @@ class LayananController extends Controller
                     'pengerjaan_layanan_id' => $pesanan->id,
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
+                    'isDompet' => true
                 ]);
             } else {
                 $pembayaran = PembayaranLayanan::where('pengerjaan_layanan_id', $pesanan->id)->first();
@@ -74,12 +77,13 @@ class LayananController extends Controller
                 $pembayaran->update([
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => $pesanan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                    'bukti_pembayaran' => null,
+                    'bukti_pembayaran' => 'bukti.jpg',
+                    'isDompet' => true
                 ]);
             }
 
-            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
-                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
+//            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
+//                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
 
             return back()->with('update', 'Silahkan cek email Anda dan selesaikan pembayaran Anda sebelum batas waktu yang ditentukan! Terimakasih :)');
         }

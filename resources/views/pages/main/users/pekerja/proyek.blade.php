@@ -664,15 +664,15 @@
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
-                                                                    title="Update Progress"
-                                                                    onclick="updateProgress('{{$row->id}}',
+                                                                    title="Lihat Progress"
+                                                                    onclick="lihatProgress('{{$row->id}}',
                                                                         '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
                                                                         '{{$row->get_project->judul}}')"
                                                                 {{is_null($row->get_project->get_pembayaran) ||
                                                                 (!is_null($row->get_project->get_pembayaran) &&
                                                                 is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
                                                                 $row->selesai == true ? 'disabled' : ''}}>
-                                                                <i class="fa fa-upload" style="margin-right: 0"></i>
+                                                                <i class="fa fa-chart-bar" style="margin-right: 0"></i>
                                                             </button>
                                                         </span>
                                                     </div>
@@ -698,6 +698,17 @@
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-link btn-sm" data-toggle="tooltip"
+                                                                    title="Update Progress"
+                                                                    onclick="updateProgress('{{$row->id}}',
+                                                                        '{{route('pekerja-update-progress.proyek', ['id' => $row->id])}}',
+                                                                        '{{$row->get_project->judul}}')"
+                                                                {{is_null($row->get_project->get_pembayaran) ||
+                                                                (!is_null($row->get_project->get_pembayaran) &&
+                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
+                                                                $row->selesai == true ? 'disabled' : ''}}>
+                                                                <i class="fa fa-tasks" style="margin-right: 0"></i>
+                                                            </button>
+                                                            <button class="btn btn-link btn-sm" data-toggle="tooltip"
                                                                     title="Update Hasil"
                                                                     onclick="updateHasil('{{$row->id}}',
                                                                         '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
@@ -708,7 +719,12 @@
                                                                 $row->selesai == true ? 'disabled' : ''}}>
                                                                 <i class="fa fa-upload" style="margin-right: 0"></i>
                                                             </button>
-                                                            <button class="btn btn-link btn-sm" data-toggle="tooltip"
+                                                        </span>
+                                                    </div>
+                                                    <hr style="margin: .5em 0">
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
                                                                     title="Ulas Hasil"
                                                                     onclick="ulasHasil('{{$row->id}}',
                                                                         '{{route('pekerja.ulas-pengerjaan.proyek', ['id' => $row->id])}}',
@@ -744,11 +760,8 @@
                                     </div>
                                 </div>
 
-                                <div id="update-progress" style="display: none">
+                                <div id="lihat-progress" style="display: none">
                                     <div class="card">
-                                        <form class="form-horizontal" role="form"
-                                              enctype="multipart/form-data">
-                                            @csrf
                                             <div class="card-content">
                                                 <div class="card-title">
                                                     <div class="row form-group">
@@ -765,14 +778,17 @@
                                                     </div>
                                                     <hr class="mt-0">
                                                     <div class="row form-group">
+                                                        @foreach($progress as $object)
                                                         <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
                                                              alt="Thumbnail"
-                                                             src="{{$row->get_project->thumbnail != "" ?
-                                                                     asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
+                                                             src="{{$object->bukti_gambar != "" ?
+                                                                     asset('storage/proyek/thumbnail/'.$object->bukti_gambar)
                                                                      : asset('images/slider/beranda-1.jpg')}}">
                                                         <span>PROGRESS PENGERJAAN #1</span>
                                                         <br>
-                                                        <span>DESKRIPSI</span>
+                                                        <span>{{$object->desktipsi}}</span>
+{{--                                                        <small><i>$object->created_at</i></small>--}}
+                                                        @endforeach
                                                     </div>
                                                     <div class="row form-group">
                                                         <div class="col-lg-12">
@@ -784,7 +800,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
                                     </div>
                                 </div>
 
@@ -895,6 +910,74 @@
                                     </div>
                                 </div>
 
+{{--                                Update Progress--}}
+                                <div id="update-progress" style="display: none">
+                                    <div class="card">
+                                        <form class="form-horizontal" role="form" method="POST"
+                                              enctype="multipart/form-data">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="PUT">
+                                            <div class="card-content">
+                                                <div class="card-title">
+                                                    <small id="judul"></small>
+                                                    <hr class="mt-0">
+                                                    <div class="row form-group has-feedback">
+                                                        <div class="col-md-12">
+                                                            <label for="txt_bukti_gambar" class="form-control-label">File Progress
+                                                                <span class="required">*</span></label>
+                                                            <input type="file" name="bukti_gambar[]" accept="image/*"
+                                                                   id="attach-bukti_gambar" style="display: none;"
+                                                                   multiple>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i
+                                                                        class="fa fa-archive"></i></span>
+                                                                <input type="text" id="txt_bukti_gambar"
+                                                                       style="cursor: pointer"
+                                                                       class="browse_bukti_gambar form-control" readonly
+                                                                       placeholder="Pilih File" data-toggle="tooltip"
+                                                                       title="Ekstensi yang diizinkan: jpg, jpeg, gif, png. Ukuran yang diizinkan: < 5 MB">
+                                                                <span class="input-group-btn">
+                                                        <button class="browse_bukti_gambar btn btn-link btn-sm btn-block"
+                                                                type="button" style="border: 1px solid #ccc">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </span>
+                                                            </div>
+                                                            <span class="help-block"><small
+                                                                    id="count_bukti_gambar"></small></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <div class="col-md-12">
+                                                            <label for="deskripsi" class="form-control-label">Deskripsi
+                                                                <span class="required">*</span></label>
+                                                            <textarea id="deskripsi" name="deskripsi"
+                                                                      class="form-control"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <div class="col-lg-12">
+                                                            <button type="reset" class="btn btn-link btn-sm"
+                                                                    style="border: 1px solid #ccc">
+                                                                <i class="fa fa-undo mr-2"></i>BATAL
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <div class="col-lg-12">
+                                                            <button class="btn2 btn-sm"
+                                                                    style="display: block;margin-right: auto;margin-left: auto;border-radius: 6px">
+                                                                <span style="color: white">SUBMIT</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+{{--                                Ulas Hasil--}}
                                 <div id="ulas-hasil" style="display: none">
                                     <div class="card">
                                         <form class="form-horizontal" role="form" method="POST">
@@ -1293,9 +1376,28 @@
             });
         }
 
-        function updateProgress(id, tautan, action, judul) {
+        function lihatProgress(id, action, judul) {
             $("#judul").text(judul);
-            $("#tautan").val(tautan);
+            $("#dt-pengerjaan").toggle(300);
+            $("#lihat-progress").toggle(300);
+            $("#lihat-progress form").attr('action', action);
+
+            $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
+        }
+
+        $("#lihat-progress button[type=reset]").on('click', function () {
+            $("#judul").text(null);
+            $("#dt-pengerjaan").toggle(300);
+            $("#lihat-progress").toggle(300);
+            $("#lihat-progress form").removeAttr('action');
+
+            $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
+        });
+
+        // Update progress
+
+        function updateProgress(id, action, judul) {
+            $("#judul").text(judul);
             $("#dt-pengerjaan").toggle(300);
             $("#update-progress").toggle(300);
             $("#update-progress form").attr('action', action);
@@ -1305,8 +1407,8 @@
 
         $("#update-progress button[type=reset]").on('click', function () {
             $("#judul").text(null);
-            $("#txt_file_hasil, #attach-file_hasil, #tautan").val(null);
-            $("#txt_file_hasil[data-toggle=tooltip]").attr('data-original-title',
+            $("#txt_bukti_gambar, #attach-bukti_gambar").val(null);
+            $("#txt_bukti_gambar[data-toggle=tooltip]").attr('data-original-title',
                 'Ekstensi yang diizinkan: jpg, jpeg, gif, png, pdf. Ukuran yang diizinkan: < 5 MB');
             $("#dt-pengerjaan").toggle(300);
             $("#update-progress").toggle(300);
@@ -1315,33 +1417,29 @@
             $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
         });
 
-        $("#tautan").on("keyup", function () {
-            var $uri = $(this).val().substr(0, 4) != 'http' ? 'http://' + $(this).val() : $(this).val();
-            $(this).val($uri);
+        $(".browse_bukti_gambar").on('click', function () {
+            $("#attach-bukti_gambar").trigger('click');
         });
 
-        $(".browse_file_hasil").on('click', function () {
-            $("#attach-file_hasil").trigger('click');
-        });
-
-        $("#attach-file_hasil").on('change', function () {
+        $("#attach-bukti_gambar").on('change', function () {
             var files = $(this).prop("files"), names = $.map(files, function (val) {
                 return val.name;
             });
-            $("#txt_file_hasil").val(names);
-            $("#txt_file_hasil[data-toggle=tooltip]").attr('data-original-title', names);
-            $("#count_file_hasil").text($(this).get(0).files.length + " file dipilih!");
+            $("#txt_bukti_gambar").val(names);
+            $("#txt_bukti_gambar[data-toggle=tooltip]").attr('data-original-title', names);
+            $("#count_bukti_gambar").text($(this).get(0).files.length + " file dipilih!");
         });
 
         $("#update-progress form").on('submit', function (e) {
             e.preventDefault();
-            if (!$("#attach-file_hasil").val()) {
+            if (!$("#attach-bukti_gambar").val()) {
                 swal('PERHATIAN!', 'File hasil pengerjaan tugas/proyek tidak boleh kosong!', 'warning');
             } else {
                 $(this)[0].submit();
             }
         });
 
+        // Update Hasil
         function updateHasil(id, tautan, action, judul) {
             $("#judul").text(judul);
             $("#tautan").val(tautan);

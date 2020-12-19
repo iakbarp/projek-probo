@@ -907,14 +907,14 @@
                                                                            style="margin-right: 0"></i>
                                                                     </button>
                                                                 @endif
-                                                                <button class="btn btn-link btn-sm" type="button"
-                                                                        data-toggle="tooltip" title="Bukti Pembayaran"
-                                                                        onclick="buktiPembayaran('{{$row->id}}','#INV/{{\Carbon\Carbon::parse($row->get_project->get_pembayaran->created_at)->format('Ymd').'/'.$row->get_project->get_pembayaran->id}}',
-                                                                            '{{route('klien.update-pembayaran.proyek',['id' => $row->id])}}',
-                                                                            '{{route('klien.data-pembayaran.proyek',['id' => $row->get_project->get_pembayaran->id])}}',
-                                                                            '{{$row->get_project->harga}}',0)">
-                                                                    <i class="fa fa-upload" style="margin-right: 0"></i>
-                                                                </button>
+{{--                                                                <button class="btn btn-link btn-sm" type="button"--}}
+{{--                                                                        data-toggle="tooltip" title="Bukti Pembayaran"--}}
+{{--                                                                        onclick="buktiPembayaran('{{$row->id}}','#INV/{{\Carbon\Carbon::parse($row->get_project->get_pembayaran->created_at)->format('Ymd').'/'.$row->get_project->get_pembayaran->id}}',--}}
+{{--                                                                            '{{route('klien.update-pembayaran.proyek',['id' => $row->id])}}',--}}
+{{--                                                                            '{{route('klien.data-pembayaran.proyek',['id' => $row->get_project->get_pembayaran->id])}}',--}}
+{{--                                                                            '{{$row->get_project->harga}}',0)">--}}
+{{--                                                                    <i class="fa fa-upload" style="margin-right: 0"></i>--}}
+{{--                                                                </button>--}}
                                                             </span>
                                                         </div>
                                                     @else

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages\Users\Pekerja;
 use App\Http\Controllers\Controller;
 use App\Model\Bid;
 use App\Model\Pengerjaan;
+use App\Model\PengerjaanProgress;
 use App\Model\Review;
 use App\Model\Undangan;
 use Illuminate\Http\Request;
@@ -23,8 +24,9 @@ class ProyekController extends Controller
         $bid = Bid::where('user_id', $user->id)->get();
         $undangan = Undangan::where('user_id', $user->id)->get();
         $pengerjaan = Pengerjaan::where('user_id', $user->id)->get();
+        $progress = PengerjaanProgress::where('user_id', $user->id)->get();
 
-        return view('pages.main.users.pekerja.proyek', compact('user', 'bid', 'undangan', 'pengerjaan'));
+        return view('pages.main.users.pekerja.proyek', compact('user', 'bid', 'undangan', 'pengerjaan', 'progress'));
     }
 
     public function batalkanBid($id)
@@ -90,6 +92,37 @@ class ProyekController extends Controller
         }
 
         return $data;
+    }
+
+    public function updatePengerjaanProgressProyek(Request $request)
+    {
+        $progress = PengerjaanProgress::find($request->id);
+        $pengerjaan = Pengerjaan::find($request->id);
+
+        if ($request->hasFile('bukti_gambar')) {
+            $this->validate($request, [
+                'bukti_gambar' => 'required|array',
+                'bukti_gambar.*' => 'mimes:jpg,jpeg,gif,png|max:5120'
+            ]);
+
+            $bukti_gambar = [];
+            $i = 0;
+            foreach ($request->file('bukti_gambar') as $file) {
+                $file->storeAs('public/proyek/progress', $file->getClientOriginalName());
+                $bukti_gambar[$i] = $file->getClientOriginalName();
+                $i = 1 + $i;
+            }
+        } else {
+            $bukti_gambar = null;
+        }
+        PengerjaanProgress::create([
+            'user_id' => Auth::id(),
+            'pengerjaan_id' => $pengerjaan->id,
+            'bukti_gambar' => $bukti_gambar,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return back()->with('pengerjaan', 'Update Progress berhasil ditambahkan!');
     }
 
     public function updatePengerjaanProyek(Request $request)

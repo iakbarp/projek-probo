@@ -25,4 +25,9 @@ class Pengerjaan extends Model
     {
         return $this->hasOne(ReviewWorker::class, 'pengerjaan_id');
     }
+
+    public function get_pengerjaan_progress()
+    {
+        return $this->hasMany(ReviewWorker::class, 'pengerjaan_id');
+    }
 }
