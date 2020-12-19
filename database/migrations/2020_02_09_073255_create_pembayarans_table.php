@@ -19,7 +19,7 @@ class CreatePembayaransTable extends Migration
             $table->foreign('proyek_id')->references('id')->on('project')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->boolean('dp')->default(false);
-            $table->string('jumlah_pembayaran')->nullable();
+            $table->double('jumlah_pembayaran')->nullable();
             $table->text('bukti_pembayaran')->nullable();
             $table->boolean('selesai')->nullable()->default(false);
             $table->timestamps();

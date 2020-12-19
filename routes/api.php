@@ -83,9 +83,11 @@ Route::group(['namespace' => 'API'], function () {
         Route::group(['prefix' => 'public'], function () {
             Route::get('/', 'publicPreviewController@get');
             Route::get('/proyek', 'publicPreviewController@proyek');
+            Route::get('/proyek/{id}', 'publicPreviewController@getProyek');
             Route::get('/layanan', 'publicPreviewController@layanan');
             Route::get('/portfolio', 'publicPreviewController@portfolio');
             Route::get('/ulasan', 'publicPreviewController@ulasan');
+            Route::get('/layanan/{id}', 'publicPreviewController@getLayanan');
 
         });
 

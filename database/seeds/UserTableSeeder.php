@@ -36,8 +36,10 @@ class UserTableSeeder extends Seeder
                 \App\Model\Bio::create(['user_id' => $user->id]);
 
             } elseif ($role == \App\Support\Role::OTHER) {
+
                 for ($c = 0; $c < (($role == \App\Support\Role::OTHER) ? 20 : 2); $c++) {
-                    $email = $faker->safeEmail;
+                    $email = $faker->unique()->safeEmail;
+                    $email=is_numeric(strpos($email,'admin'))?('admin'.$c.'@examlple.com'):$email;
                     $user = User::create([
                         'name' => $faker->name,
                         'username' => strtok($email, '@'),
