@@ -429,6 +429,8 @@ class publicPreviewController extends Controller
                     'u.id', DB::raw("u.name as nama"), "b.foto", 'negoharga', 'negowaktu', 'task',
                     DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
                 ]);
+                $bid = $this->imgCheck($bid->toArray(), 'foto', 'storage/users/foto/', 0);
+
             $proyek->bid = $bid;
 
 
