@@ -20,10 +20,13 @@ class tabDataController extends Controller
     {
 
         try {
+            $user=auth('api')->user();
             // $bid=collect(Bid::whereNull('tolak')->get())->pluk('proyek_id');
-            $bid = Bid::whereNotNull('tolak')->get();
+            $bid = Bid::whereNotNull('tolak')
+            ->groupBy('proyek_id')
+            ->get();
             $proyek = DB::table('project')->select('project.id')
-
+                ->where('user_id','!=',$user->id)
 
                 ->whereNotIn('project.id', $bid->pluck('proyek_id'))
 
@@ -74,6 +77,8 @@ class tabDataController extends Controller
             $limit = $request->limit;
             $q = $request->q;
             $kat = $request->kat;
+            $user=auth('api')->user();
+
 
 
 
@@ -84,6 +89,12 @@ class tabDataController extends Controller
 
                 ->join('subkategori as sub', 'sub.id', '=', 'project.subkategori_id')
                 ->join('kategori as kat', 'sub.kategori_id', '=', 'kat.id')
+                ->leftJoin('bid', function($rel){
+                    $rel->on('bid.proyek_id', '=', 'project.id');
+                    $rel->on('bid.tolak', '=',DB::raw(0));
+                })
+                ->where('project.user_id','!=',$user->id)
+
 
                 ->select(
                     'project.*',
@@ -94,6 +105,8 @@ class tabDataController extends Controller
                     DB::raw('ifnull((select count(id) from bid where project.id=bid.proyek_id),0) as `jumlah_bid`')
                 )
                 ->whereNotIn('project.id', $bid->pluck('proyek_id'))
+                ->whereNull('bid.id')
+                ->where('pribadi', false)
 
                 ->when($q, function ($query) use ($q) {
                     $query->where('project.judul', 'like', "%$q%");
@@ -101,7 +114,7 @@ class tabDataController extends Controller
                 ->when($kat, function ($query) use ($kat) {
                     $query->whereIn('kat.id', json_decode($kat));
                 })
-
+                ->groupBy( 'project.id','bid.proyek_id')
                 ->orderBy('project.id', 'desc')
 
                 // ->offset($offset ?? 0)
@@ -360,7 +373,8 @@ class tabDataController extends Controller
     {
         $res = [];
         $dummy_photo = [
-            asset('images/slider/beranda-' . rand(1, 5) . '.jpg'),
+            asset('images/undangan-' . rand(1, 2) . '.jpg'),
+
             asset('admins/img/avatar/avatar-' . rand(1, 2) . '.png'),
             asset('images/notfound.png')
         ];

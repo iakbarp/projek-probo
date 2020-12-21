@@ -43,6 +43,8 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/kategori', 'tabDataController@kategori');
         Route::get('/grup_kategori', 'tabDataController@grupKategori');
 
+        Route::get('/aggrement_proyek','aggrementController@proyek');
+
         Route::group(['prefix' => 'message'], function () {
 
             Route::get('/', 'messageController@index');
