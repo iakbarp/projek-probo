@@ -608,7 +608,8 @@
                                 @csrf
                                 {{method_field('put')}}
                                 <input type="hidden" name="id">
-                                <input type="hidden" name="rekening">
+                                <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                                <input type="hidden" name="cek" value="service">
                                 <div class="card-content">
                                     <div class="card-title">
                                         <small id="judul-bayar"></small>

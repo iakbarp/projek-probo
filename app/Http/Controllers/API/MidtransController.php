@@ -56,7 +56,7 @@ class MidtransController extends Controller
             'enabled_payments' => $this->channels,
             'transaction_details' => [
                 'order_id' => $cek == 'project' ?
-                    strtoupper('PRO-' . $pengerjaan->proyek_id) : strtoupper('SER-' . $pengerjaan->id),
+                    strtoupper('PRO-' . $pengerjaan->proyek_id.'_'.now()->timestamp) : strtoupper('SER-' . $pengerjaan->id.'_'.now()->timestamp),
                 'gross_amount' => ceil(str_replace('.', '', $request->jumlah_pembayaran)),
             ],
             'customer_details' => [
@@ -105,11 +105,11 @@ class MidtransController extends Controller
         $notif = new Notification();
         $data_tr = collect(Transaction::status($notif->transaction_id))->toArray();
         if (strpos($notif->order_id, 'PRO') !== false) {
-            $pengerjaan = Pengerjaan::find(substr($notif->order_id, 4));
+            $pengerjaan = Pengerjaan::find(substr(strtok($notif->order_id, '_'), 4));
             $pembayaran = $pengerjaan->get_project->get_pembayaran;
             $name = 'Pembayaran proyek "' . $pengerjaan->get_project->judul . '"';
         } else {
-            $pengerjaan = PengerjaanLayanan::find(substr($notif->order_id, 4));
+            $pengerjaan = PengerjaanLayanan::find(substr(strtok($notif->order_id, '_'), 4));
             $pembayaran = $pengerjaan->get_pembayaran;
             $name = 'Pembayaran layanan "' . $pengerjaan->get_service->judul . '"';
         }
