@@ -23,7 +23,7 @@ class LayananController extends Controller
     public function dashboard(Request $request)
     {
         $user = Auth::user();
-        $pesanan = PengerjaanLayanan::where('user_id', $user->id)->get();
+        $pesanan = PengerjaanLayanan::where('user_id', $user->id)->orderByDesc('id')->get();
         $req_id = $request->id;
         $req_invoice = $request->invoice;
         $req_url = $request->url;

@@ -56,7 +56,7 @@ class MidtransController extends Controller
             'enabled_payments' => $this->channels,
             'transaction_details' => [
                 'order_id' => $cek == 'project' ?
-                    strtoupper('PRO-' . $pengerjaan->proyek_id) : strtoupper('SER-' . $pengerjaan->id),
+                    strtoupper('PRO-' . $pengerjaan->proyek_id . '_' . now()->timestamp) : strtoupper('SER-' . $pengerjaan->id . '_' . now()->timestamp),
                 'gross_amount' => ceil(str_replace('.', '', $request->jumlah_pembayaran)),
             ],
             'customer_details' => [
@@ -105,11 +105,11 @@ class MidtransController extends Controller
         $notif = new Notification();
         $data_tr = collect(Transaction::status($notif->transaction_id))->toArray();
         if (strpos($notif->order_id, 'PRO') !== false) {
-            $pengerjaan = Pengerjaan::find(substr($notif->order_id, 4));
+            $pengerjaan = Pengerjaan::where('proyek_id', substr(strtok($notif->order_id, '_'), 4))->first();
             $pembayaran = $pengerjaan->get_project->get_pembayaran;
             $name = 'Pembayaran proyek "' . $pengerjaan->get_project->judul . '"';
         } else {
-            $pengerjaan = PengerjaanLayanan::find(substr($notif->order_id, 4));
+            $pengerjaan = PengerjaanLayanan::find(substr(strtok($notif->order_id, '_'), 4));
             $pembayaran = $pengerjaan->get_pembayaran;
             $name = 'Pembayaran layanan "' . $pengerjaan->get_service->judul . '"';
         }
@@ -156,7 +156,7 @@ class MidtransController extends Controller
                         }
                     }
 
-                    $this->invoiceMail('unfinish', $notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
+                    $this->invoiceMail($notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
 
                     DB::commit();
                     return $name . ' dengan ID #' . $notif->order_id . ' berhasil di checkout!';
@@ -171,7 +171,9 @@ class MidtransController extends Controller
                                 'proyek_id' => $pengerjaan->proyek_id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
-                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ? 'dp.jpg' : 'lunas.jpg',
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
                                 'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         } else {
@@ -179,7 +181,9 @@ class MidtransController extends Controller
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
-                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ? 'dp.jpg' : 'lunas.jpg',
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
                                 'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         }
@@ -188,20 +192,28 @@ class MidtransController extends Controller
                         if (strpos($notif->order_id, 'PRO') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-                                'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                                'bukti_pembayaran' => 'lunas.jpg',
-                                'selesai' => true
+                                'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran :
+                                    $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
+                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         } else {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                                'bukti_pembayaran' => 'lunas.jpg',
-                                'selesai' => true
+                                'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
+                                    $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
+                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         }
                     }
-                    $this->invoiceMail('finish', $notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
+                    $this->invoiceMail($notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
 
                     DB::commit();
                     return $name . ' dengan ID #' . $notif->order_id . ' berhasil dikonfirmasi!';
@@ -223,10 +235,8 @@ class MidtransController extends Controller
         }
     }
 
-    private function invoiceMail($status, $code, $user, $pdf_url, $data_tr, $pembayaran, $sisa_pembayaran)
+    private function invoiceMail($code, $user, $pdf_url, $data_tr, $pembayaran, $sisa_pembayaran)
     {
-        $data = Pesanan::where('uni_code', $code)->first();
-
         if ($data_tr['payment_type'] == 'credit_card') {
             $type = $data_tr['payment_type'];
             $bank = $data_tr['card_type'];
@@ -268,7 +278,6 @@ class MidtransController extends Controller
             $instruction = null;
         }
 
-        Mail::to($user->email)
-            ->send(new PembayaranProyekMail($code, $data, $payment, $instruction, $pembayaran, $sisa_pembayaran));
+        Mail::to($user->email)->send(new PembayaranProyekMail($code, $payment, $instruction, $pembayaran, $sisa_pembayaran));
     }
 }

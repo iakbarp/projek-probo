@@ -8,6 +8,7 @@ use App\Model\Pembayaran;
 use App\Model\PembayaranLayanan;
 use App\Model\Project;
 use App\Model\Services;
+use App\Model\Withdraw;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Whoops\Exception\ErrorException;
@@ -59,6 +60,38 @@ class PembayaranController extends Controller
     {
         try {
             $data = PembayaranLayanan::find($request->id);
+            $data->update([
+                'selesai' => true
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => "Pembayaran Telah Diproses"
+            ]);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'status' => 401,
+                'message' => $exception
+            ]);
+        } catch (ErrorException $error) {
+            return response()->json([
+                'status' => 401,
+                'message' => $error
+            ]);
+        }
+    }
+
+    public function withdraw()
+    {
+        $data = Withdraw::all();
+        return view('pages.admins.pembayaran.withdraw', [
+            'withdraw' => $data
+        ]);
+    }
+
+    public function withdraw_done(Request $request)
+    {
+        try {
+            $data = Withdraw::find($request->id);
             $data->update([
                 'selesai' => true
             ]);

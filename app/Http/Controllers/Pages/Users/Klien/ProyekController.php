@@ -31,7 +31,7 @@ class ProyekController extends Controller
         $user = Auth::user();
         $kategori = Kategori::orderBy('nama')->get();
         $proyek = Project::where('user_id', $user->id)->get();
-        $pengerjaan = Pengerjaan::whereIn('proyek_id', $proyek->pluck('id'))->get();
+        $pengerjaan = Pengerjaan::whereIn('proyek_id', $proyek->pluck('id'))->orderByDesc('id')->get();
         $req_id = $request->id;
         $req_invoice = $request->invoice;
         $req_url = $request->url;

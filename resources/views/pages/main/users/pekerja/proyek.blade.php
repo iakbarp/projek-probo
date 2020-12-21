@@ -765,6 +765,7 @@
                                             <div class="card-content">
                                                 <div class="card-title">
                                                     <div class="row form-group">
+                                                        <div class="col-md-12">
                                                         <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
                                                              alt="Thumbnail"
                                                              src="{{$row->get_project->thumbnail != "" ?
@@ -775,20 +776,47 @@
                                                         <br>
                                                         <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
                                                         </b>
+                                                            <br>
+                                                            @if(!is_null($row->get_project->get_pembayaran))
+                                                                @if(!is_null($row->get_project->get_pembayaran->bukti_pembayaran))
+                                                                    @if($row->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
+                                                                        <span
+                                                                            class="label label-success">LUNAS</span>
+                                                                    @else
+                                                                        <span class="label label-default">DP {{round($row
+                                                                            ->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_project->harga * 100,1)}}%</span>
+                                                                    @endif |
+                                                                    <span class="label label-{{$row->selesai == false ?
+                                                                        'warning' : 'success'}}">{{$row->selesai == false ?
+                                                                        'PROSES PENGERJAAN' : 'SELESAI'}}</span>
+                                                                @else
+                                                                    <span class="label label-info">MENUNGGU KONFIRMASI</span>
+                                                                @endif
+                                                            @else
+                                                                <span
+                                                                    class="label label-danger">MENUNGGU PEMBAYARAN</span>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                     <hr class="mt-0">
                                                     <div class="row form-group">
-                                                        @foreach($progress as $object)
-                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
-                                                             alt="Thumbnail"
-                                                             src="{{$object->bukti_gambar != "" ?
-                                                                     asset('storage/proyek/thumbnail/'.$object->bukti_gambar)
-                                                                     : asset('images/slider/beranda-1.jpg')}}">
-                                                        <span>PROGRESS PENGERJAAN #1</span>
-                                                        <br>
-                                                        <span>{{$object->desktipsi}}</span>
-{{--                                                        <small><i>$object->created_at</i></small>--}}
-                                                        @endforeach
+                                                        <div class="col-lg-12">
+                                                            @php $no = 1; @endphp
+                                                            @foreach($progress as $object)
+                                                            <a href="{{asset('storage/proyek/progress/'.$object->bukti_gambar)}}" target="_blank"><img style="width: 125px;height: 125px" class="img-responsive float-left mr-2"
+                                                                 alt="Thumbnail"
+                                                                 src="{{$object->bukti_gambar != "" ?
+                                                                         asset('storage/proyek/progress/'.$object->bukti_gambar)
+                                                                         : asset('images/slider/beranda-1.jpg')}}">
+                                                            </a>
+                                                            <b>PROGRESS PENGERJAAN #{{$no++}}</b>
+                                                                <i class="pull-right" style="color: black;font-size: 15px">{{$object->created_at->formatLocalized('%d %B %Y')}}</i>
+                                                                    <hr class="mt-0">
+                                                            <br>
+                                                            <p>{{$object->deskripsi}}</p>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                     <div class="row form-group">
                                                         <div class="col-lg-12">

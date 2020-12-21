@@ -703,7 +703,7 @@
                                                                                 class="label label-success">LUNAS</span>
                                                                         @else
                                                                             <span class="label label-default">DP {{round($row
-                                                                            ->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_project->get_pembayaran->jumlah_pembayaran / $row
                                                                             ->get_project->harga * 100,1)}}%</span>
                                                                         @endif |
                                                                         <span class="label label-{{$row->selesai == false ?
@@ -1365,7 +1365,7 @@
             $("#dt-pengerjaan table").DataTable({
                 dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'B><'col-sm-12 col-md-4'f>>" +
                     "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-                columnDefs: [{"sortable": false, "targets": 2}],
+                columnDefs: [{"sortable": false, "targets": 1}],
                 language: {
                     "emptyTable": "Anda belum memiliki daftar pengerjaan tugas/proyek apapun",
                     "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",

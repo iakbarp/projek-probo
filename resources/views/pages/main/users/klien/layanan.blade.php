@@ -608,7 +608,8 @@
                                 @csrf
                                 {{method_field('put')}}
                                 <input type="hidden" name="id">
-                                <input type="hidden" name="rekening">
+                                <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                                <input type="hidden" name="cek" value="service">
                                 <div class="card-content">
                                     <div class="card-title">
                                         <small id="judul-bayar"></small>
@@ -721,8 +722,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row form-group">
+                                        <div class="row">
                                             <div class="col-lg-12">
                                                 <button type="reset" class="btn btn-link btn-sm"
                                                         style="border: 1px solid #ccc">
@@ -730,7 +730,6 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <br>
 {{--                                        <div class="row form-group">--}}
 {{--                                            <div class="col-lg-12">--}}
 {{--                                                <button class="btn2 btn-sm" style="margin:auto; display:block;">--}}
@@ -910,7 +909,7 @@
             $("#dt-pesanan table").DataTable({
                 dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'B><'col-sm-12 col-md-4'f>>" +
                     "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-                columnDefs: [{"sortable": false, "targets": 5}],
+                columnDefs: [{"sortable": false, "targets": 4}],
                 language: {
                     "emptyTable": "Anda belum menambahkan layanan apapun",
                     "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",
