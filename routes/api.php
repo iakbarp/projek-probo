@@ -90,24 +90,37 @@ Route::group(['namespace' => 'API'], function () {
             Route::get('/portfolio', 'publicPreviewController@portfolio');
             Route::get('/ulasan', 'publicPreviewController@ulasan');
             Route::get('/layanan/{id}', 'publicPreviewController@getLayanan');
+            Route::post('/bid_proyek', 'publicPreviewController@bidProyek');
 
         });
 
         Route::group(['prefix' => 'klien'], function () {
 
             Route::group(['prefix' => 'proyek','namespace' => 'Users\Klien'], function () {
-            Route::get('/', 'ProyekController@dashboard');
-            Route::post('/', 'ProyekController@tambahProyek');
-            Route::post('/lampiran', 'ProyekController@tambahLampiran');
-            Route::delete('/lampiran', 'ProyekController@deleteLampiran');
-            Route::post('/{proyek_id}', 'ProyekController@updateProyek');
-            Route::delete('/{proyek_id}', 'ProyekController@deleteProyek');
+                Route::get('/', 'ProyekController@dashboard');
+                Route::post('/', 'ProyekController@tambahProyek');
+                Route::post('/lampiran', 'ProyekController@tambahLampiran');
+                Route::delete('/lampiran', 'ProyekController@deleteLampiran');
+                Route::post('/{proyek_id}', 'ProyekController@updateProyek');
+                Route::delete('/{proyek_id}', 'ProyekController@deleteProyek');
+            });
 
+            Route::group(['prefix' => 'layanan','namespace' => 'Users\Klien'], function () {
+                Route::get('/', 'LayananController@dashboard');
+                Route::post('/', 'LayananController@tambahLayanan');
+                Route::post('/{proyek_id}', 'ProyekController@updateLayanan');
+                Route::delete('/{proyek_id}', 'ProyekController@deleteLayanan');
             });
 
         });
 
         Route::group(['prefix' => 'pekerja'], function () {
+            Route::group(['prefix' => 'layanan','namespace' => 'Users\Pekerja'], function () {
+                Route::get('/', 'LayananController@dashboard');
+                Route::post('/', 'LayananController@tambahLayanan');
+                Route::post('/{proyek_id}', 'ProyekController@updateLayanan');
+                Route::delete('/{proyek_id}', 'ProyekController@deleteLayanan');
+            });
         });
     });
 
