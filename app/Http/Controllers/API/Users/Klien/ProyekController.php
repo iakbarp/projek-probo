@@ -113,11 +113,7 @@ class ProyekController extends Controller
 
 
                 if ($d) {
-                    // $query="SELECT a.*,ifnull(format(AVG(b.bintang),1),0.0) bintang FROM pengerjaan a left join ulasan_pekerja b on a.id=b.pengerjaan_id
-                    // where selesai=1
-                    // group by a.id,b.pengerjaan_id";
-
-                    // $hasil=DB::raw($query)->first();
+                 
 
                     $pekerjas = DB::table('users')
                         ->where('users.id', $d->user_id)

@@ -19,6 +19,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class publicPreviewController extends Controller
 {
@@ -46,7 +47,7 @@ class publicPreviewController extends Controller
                 })
                 ->where('pribadi', false)
                 ->where('project.user_id', $user->id)
-                ->groupBy( 'project.id','bid.proyek_id')
+                ->groupBy('project.id', 'bid.proyek_id')
 
                 ->get()->count();
 
@@ -287,7 +288,7 @@ class publicPreviewController extends Controller
                 })
                 ->join('subkategori as sub', 'sub.id', '=', 'project.subkategori_id')
                 ->join('kategori as kat', 'kat.id', '=', 'sub.kategori_id')
-                
+
                 ->select(
                     "project.id",
                     'subkategori_id',
@@ -305,7 +306,7 @@ class publicPreviewController extends Controller
                     "lampiran",
 
                 )
-                ->groupBy( 'project.id','bid.proyek_id')
+                ->groupBy('project.id', 'bid.proyek_id')
 
                 ->orderBy('project.updated_at', 'desc')
                 ->get();
@@ -411,15 +412,15 @@ class publicPreviewController extends Controller
 
 
             if ($proyek) {
-                $proyek = $this->get_kategori_img_obj($proyek,'storage/proyek/thumbnail/');
-            // $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
+                $proyek = $this->get_kategori_img_obj($proyek, 'storage/proyek/thumbnail/');
+                // $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
 
 
 
                 $lamp = [];
                 if ($proyek->lampiran) {
                     foreach ($proyek->lampiran as $row) {
-                        $lamp[] = $this->imgCheck($row, null, 'storage/proyek/thumbnail/', 2);
+                        $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
                     }
                 }
                 $proyek->lampiran = $lamp;
@@ -439,15 +440,22 @@ class publicPreviewController extends Controller
                 })
                 ->whereNotNull('u.id')
                 ->orderBy('bid.id', 'desc')
-                ->select(  'u.id', DB::raw("u.name as nama"), "b.foto", 'negoharga', 'negowaktu', 'task',
-                DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),)
+                ->select(
+                    'u.id',
+                    DB::raw("u.name as nama"),
+                    "b.foto",
+                    'negoharga',
+                    'negowaktu',
+                    'task',
+                    DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
+                )
                 ->get()->toArray();
-                if($bid[0]['id']==null){
-                    $bid=[];
-                }
-                
-                $bid = $this->imgCheck($bid, 'foto', 'storage/users/foto/', 0);
-                
+            if ($bid[0]['id'] == null) {
+                $bid = [];
+            }
+
+            $bid = $this->imgCheck($bid, 'foto', 'storage/users/foto/', 0);
+
             $proyek->bid = $bid;
 
 
@@ -460,7 +468,7 @@ class publicPreviewController extends Controller
                     'user' => $bio,
 
                     'proyek' => $proyek,
-                    'already_bid' => Bid::query()->where('user_id', $user->id)->where('proyek_id', $proyek->id)->first() ? true : false,
+                    'already_bid' => Bid::query()->where('user_id', auth('api')->user()->id)->where('proyek_id', $proyek->id)->first() ? true : false,
                     'its_me' => $its_me,
                 ]
             ]);
@@ -510,7 +518,7 @@ class publicPreviewController extends Controller
                 ->firstOrFail();
 
 
-            $layanan = $this->get_kategori_img_obj($layanan,'storage/layanan/thumbnail/');
+            $layanan = $this->get_kategori_img_obj($layanan, 'storage/layanan/thumbnail/');
 
             $ulasan = PengerjaanLayanan::query()
                 ->where('service_id', $layanan->id)
@@ -518,17 +526,18 @@ class publicPreviewController extends Controller
                 ->join('ulasan_service as u', 'u.pengerjaan_layanan_id', '=', 'pengerjaan_layanan.id')
                 ->join('users as s', 's.id', '=', 'u.user_id')
                 ->join('bio as b', 's.id', '=', 'u.user_id')
-                ->select('s.id',
-                DB::raw('s.name as nama'),
-                'b.foto',
-                DB::raw('format(bintang,1) as bintang'),
-                'u.deskripsi'
+                ->select(
+                    's.id',
+                    DB::raw('s.name as nama'),
+                    'b.foto',
+                    DB::raw('format(bintang,1) as bintang'),
+                    'u.deskripsi'
                 )
                 ->groupBy('u.id')
                 ->get();
-                $ulasan = $this->imgCheck($ulasan->toArray(), 'foto', 'storage/users/foto/', 0);
+            $ulasan = $this->imgCheck($ulasan->toArray(), 'foto', 'storage/users/foto/', 0);
 
-            $layanan->ulasan=$ulasan;
+            $layanan->ulasan = $ulasan;
 
 
 
@@ -645,14 +654,61 @@ class publicPreviewController extends Controller
         return $bio;
     }
 
-    private function get_kategori_img($res,$loc)
+    public function bidProyek(Request $request)
+    {
+        $user = auth('api')->user();
+
+        $validator = Validator::make($request->all(), [
+            'negowaktu' => 'required|numeric',
+            'negoharga' => 'required|numeric',
+            'task' => 'required|string|max:250',
+            'proyek_id' => 'required|exists:project,id',
+            'aggrement' => 'required|in:1',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        $request->request->add(['user_id' => $user->id]);
+
+        // return collect($request->all())->toArray();
+
+        try {
+            Bid::create(collect($request->all())->toArray());
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => 'proyek berhasil dibid'
+                ]
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
+    private function get_kategori_img($res, $loc)
     {
         foreach ($res as $dt) {
             $dt->subkategori = SubKategori::where('id', $dt->subkategori_id)->first(['id', 'nama', 'kategori_id']);
             if ($sub = $dt->subkategori) {
                 $dt->kategori = Kategori::where('id', $sub->kategori_id)->first(['id', 'nama']);
             }
-            $dt = $this->imgCheck($dt, 'thumbnail',$loc, 2);
+            $dt = $this->imgCheck($dt, 'thumbnail', $loc, 2);
             unset($dt->subkategori->kategori_id);
         }
 
@@ -660,7 +716,7 @@ class publicPreviewController extends Controller
         return $res;
     }
 
-    private function get_kategori_img_obj($dt,$loc)
+    private function get_kategori_img_obj($dt, $loc)
     {
 
 
@@ -687,7 +743,7 @@ class publicPreviewController extends Controller
         ];
         $res = $data;
 
-        if (is_array($data) &&$column) {
+        if (is_array($data) && $column) {
 
             $res = [];
 
