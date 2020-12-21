@@ -909,7 +909,7 @@
             $("#dt-pesanan table").DataTable({
                 dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'B><'col-sm-12 col-md-4'f>>" +
                     "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-                columnDefs: [{"sortable": false, "targets": 5}],
+                columnDefs: [{"sortable": false, "targets": 4}],
                 language: {
                     "emptyTable": "Anda belum menambahkan layanan apapun",
                     "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",
