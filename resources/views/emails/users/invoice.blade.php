@@ -395,8 +395,6 @@
                                                                 Checkout berhasil
                                                                 pada {{now()->formatLocalized('%d %B %Y – %H:%M')}}
                                                                 @else
-                                                                    <b style="font-size: 22px">Kami akan mengirimkan
-                                                                        produk yang Anda pesan sesegera mungkin</b><br>
                                                                     Terima kasih telah menyelesaikan transaksi
                                                                     di {{env('APP_TITLE')}}
                                                                 @endif
