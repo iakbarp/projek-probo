@@ -703,7 +703,7 @@
                                                                                 class="label label-success">LUNAS</span>
                                                                         @else
                                                                             <span class="label label-default">DP {{round($row
-                                                                            ->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_project->get_pembayaran->jumlah_pembayaran / $row
                                                                             ->get_project->harga * 100,1)}}%</span>
                                                                         @endif |
                                                                         <span class="label label-{{$row->selesai == false ?
