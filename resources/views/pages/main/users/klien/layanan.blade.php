@@ -721,8 +721,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row form-group">
+                                        <div class="row">
                                             <div class="col-lg-12">
                                                 <button type="reset" class="btn btn-link btn-sm"
                                                         style="border: 1px solid #ccc">
@@ -730,7 +729,6 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <br>
 {{--                                        <div class="row form-group">--}}
 {{--                                            <div class="col-lg-12">--}}
 {{--                                                <button class="btn2 btn-sm" style="margin:auto; display:block;">--}}

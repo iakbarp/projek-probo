@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,7 @@ class CreateSaldoView extends Migration
      */
     public function up()
     {
-        \DB::statement("create view view_saldo as SELECT u.id,ifnull(sum(t.jumlah),0)-ifnull(sum(w.jumlah),0)-ifnull(sum(p.jumlah_pembayaran),0)-ifnull(sum(pl.jumlah_pembayaran),0) as saldo
+        DB::statement("create view view_saldo as SELECT u.id,ifnull(sum(t.jumlah),0)-ifnull(sum(w.jumlah),0)-ifnull(sum(p.jumlah_pembayaran),0)-ifnull(sum(pl.jumlah_pembayaran),0) as saldo
         from users as u
         LEFT JOIN withdraw as w on w.user_id=u.id and w.konfirmasi=1
         LEFT JOIN (pembayaran as p  LEFT join project pr on pr.id=p.proyek_id and  p.isDompet=1) on pr.user_id=u.id
@@ -30,7 +31,6 @@ class CreateSaldoView extends Migration
      */
     public function down()
     {
-        \DB::statement(" DROP VIEW IF EXISTS `view_saldo`");
+        DB::statement(" DROP VIEW IF EXISTS `view_saldo`");
     }
-
 }
