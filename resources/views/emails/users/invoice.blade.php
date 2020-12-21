@@ -522,7 +522,7 @@
                                                                                 style="line-height: 1.5em;font-size: 14px">
                                                                                 <b style="font-size: 16px">{{$payment['account']}}</b>
                                                                                 @if($payment['type'] == 'bank_transfer')
-                                                                                    <br>a/n {{env('APP_TITLE')}}
+                                                                                    <br>a/n {{env('APP_COMPANY')}}
                                                                                 @endif
                                                                             </small>
                                                                         </td>
