@@ -109,12 +109,20 @@ class ProyekController extends Controller
             $i = 0;
             foreach ($request->file('bukti_gambar') as $file) {
                 $file->storeAs('public/proyek/progress', $file->getClientOriginalName());
-                $bukti_gambar[$i] = $file->getClientOriginalName();
+                $bukti_gambar = $file->getClientOriginalName();
                 $i = 1 + $i;
             }
         } else {
             $bukti_gambar = null;
         }
+
+//        if ($request->hasFile('bukti_gambar')) {
+//            $this->validate($request, ['bukti_gambar' => 'image|mimes:jpg,jpeg,gif,png|max:2048']);
+//            $bukti_gambar = $request->file('bukti_gambar')->getClientOriginalName();
+//            $request->file('bukti_gambar')->storeAs('public/proyek/progres', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$bukti_gambar);
+//        } else {
+//            $progress = null;
+//        }
         PengerjaanProgress::create([
             'user_id' => Auth::id(),
             'pengerjaan_id' => $pengerjaan->id,

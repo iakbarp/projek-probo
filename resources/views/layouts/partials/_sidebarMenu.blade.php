@@ -13,6 +13,7 @@
         <ul class="dropdown-menu">
             <li class=""><a href="{{route('admin.project.show')}}" class="nav-link">Proyek</a></li>
             <li class=""><a href="{{route('admin.service.show')}}" class="nav-link">Layanan</a></li>
+            <li class=""><a href="{{route('admin.withdraw.show')}}" class="nav-link">Withdraw</a></li>
         </ul>
     </li>
 

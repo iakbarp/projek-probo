@@ -72,6 +72,16 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
             'uses' => 'PembayaranController@service_done',
             'as' => 'admin.service.done'
         ]);
+
+        Route::get('withdraw', [
+            'uses' => 'PembayaranController@withdraw',
+            'as' => 'admin.withdraw.show'
+        ]);
+
+        Route::post('withdraw/done', [
+            'uses' => 'PembayaranController@withdraw_done',
+            'as' => 'admin.withdraw.done'
+        ]);
     });
 
     Route::group(['prefix' => 'master'], function () {
