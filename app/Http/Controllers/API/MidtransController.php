@@ -171,7 +171,9 @@ class MidtransController extends Controller
                                 'proyek_id' => $pengerjaan->proyek_id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
-                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ? 'dp.jpg' : 'lunas.jpg',
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
                                 'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         } else {
@@ -179,7 +181,9 @@ class MidtransController extends Controller
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
-                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ? 'dp.jpg' : 'lunas.jpg',
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
                                 'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         }
@@ -188,16 +192,24 @@ class MidtransController extends Controller
                         if (strpos($notif->order_id, 'PRO') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-                                'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                                'bukti_pembayaran' => 'lunas.jpg',
-                                'selesai' => true
+                                'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran :
+                                    $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
+                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         } else {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                                'bukti_pembayaran' => 'lunas.jpg',
-                                'selesai' => true
+                                'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
+                                    $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+                                'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
+                                    'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
+                                    'FP - '.now()->format('j F Y'),
+                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         }
                     }
