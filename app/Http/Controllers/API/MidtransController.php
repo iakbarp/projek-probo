@@ -105,7 +105,7 @@ class MidtransController extends Controller
         $notif = new Notification();
         $data_tr = collect(Transaction::status($notif->transaction_id))->toArray();
         if (strpos($notif->order_id, 'PRO') !== false) {
-            $pengerjaan = Pengerjaan::find(substr(strtok($notif->order_id, '_'), 4));
+            $pengerjaan = Pengerjaan::where('proyek_id', substr(strtok($notif->order_id, '_'), 4))->first();
             $pembayaran = $pengerjaan->get_project->get_pembayaran;
             $name = 'Pembayaran proyek "' . $pengerjaan->get_project->judul . '"';
         } else {
