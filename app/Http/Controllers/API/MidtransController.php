@@ -127,13 +127,13 @@ class MidtransController extends Controller
                     if (is_null($pembayaran)) {
                         $sisa_pembayaran = 0;
                         if (strpos($notif->order_id, 'PRO') !== false) {
-                            $pembayaran = Pembayaran::firstOrCreate([
+                            Pembayaran::firstOrCreate([
                                 'proyek_id' => $pengerjaan->proyek_id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
                             ]);
                         } else {
-                            $pembayaran = PembayaranLayanan::firstOrCreate([
+                            PembayaranLayanan::firstOrCreate([
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
@@ -156,7 +156,7 @@ class MidtransController extends Controller
                         }
                     }
 
-                    $this->invoiceMail('unfinish', $notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
+                    $this->invoiceMail($notif->order_id, $user, null, $data_tr, $sisa_pembayaran);
 
                     DB::commit();
                     return $name . ' dengan ID #' . $notif->order_id . ' berhasil di checkout!';
@@ -167,7 +167,7 @@ class MidtransController extends Controller
                     if (is_null($pembayaran)) {
                         $sisa_pembayaran = 0;
                         if (strpos($notif->order_id, 'PRO') !== false) {
-                            $pembayaran = Pembayaran::firstOrCreate([
+                            Pembayaran::firstOrCreate([
                                 'proyek_id' => $pengerjaan->proyek_id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
@@ -175,7 +175,7 @@ class MidtransController extends Controller
                                 'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                             ]);
                         } else {
-                            $pembayaran = PembayaranLayanan::firstOrCreate([
+                            PembayaranLayanan::firstOrCreate([
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['gross_amount'],
@@ -201,7 +201,7 @@ class MidtransController extends Controller
                             ]);
                         }
                     }
-                    $this->invoiceMail('finish', $notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
+                    $this->invoiceMail($notif->order_id, $user, null, $data_tr, $sisa_pembayaran);
 
                     DB::commit();
                     return $name . ' dengan ID #' . $notif->order_id . ' berhasil dikonfirmasi!';
@@ -223,10 +223,8 @@ class MidtransController extends Controller
         }
     }
 
-    private function invoiceMail($status, $code, $user, $pdf_url, $data_tr, $pembayaran, $sisa_pembayaran)
+    private function invoiceMail($code, $user, $pdf_url, $data_tr, $sisa_pembayaran)
     {
-        $data = Pesanan::where('uni_code', $code)->first();
-
         if ($data_tr['payment_type'] == 'credit_card') {
             $type = $data_tr['payment_type'];
             $bank = $data_tr['card_type'];
@@ -268,7 +266,6 @@ class MidtransController extends Controller
             $instruction = null;
         }
 
-        Mail::to($user->email)
-            ->send(new PembayaranProyekMail($code, $data, $payment, $instruction, $pembayaran, $sisa_pembayaran));
+        Mail::to($user->email)->send(new PembayaranProyekMail($code, $payment, $instruction, $sisa_pembayaran));
     }
 }

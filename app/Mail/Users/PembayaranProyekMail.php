@@ -2,6 +2,8 @@
 
 namespace App\Mail\Users;
 
+use App\Model\Pengerjaan;
+use App\Model\PengerjaanLayanan;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,20 +14,18 @@ class PembayaranProyekMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $code, $data, $payment, $filename, $instruction, $pembayaran, $sisa_pembayaran;
+    public $code, $payment, $instruction, $sisa_pembayaran;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($code, $data, $payment, $instruction, $pembayaran, $sisa_pembayaran)
+    public function __construct($code, $payment, $instruction, $sisa_pembayaran)
     {
         $this->code = $code;
-        $this->data = $data;
         $this->payment = $payment;
         $this->instruction = $instruction;
-        $this->pembayaran = $pembayaran;
         $this->sisa_pembayaran = $sisa_pembayaran;
     }
 
@@ -36,17 +36,27 @@ class PembayaranProyekMail extends Mailable
      */
     public function build()
     {
-        $data = $this->data;
         $payment = $this->payment;
         $code = $this->code;
-        $pembayaran = $this->pembayaran;
-        $sisa_pembayaran = $this->sisa_pembayaran;
-        $invoice = '#INV/' . Carbon::parse($this->data->created_at)->format('Ymd') . '/' . $this->data->id;
+        $sisa = $this->sisa_pembayaran;
+
+        if (strpos($code, 'PRO') !== false) {
+            $data = Pengerjaan::where('proyek_id', substr(strtok($code, '_'), 4))->first();
+            $data2 = $data->get_project;
+            $invoice = '#INV/' . Carbon::parse($data->created_at)->format('Ymd') . '/' . $data->id;
+            $name = 'Proyek';
+        } else {
+            $data = PengerjaanLayanan::find(substr(strtok($code, '_'), 4));
+            $data2 = $data->get_service;
+            $invoice = '#INV/' . Carbon::parse($data->created_at)->format('Ymd') . '/' . $data->id;
+            $name = 'Layanan';
+        }
+
         if ($data->selesai == false && $data->bukti_pembayaran == null) {
-            $subject = 'Menunggu Pembayaran ' . strtoupper(str_replace('_', ' ', $payment['type'])) .
+            $subject = 'Menunggu Pembayaran ' .$name. ' ' . strtoupper(str_replace('_', ' ', $payment['type'])) .
                 ' #' . $code;
         } else {
-            $subject = 'Checkout Pesanan dengan ID Pembayaran #' . $code . ' Berhasil Dikonfirmasi pada ' .
+            $subject = 'Checkout Pesanan dengan ID Pembayaran '.$name.' #' . $code . ' Berhasil Dikonfirmasi pada ' .
                 Carbon::parse($data->created_at)->formatLocalized('%d %B %Y – %H:%M');
         }
 
@@ -55,6 +65,6 @@ class PembayaranProyekMail extends Mailable
         }
 
         return $this->from(env('MAIL_USERNAME'), env('APP_TITLE'))->subject($subject)
-            ->view('emails.users.invoice', compact('code', 'data', 'payment', 'pembayaran', 'sisa_pembayaran', 'invoice'));
+            ->view('emails.users.invoice', compact('code', 'data', 'data2', 'payment', 'sisa', 'invoice', 'name'));
     }
 }
