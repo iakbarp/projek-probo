@@ -454,7 +454,7 @@
                                                                     <tr style="border-top: 1px solid #eee">
                                                                         <td><b>Jumlah yang Telah Dibayar</b></td>
                                                                         <td colspan="4" align="right">
-                                                                            <b>Rp{{number_format($data2->harga - $sisa,2,',','.')}}</b>
+                                                                            <b>Rp{{number_format($sisa,2,',','.')}}</b>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -462,7 +462,7 @@
                                                                                 Dibayar</b></td>
                                                                         <td colspan="4" align="right">
                                                                             <b style="font-size: 18px;color: #122752">
-                                                                                Rp{{number_format($sisa,2,',','.')}}</b>
+                                                                                Rp{{number_format($data2->harga - $sisa,2,',','.')}}</b>
                                                                         </td>
                                                                     </tr>
                                                                 @else
