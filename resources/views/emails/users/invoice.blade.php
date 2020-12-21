@@ -389,7 +389,7 @@
                                                     <tr>
                                                         <td>
                                                             <small style="line-height: 2em">
-                                                                @if ($data->selesai == false && $data->bukti_pembayaran == null) {
+                                                                @if ($pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null) {
                                                                 <b style="font-size: 22px">Mohon untuk segera
                                                                     menyeleseaikan pembayaran Anda</b><br>
                                                                 Checkout berhasil
@@ -426,35 +426,35 @@
                                                             <table class="custom">
                                                                 <tr>
                                                                     <td>
-                                                                        <b>{{$data->judul}}</b>
+                                                                        <b>{{$data2->judul}}</b>
                                                                     </td>
                                                                     <td>&emsp;</td>
                                                                     <td align="center"><b>1</b></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <b>Rp{{number_format($data->harga,2,',','.')}}</b>
+                                                                        <b>Rp{{number_format($data2->harga,2,',','.')}}</b>
                                                                     </td>
                                                                 </tr>
                                                                 <tr style="border-top: 1px solid #eee">
                                                                     <td><b>Total Tagihan</b></td>
                                                                     <td colspan="4" align="right">
-                                                                        <b>Rp{{number_format($data->harga,2,',','.')}}</b>
+                                                                        <b>Rp{{number_format($data2->harga,2,',','.')}}</b>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Jenis Pembayaran
-                                                                        (<b>{{$data->dp == true ? 'DP' : 'LUNAS'}}</b>)
+                                                                        (<b>{{$pembayaran->dp == true ? 'DP' : 'LUNAS'}}</b>)
                                                                     </td>
                                                                     <td colspan="4" align="right">
-                                                                        <b>{{round($data->jumlah_pembayaran /
-                                                                        $data->harga * 100,1)}}%</b>
+                                                                        <b>{{round($pembayaran->jumlah_pembayaran /
+                                                                        $data2->harga * 100,1)}}%</b>
                                                                     </td>
                                                                 </tr>
                                                                 @if($sisa > 0)
                                                                     <tr style="border-top: 1px solid #eee">
                                                                         <td><b>Jumlah yang Telah Dibayar</b></td>
                                                                         <td colspan="4" align="right">
-                                                                            <b>Rp{{number_format($data->harga - $sisa,2,',','.')}}</b>
+                                                                            <b>Rp{{number_format($data2->harga - $sisa,2,',','.')}}</b>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -470,7 +470,7 @@
                                                                         <td><b style="color: #122752">Jumlah yang Harus
                                                                                 Dibayar</b></td>
                                                                         <td colspan="4" align="right">
-                                                                            <b style="font-size: 18px;color: #122752">Rp{{number_format($data->jumlah_pembayaran,2,',','.')}}</b>
+                                                                            <b style="font-size: 18px;color: #122752">Rp{{number_format($pembayaran->jumlah_pembayaran,2,',','.')}}</b>
                                                                         </td>
                                                                     </tr>
                                                                 @endif
@@ -540,7 +540,7 @@
                                                         <td>
                                                             <small><b>Status Pembayaran</b></small>
                                                             <hr class="hr-divider">
-                                                            <span>{{$data->selesai == false && $data->bukti_pembayaran == null ? 'Menunggu Pembayaran' : 'Pembayaran Diterima'}}</span>
+                                                            <span>{{$pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null ? 'Menunggu Pembayaran' : 'Pembayaran Diterima'}}</span>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -554,7 +554,7 @@
                                                 <div style="font-size:20px;line-height:20px;">&nbsp;</div>
                                             </td>
                                         </tr>
-                                        @if($data->selesai == false && $data->bukti_pembayaran == null)
+                                        @if($pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null)
                                             <tr>
                                                 <td>
                                                     <div class="alert alert-warning text-center">
