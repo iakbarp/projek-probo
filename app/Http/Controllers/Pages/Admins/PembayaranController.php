@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Model\Negara;
 use App\Model\Pembayaran;
 use App\Model\PembayaranLayanan;
+use App\Model\PengerjaanLayanan;
 use App\Model\Project;
 use App\Model\Services;
+use App\Model\Topup;
 use App\Model\Withdraw;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Whoops\Exception\ErrorException;
 
 class PembayaranController extends Controller
@@ -27,9 +30,18 @@ class PembayaranController extends Controller
     {
         try {
             $data = Pembayaran::find($request->id);
+            $get_user = Project::query()->whereHas('get_pengerjaan')->first();
+            $topup=$data->jumlah_pembayaran;
+
             $data->update([
                 'selesai' => true
             ]);
+            Topup::create([
+                'user_id'=>$get_user->user_id,
+                'jumlah'=>$topup,
+            ]);
+
+
             return response()->json([
                 'status' => 200,
                 'message' => "Pembayaran Telah Diproses"
@@ -60,8 +72,23 @@ class PembayaranController extends Controller
     {
         try {
             $data = PembayaranLayanan::find($request->id);
+
+//            $get_user=PengerjaanLayanan::where('id',$data->pengerjaan_layanan_id)->first();
+            $get_user = Services::query()->whereHas('get_pengerjaan_layanan',function ($q) use($data){
+                $q->where('id',$data->pengerjaan_layanan_id);
+            })->first();
+
+//            dd($data);
+            $topup=$data->jumlah_pembayaran;
+//
+//dd($get_user->get_service);
             $data->update([
                 'selesai' => true
+            ]);
+
+            Topup::create([
+               'user_id'=>$get_user->user_id,
+                'jumlah'=>$topup,
             ]);
             return response()->json([
                 'status' => 200,
