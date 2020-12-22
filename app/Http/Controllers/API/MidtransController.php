@@ -174,7 +174,8 @@ class MidtransController extends Controller
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true,
+                                'selesai' => false,
                             ]);
                         } else {
                             $pembayaran = PembayaranLayanan::firstOrCreate([
@@ -184,7 +185,8 @@ class MidtransController extends Controller
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+                                'selesai' => false,
                             ]);
                         }
                     } else {
@@ -198,7 +200,8 @@ class MidtransController extends Controller
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+                                'selesai' => false,
                             ]);
                         } else {
                             $pembayaran->update([
@@ -209,7 +212,8 @@ class MidtransController extends Controller
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+                                'selesai' => false,
                             ]);
                         }
                     }

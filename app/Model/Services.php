@@ -24,4 +24,9 @@ class Services extends Model
     {
         return $this->hasMany(PengerjaanLayanan::class, 'service_id');
     }
+
+    public function get_pembayaran_layanan()
+    {
+        return $this->hasOne(PembayaranLayanan::class, 'service_id');
+    }
 }
