@@ -7,6 +7,7 @@ use App\Mail\Users\PembayaranLayananMail;
 use App\Model\PembayaranLayanan;
 use App\Model\PengerjaanLayanan;
 use App\Model\Saldo;
+use App\Model\Services;
 use App\Model\UlasanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ class LayananController extends Controller
     public function dashboard(Request $request)
     {
         $user = Auth::user();
+        $service = Services::where('user_id', $user->id)->get();
         $pesanan = PengerjaanLayanan::where('user_id', $user->id)->orderByDesc('id')->get();
         $req_id = $request->id;
         $req_invoice = $request->invoice;
@@ -36,7 +38,7 @@ class LayananController extends Controller
             $find = null;
         }
 
-        return view('pages.main.users.klien.layanan', compact('user', 'pesanan',
+        return view('pages.main.users.klien.layanan', compact('user', 'service', 'pesanan',
             'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'find', 'saldo'));
     }
 

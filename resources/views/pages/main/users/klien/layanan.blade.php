@@ -560,7 +560,7 @@
                                                                 onclick="bayarSekarang('{{$row->id}}','{{$row->get_service->judul}}',
                                                                     '{{route('klien.update-pembayaran.pesanan',['id' => $row->id])}}',
                                                                     '{{$row->get_service->harga}}',
-                                                                    '{{$row->get_pembayaran->jumlah_pembayaran}}')">
+                                                                    '{{$row->get_service->get_pembayaran->jumlah_pembayaran}}')">
                                                             <i class="fa fa-wallet" style="margin-right: 0"></i>
                                                         </button>
                                                     @endif
@@ -902,6 +902,7 @@
     <script src="{{asset('vendor/lightgallery/dist/js/lightgallery-all.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
     <script>
         $(function () {
             var export_pesanan = 'Daftar Pesanan Layanan ({{now()->format('j F Y')}})';
@@ -1090,20 +1091,6 @@
 
             $(".pm-radioButton").prop("checked", false).trigger('change');
             $("#pm-details").hide();
-        }
-
-        function paymentMethod(rekening) {
-            if ($("input[name=dp]").is(":checked")) {
-                $("#pay-form input[name=rekening]").val(rekening);
-                $("#pm-details").show().html(
-                    'Jumlah yang harus Anda transfer ke nomor rekening <u>' + rekening + '</u> ' +
-                    '(a/n <u>{{env('APP_NAME')}}</u>) adalah sebesar ' +
-                    '<u>Rp' + thousandSeparator(parseInt($("#jumlah_pembayaran").val().split('.').join(''))) + ',00</u>.');
-            } else {
-                $(".pm-radioButton").prop("checked", false).trigger('change');
-                $("#pm-details").hide();
-                $("#pay-form button[type=submit]").click();
-            }
         }
 
         $("#pay-form").on('submit', function (e) {
