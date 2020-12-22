@@ -39,6 +39,7 @@ class PembayaranController extends Controller
             Topup::create([
                 'user_id'=>$get_user->user_id,
                 'jumlah'=>$topup,
+                'konfirmasi' => true,
             ]);
 
 
@@ -89,6 +90,7 @@ class PembayaranController extends Controller
             Topup::create([
                'user_id'=>$get_user->user_id,
                 'jumlah'=>$topup,
+                'konfirmasi' => true,
             ]);
             return response()->json([
                 'status' => 200,

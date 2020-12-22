@@ -1108,62 +1108,62 @@
                                     </div>
                                 </div>
 
-                                <div id="bukti-pembayaran" style="display: none">
-                                    <div class="card">
-                                        <form id="upload-form" class="form-horizontal" role="form" method="POST"
-                                              enctype="multipart/form-data">
-                                            @csrf
-                                            {{method_field('put')}}
-                                            <div class="card-content">
-                                                <div class="card-title">
-                                                    <small id="invoice"></small>
-                                                    <hr class="mt-0">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="uploader">
-                                                                <input id="file-upload" type="file"
-                                                                       name="bukti_pembayaran"
-                                                                       accept="image/*">
-                                                                <label for="file-upload" id="file-drag">
-                                                                    <img id="file-image" src="#" alt="Bukti Pembayaran"
-                                                                         class="hidden img-responsive">
-                                                                    <div id="start"><i class="fa fa-download"
-                                                                                       aria-hidden="true"></i>
-                                                                        <div>Pilih file bukti pembayaran Anda atau seret
-                                                                            filenya
-                                                                            kesini
-                                                                        </div>
-                                                                        <div id="notimage" class="hidden">Mohon untuk
-                                                                            memilih file
-                                                                            gambar
-                                                                        </div>
-                                                                        <span id="file-upload-btn"
-                                                                              class="btn btn-link btn-sm">Pilih File</span>
-                                                                    </div>
-                                                                    <div id="response" class="hidden">
-                                                                        <div id="messages"></div>
-                                                                    </div>
-                                                                    <div id="progress-upload">
-                                                                        <div
-                                                                            class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"
-                                                                            role="progressbar" aria-valuenow="0"
-                                                                            aria-valuemin="0" aria-valuemax="100">
-                                                                        </div>
-                                                                    </div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-read-more">
-                                                <button type="reset" class="btn btn-link btn-block">
-                                                    <i class="fa fa-undo mr-2"></i>BATAL
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+{{--                                <div id="bukti-pembayaran" style="display: none">--}}
+{{--                                    <div class="card">--}}
+{{--                                        <form id="upload-form" class="form-horizontal" role="form" method="POST"--}}
+{{--                                              enctype="multipart/form-data">--}}
+{{--                                            @csrf--}}
+{{--                                            {{method_field('put')}}--}}
+{{--                                            <div class="card-content">--}}
+{{--                                                <div class="card-title">--}}
+{{--                                                    <small id="invoice"></small>--}}
+{{--                                                    <hr class="mt-0">--}}
+{{--                                                    <div class="row">--}}
+{{--                                                        <div class="col-md-12">--}}
+{{--                                                            <div class="uploader">--}}
+{{--                                                                <input id="file-upload" type="file"--}}
+{{--                                                                       name="bukti_pembayaran"--}}
+{{--                                                                       accept="image/*">--}}
+{{--                                                                <label for="file-upload" id="file-drag">--}}
+{{--                                                                    <img id="file-image" src="#" alt="Bukti Pembayaran"--}}
+{{--                                                                         class="hidden img-responsive">--}}
+{{--                                                                    <div id="start"><i class="fa fa-download"--}}
+{{--                                                                                       aria-hidden="true"></i>--}}
+{{--                                                                        <div>Pilih file bukti pembayaran Anda atau seret--}}
+{{--                                                                            filenya--}}
+{{--                                                                            kesini--}}
+{{--                                                                        </div>--}}
+{{--                                                                        <div id="notimage" class="hidden">Mohon untuk--}}
+{{--                                                                            memilih file--}}
+{{--                                                                            gambar--}}
+{{--                                                                        </div>--}}
+{{--                                                                        <span id="file-upload-btn"--}}
+{{--                                                                              class="btn btn-link btn-sm">Pilih File</span>--}}
+{{--                                                                    </div>--}}
+{{--                                                                    <div id="response" class="hidden">--}}
+{{--                                                                        <div id="messages"></div>--}}
+{{--                                                                    </div>--}}
+{{--                                                                    <div id="progress-upload">--}}
+{{--                                                                        <div--}}
+{{--                                                                            class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"--}}
+{{--                                                                            role="progressbar" aria-valuenow="0"--}}
+{{--                                                                            aria-valuemin="0" aria-valuemax="100">--}}
+{{--                                                                        </div>--}}
+{{--                                                                    </div>--}}
+{{--                                                                </label>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="card-read-more">--}}
+{{--                                                <button type="reset" class="btn btn-link btn-block">--}}
+{{--                                                    <i class="fa fa-undo mr-2"></i>BATAL--}}
+{{--                                                </button>--}}
+{{--                                            </div>--}}
+{{--                                        </form>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
                                 <div id="ulas-hasil" style="display: none">
                                     <div class="card">
