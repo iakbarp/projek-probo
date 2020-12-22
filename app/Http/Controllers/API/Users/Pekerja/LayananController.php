@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
@@ -79,7 +80,7 @@ class LayananController extends Controller
 
                 if ($dt->file_hasil) {
                     foreach ($dt->file_hasil as $d) {
-                        $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 0) : [];
+                        $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 2) : [];
                     }
                 }
 
@@ -98,7 +99,7 @@ class LayananController extends Controller
                     ->first();
                 $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto');
 
-                $dt->ulasan=$ulasan;
+                $dt->ulasan = $ulasan;
 
                 $dt->file_hasil = $file;
                 $dt->layanan = collect($layanan)->where('id', $dt->service_id)->first();
@@ -113,19 +114,19 @@ class LayananController extends Controller
                     $dt->kategori = $kat;
                     $dt->subkategori = $sub;
                 }
-                $dt = $dt ? $this->imgCheck($dt, 'thumbnail', 'storage/layanan/thumbnail/', 0) : [];
+                $dt = $dt ? $this->imgCheck($dt, 'thumbnail', 'storage/layanan/thumbnail/', 2) : [];
 
                 unset($dt->kategori_id);
             }
             $bio = Bio::where('user_id', $user->id)
-            ->select(
-                DB::raw('user_id as id'),
-                DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
-                'foto',
-                'summary'
-            )
-            ->first();
-            $bio->nama=$user->name;
+                ->select(
+                    DB::raw('user_id as id'),
+                    DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
+                    'foto',
+                    'summary'
+                )
+                ->first();
+            $bio->nama = $user->name;
             $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto');
 
             return response()->json([
@@ -161,11 +162,10 @@ class LayananController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'judul' => 'required|string|max:100',
-
-                    'hari_pengerjaan' => 'required|integer',
+                    'pengerjaan' => 'required|integer',
                     'harga' => 'required|integer',
                     'deskripsi' => 'required|string|max:250',
-                    'subkategori_id' => 'required|exists:subkategori,id',
+                    'kategori' => 'required|exists:subkategori,id',
                     'thumbnail' => 'image|mimes:jpg,jpeg,gif,png|max:2048',
                 ]);
 
@@ -193,12 +193,28 @@ class LayananController extends Controller
 
 
 
-                Services::create(collect($request->all())->toArray());
+                Services::create([
+                    'judul' => $request->judul,
+                    'hari_pengerjaan' => $request->pengerjaan,
+                    'harga' => $request->harga,
+                    'deskripsi' => $request->deskripsi,
+                    'subkategori_id' => $request->kategori,
+                    'thumbnail' => $thumbnail,
+                    'user_id'=>$user->id,
+
+                ]);
+
+                return response()->json([
+                    'error' => false,
+
+                    'message' =>  'Layanan [' . $request->judul . '] Berhasil dibuat...'
+
+                ], 201);
             } else {
                 return response()->json([
                     'error' => true,
 
-                    'message' =>  'Tugas/Proyek [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
+                    'message' =>  'Layanan [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
 
                 ], 400);
             }
@@ -211,6 +227,138 @@ class LayananController extends Controller
             ], 400);
         }
     }
+
+    public function updateLayanan(Request $request)
+    {
+
+
+        $user = auth('api')->user();
+        $judul = preg_replace("![^a-z0-9]+!i", "-", strtolower($request->judul));
+
+        try {
+            $before = Services::query()->findOrFail($request->proyek_id);
+
+
+            $cek = Services::where('user_id', $user->id)->where('permalink', $judul)
+                ->where('permalink', '!=', $before->permalink)
+                // ->where('')
+                ->first();
+
+
+            if (!$cek) {
+
+                $validator = Validator::make($request->all(), [
+                    'judul' => 'required|string|max:100',
+                    'jenis' => 'required|in:privat,publik',
+                    'pengerjaan' => 'required|integer',
+                    'harga' => 'required|integer',
+                    'deskripsi' => 'required|string|max:250',
+                    'kategori' => 'required|exists:subkategori,id',
+                    // 'lampiran' => 'required|array',
+                    // 'lampiran.*' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120',
+                    'thumbnail' => 'image|mimes:jpg,jpeg,gif,png|max:2048',
+                ]);
+
+                if ($validator->fails()) {
+
+                    return response()->json([
+                        'error' => true,
+                        'data' => [
+                            'message' => $validator->errors()
+                        ]
+                    ], 422);
+                }
+
+                if ($request->hasFile('thumbnail')) {
+                    Storage::delete('public/layanan/thumbnail/' . $before->thumbnail);
+
+                    $thumbnail = sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $request->file('thumbnail')->getClientOriginalName();
+                    $request->file('thumbnail')->storeAs('public/layanan/thumbnail', $thumbnail);
+                } else {
+                    $thumbnail = $before->thumbnail;
+                }
+
+
+
+                $before->update([
+                    'user_id' => $user->id,
+                    'subkategori_id' => $request->kategori,
+                    'judul' => $request->judul,
+                    'permalink' =>  $judul,
+                    'deskripsi' => $request->deskripsi,
+                    'hari_pengerjaan' => $request->pengerjaan,
+                    'harga' =>  $request->harga,
+                    'thumbnail' => $thumbnail,
+                    // 'lampiran' => $lampiran,
+
+                ]);
+                return response()->json([
+                    'error' => false,
+                    "data" => ['message' => 'berhasil diubah!']
+
+                ]);
+            } else {
+                return response()->json([
+                    'error' => true,
+
+                    'message' =>  'Layanan [' . $request->judul . '] Anda telah tersedia! Silahkan buat tugas/proyek Anda dengan judul yang berbeda, terimakasih.'
+
+                ], 400);
+            }
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 500);
+        }
+    }
+
+    public function deleteLayanan($proyek_id)
+    {
+        $user = auth('api')->user();
+
+        try {
+            $cek = Services::where('user_id', $user->id)
+                ->where('id', $proyek_id)->first();
+
+            if ($cek) {
+
+
+                if ($cek->thumbnail != "") {
+                    Storage::delete('public/layanan/thumbnail/' . $cek->thumbnail);
+                }
+
+
+
+                $name = $cek->judul;
+                $cek->delete();
+
+                return response()->json([
+                    'error' => false,
+                    'data' => [
+                        'message' => "Layanan ['$name'] berhasil dihapus!"
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'error' => true,
+
+                    'message' =>  'Layanan tidak ditemukan!'
+
+                ], 400);
+            }
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
 
 
     private function imgCheck($data, $column, $path, $ch = 0)
