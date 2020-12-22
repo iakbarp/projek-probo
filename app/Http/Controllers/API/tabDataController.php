@@ -212,29 +212,37 @@ class tabDataController extends Controller
             $sub = DB::table('users')
                 ->leftJoin('service', 'users.id', '=', 'service.user_id')
 
-                ->leftJoin('project as pr', function ($join) {
-                    $join->on('users.id', '=', 'pr.user_id');
-                    $join->on('pr.selesai', '=', DB::raw('1'));
-                })
+                // ->leftJoin('project as pr', function ($join) {
+                //     $join->on('users.id', '=', 'pr.user_id');
+                //     $join->join('bid as pe',function($rel){
+                //         $rel->on('pe.proyek_id','=','pr.id');
+                //         $rel->on('pe.tolak',DB::raw('null'));
+                //     });
+                //     // $join->on('pr.selesai', '=', DB::raw('1'));
+                // })
                 ->leftJoin('bid', function ($join) {
-                    $join->on('users.id', '=', 'bid.proyek_id');
-                    $join->on('bid.tolak', '=', DB::raw('0'));
+                    $join->on('users.id', '=', 'bid.user_id');
+                    // $join->on('bid.tolak', '=', DB::raw('0'));
                 })
 
                 ->where(function ($qury) {
                     $qury->whereNotNull('service.user_id');
-                    $qury->orWhereNotNull('bid.user_id');
+                    // $qury->orWhereNotNull('bid.user_id');
                 })
 
                 ->select(
                     'users.id',
                     'users.name',
 
-                    DB::raw('count(pr.id) as jumlah_proyek'),
+                    DB::raw('ifnull((select count(pr.id) from `project` as `pr` join `bid` as `pe` on
+                    `pe`.`proyek_id` = `pr`.`id` and `pe`.`tolak` is null
+                     where  `users`.`id` = `pr`.`user_id` group by `pr`.`user_id`),0) as jumlah_proyek'),
                     // DB::raw('(select foto from bio where bio.user_id=users.id) as thumbnail'),
 
                 )
-                ->groupBy('users.id');
+                ->groupBy('users.id','service.user_id');
+
+            // dd($sub->toSql());
 
             $frelance = DB::table(DB::raw("({$sub->toSql()}) as sub"))
                 ->join('bio', 'bio.user_id', '=', 'sub.id')
@@ -249,7 +257,8 @@ class tabDataController extends Controller
                     // DB::raw("if(bio.alamat is null,null,CONcat(bio.alamat,if(kota.nama is null,'',concat(', ',kota.nama)),if(pr.nama is null,'',concat(', ',pr.nama)))) alamat"),
                     DB::raw('(SELECT format(AVG(bintang),1)  FROM `testimoni` where user_id=sub.id) as bintang'),
                     DB::raw('(SELECT count(bintang)  FROM `testimoni` where user_id=sub.id) as ulasan'),
-                    DB::raw('(SELECT count(id)  FROM `bid` where user_id=sub.id and tolak=0) as proyek'),
+                    // DB::raw('(SELECT count(id)  FROM `bid` where user_id=sub.id and tolak=0) as proyek'),
+                    DB::raw('sub.jumlah_proyek as proyek'),
                     'bio.created_at',
                     'bio.updated_at',
 

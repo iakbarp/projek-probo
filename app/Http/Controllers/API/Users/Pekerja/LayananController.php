@@ -9,6 +9,7 @@ use App\Model\Kategori;
 use App\Model\PengerjaanLayanan;
 use App\Model\Services;
 use App\Model\SubKategori;
+use App\Model\UlasanService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,6 +82,24 @@ class LayananController extends Controller
                         $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 0) : [];
                     }
                 }
+
+                $ulasan = UlasanService::query()
+                    ->where('pengerjaan_layanan_id', $dt->id)
+                    ->where('ulasan_service.user_id', $dt->user_id)
+                    ->leftJoin('bio', 'bio.user_id', '=', 'ulasan_service.user_id')
+                    ->leftJoin('users as u', 'u.id', '=', 'ulasan_service.user_id')
+                    ->select(
+                        'ulasan_service.id',
+                        DB::raw('u.name as nama'),
+                        'bio.foto',
+                        'ulasan_service.deskripsi',
+                        DB::raw("format(ulasan_service.bintang,1) as bintang")
+                    )
+                    ->first();
+                $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto');
+
+                $dt->ulasan=$ulasan;
+
                 $dt->file_hasil = $file;
                 $dt->layanan = collect($layanan)->where('id', $dt->service_id)->first();
             }
@@ -98,7 +117,15 @@ class LayananController extends Controller
 
                 unset($dt->kategori_id);
             }
-            $bio = Bio::where('user_id', $user->id)->first();
+            $bio = Bio::where('user_id', $user->id)
+            ->select(
+                DB::raw('user_id as id'),
+                DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
+                'foto',
+                'summary'
+            )
+            ->first();
+            $bio->nama=$user->name;
             $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto');
 
             return response()->json([
