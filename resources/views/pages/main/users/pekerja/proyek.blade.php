@@ -304,7 +304,7 @@
                                                 }
                                             @endphp
                                             <tr>
-                                                <td style="vertical-align: middle" align="center"><img class="img-responsive float-left mr-2" width="650"
+                                                <td style="vertical-align: middle" align="center"><img class="img-responsive float-left mr-2" width="160"
                                                                                                        alt="Thumbnail" src="{{$row->get_project->thumbnail != "" ?
                                                          asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
                                                          : asset('images/slider/beranda-1.jpg')}}"></td>
@@ -383,7 +383,7 @@
                                                 }
                                             @endphp
                                             <tr>
-                                                <td style="vertical-align: middle" align="center"><img class="img-responsive float-left" width="650"
+                                                <td style="vertical-align: middle" align="center"><img class="img-responsive float-left" width="160"
                                                                                                        alt="Thumbnail" src="{{$row->get_project->thumbnail != "" ?
                                                          asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
                                                          : asset('images/undangan-1.jpg')}}"></td>
