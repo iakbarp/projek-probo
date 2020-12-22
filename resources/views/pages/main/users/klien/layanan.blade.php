@@ -560,7 +560,7 @@
                                                                 onclick="bayarSekarang('{{$row->id}}','{{$row->get_service->judul}}',
                                                                     '{{route('klien.update-pembayaran.pesanan',['id' => $row->id])}}',
                                                                     '{{$row->get_service->harga}}',
-                                                                    '{{$row->get_service->get_pembayaran->jumlah_pembayaran}}')">
+                                                                    '{{$row->get_pembayaran->jumlah_pembayaran}}')">
                                                             <i class="fa fa-wallet" style="margin-right: 0"></i>
                                                         </button>
                                                     @endif
