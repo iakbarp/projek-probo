@@ -59,8 +59,8 @@ class MidtransController extends Controller
         }
         $user = User::find($request->user_id);
         $split_name = explode(" ", $user->name);
-
-        if(ceil(str_replace('.', '', $request->jumlah_pembayaran)) < 10000 || $cek == 'topup' && ceil($topup->jumlah) < 10000) {
+//dd($cek == 'topup' &&  ceil(str_replace('.','',$request->jumlah)) < 10000);
+        if((ceil(str_replace('.', '', $request->jumlah_pembayaran)) < 10000) ||( $cek == 'topup' &&  ceil(str_replace('.','',$request->jumlah)) < 10000)) {
             return response()->json([
                 'error' => true,
                 'message' => 'Maaf saat ini Anda tidak bisa melanjutkan proses checkout, karena total transaksi pembelian Anda masih kurang dari Rp' . number_format(10000, 2, ',', '.') . ' :('
