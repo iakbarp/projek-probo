@@ -414,8 +414,9 @@
                                 <label for="Konfirmasi Pin" class="col-sm-4 col-form-label">Konfirmasi Pin</label>
                                 <div class="col-sm-8">
                                     <b>KONFIRMASI PIN</b>
-                                    <input type="password" class="form-control" id="pin" name="pin" minlength="6"
+                                    <input type="password" class="form-control" id="pin_text" name="pin" minlength="6"
                                            maxlength="6" onkeypress="return numberOnly(event, false)">
+                                    <small class="text-danger" id="message_pin" style="display: none"></small>
                                 </div>
                             </div>
                         </form>
@@ -545,7 +546,29 @@
         });
 
         $verifikasiPin.on('click', function () {
-            $("#modal_withdraw").modal("show");
+            console.log($('#pin_text').val());
+            $.ajax({
+                url : '{{route('user.check_pin')}}',
+                data : {
+                    _token: '{{csrf_token()}}',
+                    pin : $('#pin_text').val()
+                },
+                type : "POST",
+                success: function (response) {
+                    console.log(response.status);
+                    if(response.status == 'success'){
+                        $('#konfirmasi_pin').modal("hide");
+                        $("#modal_withdraw").modal("show");
+
+                    }else{
+                        $('#message_pin').text(response.message).show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Salah");
+                }
+            });
+
         });
 
         $("#show_pin_settings").on('click', function () {

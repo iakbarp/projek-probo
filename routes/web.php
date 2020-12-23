@@ -453,6 +453,11 @@ Route::group(['prefix' => 'akun'], function () {
             'uses' => 'DompetController@withdrawSaldo',
             'as' => 'user.withdraw.saldo'
         ]);
+
+        Route::post('check_pin',[
+            'uses' => 'DompetController@check_pin',
+            'as' => 'user.check_pin'
+        ]);
     });
 
 });

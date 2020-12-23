@@ -103,4 +103,28 @@ class DompetController extends Controller
 
     }
 
+    public function check_pin(Request $request)
+    {
+        try {
+            $data = Dompet::query()->where('user_id',Auth::user()->id)->first();
+
+            if (!Hash::check($request->pin, $data->pin)) {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'PIN anda tidak cocok, silahkan coba lagi'
+                ],200);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'lanjut'
+                ],200);
+            }
+        }catch (\Exception $exception){
+            return response()->json([
+                'status' => 'error',
+                'message' => $exception->getMessage()
+            ],500);
+        }
+    }
+
 }
