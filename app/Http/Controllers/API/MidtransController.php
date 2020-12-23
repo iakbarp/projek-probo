@@ -43,6 +43,7 @@ class MidtransController extends Controller
     {
         app()->setLocale('id');
         $cek = $request->cek;
+        $amount = $cek == 'topup' ? $request->jumlah : $request->jumlah_pembayaran;
 
         if ($cek == 'project') {
             $pengerjaan = Pengerjaan::find($request->id);
@@ -53,14 +54,14 @@ class MidtransController extends Controller
         } else{
             $topup = Topup::firstOrCreate([
                 'user_id' => $request->user_id,
-                'jumlah' => ceil(str_replace('.','',$request->jumlah)),
+                'jumlah' => ceil(str_replace('.','',$amount)),
             ]);
             $name = 'TOPUP UNDAGI: Rp'.number_format($topup->jumlah,2,',','.');
         }
         $user = User::find($request->user_id);
         $split_name = explode(" ", $user->name);
-//dd($cek == 'topup' &&  ceil(str_replace('.','',$request->jumlah)) < 10000);
-        if((ceil(str_replace('.', '', $request->jumlah_pembayaran)) < 10000) ||( $cek == 'topup' &&  ceil(str_replace('.','',$request->jumlah)) < 10000)) {
+
+        if(ceil(str_replace('.', '', $amount)) < 10000) {
             return response()->json([
                 'error' => true,
                 'message' => 'Maaf saat ini Anda tidak bisa melanjutkan proses checkout, karena total transaksi pembelian Anda masih kurang dari Rp' . number_format(10000, 2, ',', '.') . ' :('
@@ -75,8 +76,7 @@ class MidtransController extends Controller
                             strtoupper('PRO-' . $pengerjaan->proyek_id . '_' . now()->timestamp) :
                             ($cek == 'service' ? strtoupper('SER-' . $pengerjaan->id . '_' . now()->timestamp) :
                                 strtoupper('TOP-' . $topup->id . '_' . now()->timestamp)),
-                        'gross_amount' => $cek == 'topup' ? ceil($topup->jumlah) :
-                            ceil(str_replace('.', '', $request->jumlah_pembayaran)),
+                        'gross_amount' => $cek == 'topup' ? ceil($topup->jumlah) : ceil(str_replace('.', '', $amount)),
                     ],
                     'customer_details' => [
                         'first_name' => array_shift($split_name),
@@ -110,7 +110,7 @@ class MidtransController extends Controller
                                 ($cek == 'service' ? strtoupper('SERVICE-' . str_pad($pengerjaan->id, 4, STR_PAD_LEFT)) :
                                     strtoupper('TOPUP-' . str_pad($topup->id, 4, STR_PAD_LEFT))),
                             'price' => $cek == 'topup' ? ceil($topup->jumlah) :
-                                ceil(str_replace('.', '', $request->jumlah_pembayaran)),
+                                ceil(str_replace('.', '', $amount)),
                             'quantity' => 1,
                             'name' => $cek == 'topup' ? $name :
                                 ($request->dp == 1 ? $name . ' (DP)' : $name . ' (FP)'),
