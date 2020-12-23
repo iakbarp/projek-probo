@@ -108,8 +108,8 @@ Route::group(['namespace' => 'API'], function () {
             Route::group(['prefix' => 'layanan','namespace' => 'Users\Klien'], function () {
                 Route::get('/', 'LayananController@dashboard');
                 Route::post('/', 'LayananController@tambahLayanan');
-                Route::post('/{proyek_id}', 'ProyekController@updateLayanan');
-                Route::delete('/{proyek_id}', 'ProyekController@deleteLayanan');
+                Route::post('/{proyek_id}', 'LayananController@updateLayanan');
+                Route::delete('/{proyek_id}', 'LayananController@deleteLayanan');
             });
 
         });
@@ -118,8 +118,8 @@ Route::group(['namespace' => 'API'], function () {
             Route::group(['prefix' => 'layanan','namespace' => 'Users\Pekerja'], function () {
                 Route::get('/', 'LayananController@dashboard');
                 Route::post('/', 'LayananController@tambahLayanan');
-                Route::post('/{proyek_id}', 'ProyekController@updateLayanan');
-                Route::delete('/{proyek_id}', 'ProyekController@deleteLayanan');
+                Route::post('/{proyek_id}', 'LayananController@updateLayanan');
+                Route::delete('/{proyek_id}', 'LayananController@deleteLayanan');
             });
         });
     });
