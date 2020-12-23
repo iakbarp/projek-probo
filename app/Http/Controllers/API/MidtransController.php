@@ -60,58 +60,68 @@ class MidtransController extends Controller
         $user = User::find($request->user_id);
         $split_name = explode(" ", $user->name);
 
-        return Snap::getSnapToken([
-            'enabled_payments' => $this->channels,
-            'transaction_details' => [
-                'order_id' => $cek == 'project' ?
-                    strtoupper('PRO-' . $pengerjaan->proyek_id . '_' . now()->timestamp) :
-                    ($cek == 'service' ? strtoupper('SER-' . $pengerjaan->id . '_' . now()->timestamp) :
-                        strtoupper('TOP-' . $topup->id . '_' . now()->timestamp)),
-                'gross_amount' => $cek == 'topup' ? ceil($topup->jumlah) :
-                    ceil(str_replace('.', '', $request->jumlah_pembayaran)),
-            ],
-            'customer_details' => [
-                'first_name' => array_shift($split_name),
-                'last_name' => implode(" ", $split_name),
-                'phone' => $user->get_bio->hp,
-                'email' => $user->email,
-                'address' => $user->get_bio->alamat,
-                'billing_address' => [
-                    'first_name' => array_shift($split_name),
-                    'last_name' => implode(" ", $split_name),
-                    'address' => $user->get_bio->alamat,
-                    'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
-                    'postal_code' => $user->get_bio->kode_pos,
-                    'phone' => $user->get_bio->hp,
-                    'country_code' => 'IDN'
-                ],
-                'shipping_address' => [
-                    'first_name' => array_shift($split_name),
-                    'last_name' => implode(" ", $split_name),
-                    'address' => $user->get_bio->alamat,
-                    'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
-                    'postal_code' => $user->get_bio->kode_pos,
-                    'phone' => $user->get_bio->hp,
-                    'country_code' => 'IDN'
-                ],
-            ],
-            'item_details' => [
-                array(
-                    'id' => $cek == 'project' ?
-                        strtoupper('PROJECT-' . str_pad($pengerjaan->proyek_id, 4, STR_PAD_LEFT)) :
-                        ($cek == 'service' ? strtoupper('SERVICE-' . str_pad($pengerjaan->id, 4, STR_PAD_LEFT)) :
-                            strtoupper('TOPUP-' . str_pad($topup->id, 4, STR_PAD_LEFT))),
-                    'price' => $cek == 'topup' ? ceil($topup->jumlah) :
-                        ceil(str_replace('.', '', $request->jumlah_pembayaran)),
-                    'quantity' => 1,
-                    'name' => $cek == 'topup' ? $name :
-                        ($request->dp == 1 ? $name . ' (DP)' : $name . ' (FP)'),
-                    'category' => $cek == 'topup' ? 'TOPUP Payment' : ($cek == 'project' ? 'Project Payment' : 'Service Payment')
-                )
-            ],
-            'custom_field1' => $user->id,
-            'custom_field2' => $cek == 'topup' ? null : $request->dp,
-        ]);
+        if(ceil(str_replace('.', '', $request->jumlah_pembayaran)) < 10000 || $cek == 'topup' && ceil($topup->jumlah) < 10000) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Maaf saat ini Anda tidak bisa melanjutkan proses checkout, karena total transaksi pembelian Anda masih kurang dari Rp' . number_format(10000, 2, ',', '.') . ' :('
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => false,
+                'data' => Snap::getSnapToken([
+                    'enabled_payments' => $this->channels,
+                    'transaction_details' => [
+                        'order_id' => $cek == 'project' ?
+                            strtoupper('PRO-' . $pengerjaan->proyek_id . '_' . now()->timestamp) :
+                            ($cek == 'service' ? strtoupper('SER-' . $pengerjaan->id . '_' . now()->timestamp) :
+                                strtoupper('TOP-' . $topup->id . '_' . now()->timestamp)),
+                        'gross_amount' => $cek == 'topup' ? ceil($topup->jumlah) :
+                            ceil(str_replace('.', '', $request->jumlah_pembayaran)),
+                    ],
+                    'customer_details' => [
+                        'first_name' => array_shift($split_name),
+                        'last_name' => implode(" ", $split_name),
+                        'phone' => $user->get_bio->hp,
+                        'email' => $user->email,
+                        'address' => $user->get_bio->alamat,
+                        'billing_address' => [
+                            'first_name' => array_shift($split_name),
+                            'last_name' => implode(" ", $split_name),
+                            'address' => $user->get_bio->alamat,
+                            'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
+                            'postal_code' => $user->get_bio->kode_pos,
+                            'phone' => $user->get_bio->hp,
+                            'country_code' => 'IDN'
+                        ],
+                        'shipping_address' => [
+                            'first_name' => array_shift($split_name),
+                            'last_name' => implode(" ", $split_name),
+                            'address' => $user->get_bio->alamat,
+                            'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
+                            'postal_code' => $user->get_bio->kode_pos,
+                            'phone' => $user->get_bio->hp,
+                            'country_code' => 'IDN'
+                        ],
+                    ],
+                    'item_details' => [
+                        array(
+                            'id' => $cek == 'project' ?
+                                strtoupper('PROJECT-' . str_pad($pengerjaan->proyek_id, 4, STR_PAD_LEFT)) :
+                                ($cek == 'service' ? strtoupper('SERVICE-' . str_pad($pengerjaan->id, 4, STR_PAD_LEFT)) :
+                                    strtoupper('TOPUP-' . str_pad($topup->id, 4, STR_PAD_LEFT))),
+                            'price' => $cek == 'topup' ? ceil($topup->jumlah) :
+                                ceil(str_replace('.', '', $request->jumlah_pembayaran)),
+                            'quantity' => 1,
+                            'name' => $cek == 'topup' ? $name :
+                                ($request->dp == 1 ? $name . ' (DP)' : $name . ' (FP)'),
+                            'category' => $cek == 'topup' ? 'TOPUP Payment' : ($cek == 'project' ? 'Project Payment' : 'Service Payment')
+                        )
+                    ],
+                    'custom_field1' => $user->id,
+                    'custom_field2' => $cek == 'topup' ? null : $request->dp,
+                ])
+            ], 200);
+        }
     }
 
     public function notificationCallback()

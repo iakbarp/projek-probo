@@ -226,21 +226,21 @@
     </style>
 @endpush
 @section('content')
-{{--    <div class="breadcrumbs" style="background-image: url('{{$user->get_bio->latar_belakang != null ?--}}
-{{--    asset('storage/users/latar_belakang/'.$user->get_bio->latar_belakang) : asset('images/slider/beranda-pekerja.jpg')}}')">--}}
-{{--        <div class="breadcrumbs-overlay"></div>--}}
-{{--        <div class="page-title">--}}
-{{--            <h2>Dashboard Klien: Layanan</h2>--}}
-{{--            <p>Halaman ini menampilkan daftar layanan yang Anda pesan beserta status pembayaran dan pengerjaannya.</p>--}}
-{{--        </div>--}}
-{{--        <ul class="crumb">--}}
-{{--            <li><a href="{{route('beranda')}}"><i class="fa fa-home"></i></a></li>--}}
-{{--            <li><i class="fa fa-angle-double-right"></i> <a href="#">Dashboard Klien</a></li>--}}
-{{--            <li><i class="fa fa-angle-double-right"></i> <a href="{{url()->current()}}">Layanan</a></li>--}}
-{{--            <li><a href="#" onclick="goToAnchor()"><i class="fa fa-angle-double-right"></i> Daftar Pesanan</a>--}}
-{{--            </li>--}}
-{{--        </ul>--}}
-{{--    </div>--}}
+    {{--    <div class="breadcrumbs" style="background-image: url('{{$user->get_bio->latar_belakang != null ?--}}
+    {{--    asset('storage/users/latar_belakang/'.$user->get_bio->latar_belakang) : asset('images/slider/beranda-pekerja.jpg')}}')">--}}
+    {{--        <div class="breadcrumbs-overlay"></div>--}}
+    {{--        <div class="page-title">--}}
+    {{--            <h2>Dashboard Klien: Layanan</h2>--}}
+    {{--            <p>Halaman ini menampilkan daftar layanan yang Anda pesan beserta status pembayaran dan pengerjaannya.</p>--}}
+    {{--        </div>--}}
+    {{--        <ul class="crumb">--}}
+    {{--            <li><a href="{{route('beranda')}}"><i class="fa fa-home"></i></a></li>--}}
+    {{--            <li><i class="fa fa-angle-double-right"></i> <a href="#">Dashboard Klien</a></li>--}}
+    {{--            <li><i class="fa fa-angle-double-right"></i> <a href="{{url()->current()}}">Layanan</a></li>--}}
+    {{--            <li><a href="#" onclick="goToAnchor()"><i class="fa fa-angle-double-right"></i> Daftar Pesanan</a>--}}
+    {{--            </li>--}}
+    {{--        </ul>--}}
+    {{--    </div>--}}
 
     <section class="none-margin" style="padding: 40px 0 40px 0">
         <div class="container">
@@ -309,7 +309,8 @@
                                 </tr>
                             </table>
                             <div class="card-title">
-                                <a href="{{route('profil.user', ['username' => $user->username])}}" class="btn btn-sm btn-link btn-block"
+                                <a href="{{route('profil.user', ['username' => $user->username])}}"
+                                   class="btn btn-sm btn-link btn-block"
                                    style="border: 1px solid #ccc;color: #333;background: #247bff;
     text-transform: uppercase;
     font-size: 12px;
@@ -325,7 +326,7 @@
     transition-duration: 0.1s;
     text-align: center;"><small style="color: white">Tampilan Publik</small>
                                 </a>
-{{--                                <hr style="margin: 10px 0">--}}
+                                {{--                                <hr style="margin: 10px 0">--}}
                                 {{--                                <table class="stats" style="font-size: 14px; margin-top: 0">--}}
                                 {{--                                    <tr data-toggle="tooltip" data-placement="left" title="Bergabung Sejak">--}}
                                 {{--                                        <td><i class="fa fa-calendar-check"></i></td>--}}
@@ -382,7 +383,7 @@
                                                         {{$row->get_service->get_sub->get_kategori->nama}}</span>
                                                     <br><b>{{$row->get_service->judul}}</b>
                                                 </a>
-{{--                                                {!! $row->get_service->deskripsi !!}--}}
+                                                {{--                                                {!! $row->get_service->deskripsi !!}--}}
                                             </div>
                                         </div>
                                         <div class="row mb-1" style="border-bottom: 1px solid #eee">
@@ -453,12 +454,12 @@
                                                             (kosong)
                                                         @endif
                                                     </li>
-{{--                                                    <li><b>Progress Pengerjaan</b></li>--}}
-{{--                                                    <li>--}}
-{{--                                                        <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
-{{--                                                            <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
-{{--                                                        </div>--}}
-{{--                                                    </li>--}}
+                                                    {{--                                                    <li><b>Progress Pengerjaan</b></li>--}}
+                                                    {{--                                                    <li>--}}
+                                                    {{--                                                        <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
+                                                    {{--                                                            <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
+                                                    {{--                                                        </div>--}}
+                                                    {{--                                                    </li>--}}
 
                                                 </ul>
                                             </div>
@@ -564,14 +565,14 @@
                                                             <i class="fa fa-wallet" style="margin-right: 0"></i>
                                                         </button>
                                                     @endif
-{{--                                                    <button class="btn btn-link btn-sm" type="button"--}}
-{{--                                                            data-toggle="tooltip" title="Bukti Pembayaran"--}}
-{{--                                                            onclick="buktiPembayaran('{{$row->id}}','#INV/{{\Carbon\Carbon::parse($row->get_pembayaran->created_at)->format('Ymd').'/'.$row->get_pembayaran->id}}',--}}
-{{--                                                                '{{route('klien.update-pembayaran.pesanan',['id' => $row->id])}}',--}}
-{{--                                                                '{{route('klien.data-pembayaran.pesanan',['id' => $row->get_pembayaran->id])}}',--}}
-{{--                                                                '{{$row->get_service->harga}}',0)">--}}
-{{--                                                        <i class="fa fa-upload" style="margin-right: 0"></i>--}}
-{{--                                                    </button>--}}
+                                                    {{--                                                    <button class="btn btn-link btn-sm" type="button"--}}
+                                                    {{--                                                            data-toggle="tooltip" title="Bukti Pembayaran"--}}
+                                                    {{--                                                            onclick="buktiPembayaran('{{$row->id}}','#INV/{{\Carbon\Carbon::parse($row->get_pembayaran->created_at)->format('Ymd').'/'.$row->get_pembayaran->id}}',--}}
+                                                    {{--                                                                '{{route('klien.update-pembayaran.pesanan',['id' => $row->id])}}',--}}
+                                                    {{--                                                                '{{route('klien.data-pembayaran.pesanan',['id' => $row->get_pembayaran->id])}}',--}}
+                                                    {{--                                                                '{{$row->get_service->harga}}',0)">--}}
+                                                    {{--                                                        <i class="fa fa-upload" style="margin-right: 0"></i>--}}
+                                                    {{--                                                    </button>--}}
                                                 </span>
                                             </div>
                                         @else
@@ -660,36 +661,41 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 @foreach($saldo as $row)
-                                                <label class="card-label mb-0" for="pay_undagi">
-                                                    <input id="pay_undagi" class="card-rb" type="radio"
-                                                           name="payment_method" value="undagi">
-                                                    <div class="card card-input">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media p-4">
-                                                                    <div class="media-left media-middle"
-                                                                         style="width: 20%">
-                                                                        <img class="media-object" alt="icon"
-                                                                             src="{{asset('images/logo/undagi_pay.png')}}">
-                                                                    </div>
-                                                                    <div class="ml-2 media-body">
-                                                                        <h5 class="mt-0 mb-1">
-                                                                            <i class="fa fa-wallet mr-2"></i>UNDAGI PAY
-                                                                            <small class="pull-right">Saldo : {{number_format($row->saldo,2,',','.')}}</small>
-                                                                        </h5>
-                                                                        <blockquote class="mb-0"
-                                                                                    style="font-size: 14px;text-transform: none;border-color: #eee">
-                                                                            <p align="justify">
-                                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                                            </p>
-                                                                        </blockquote>
+                                                    <label class="card-label mb-0" for="pay_undagi">
+                                                        <input id="pay_undagi" class="card-rb" type="radio"
+                                                               name="payment_method" value="undagi">
+                                                        <div class="card card-input">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media p-4">
+                                                                        <div class="media-left media-middle"
+                                                                             style="width: 20%">
+                                                                            <img class="media-object" alt="icon"
+                                                                                 src="{{asset('images/logo/undagi_pay.png')}}">
+                                                                        </div>
+                                                                        <div class="ml-2 media-body">
+                                                                            <h5 class="mt-0 mb-1">
+                                                                                <i class="fa fa-wallet mr-2"></i>UNDAGI
+                                                                                PAY
+                                                                                <small class="pull-right">Saldo
+                                                                                    : {{number_format($row->saldo,2,',','.')}}</small>
+                                                                            </h5>
+                                                                            <blockquote class="mb-0"
+                                                                                        style="font-size: 14px;text-transform: none;border-color: #eee">
+                                                                                <p align="justify">
+                                                                                    Lorem ipsum dolor sit amet,
+                                                                                    consectetur adipiscing elit, sed do
+                                                                                    eiusmod tempor incididunt ut labore
+                                                                                    et dolore magna aliqua.
+                                                                                </p>
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </label>
-                                                    @endforeach
+                                                    </label>
+                                                @endforeach
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="card-label mb-0" for="pay_midtrans">
@@ -711,7 +717,10 @@
                                                                         <blockquote class="mb-0"
                                                                                     style="font-size: 14px;text-transform: none;border-color: #eee">
                                                                             <p align="justify">
-                                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                                Lorem ipsum dolor sit amet, consectetur
+                                                                                adipiscing elit, sed do eiusmod tempor
+                                                                                incididunt ut labore et dolore magna
+                                                                                aliqua.
                                                                             </p>
                                                                         </blockquote>
                                                                     </div>
@@ -730,13 +739,13 @@
                                                 </button>
                                             </div>
                                         </div>
-{{--                                        <div class="row form-group">--}}
-{{--                                            <div class="col-lg-12">--}}
-{{--                                                <button class="btn2 btn-sm" style="margin:auto; display:block;">--}}
-{{--                                                    <i style="color: white" class="fa fa-wallet"></i><small style="color: white">&nbsp;BAYAR SEKARANG</small>--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                                        {{--                                        <div class="row form-group">--}}
+                                        {{--                                            <div class="col-lg-12">--}}
+                                        {{--                                                <button class="btn2 btn-sm" style="margin:auto; display:block;">--}}
+                                        {{--                                                    <i style="color: white" class="fa fa-wallet"></i><small style="color: white">&nbsp;BAYAR SEKARANG</small>--}}
+                                        {{--                                                </button>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="card-read-more">
@@ -748,58 +757,58 @@
                         </div>
                     </div>
 
-{{--                    <div id="bukti-pembayaran" style="display: none">--}}
-{{--                        <div class="card">--}}
-{{--                            <form id="upload-form" class="form-horizontal" role="form" method="POST"--}}
-{{--                                  enctype="multipart/form-data">--}}
-{{--                                @csrf--}}
-{{--                                {{method_field('put')}}--}}
-{{--                                <div class="card-content">--}}
-{{--                                    <div class="card-title">--}}
-{{--                                        <small id="invoice"></small>--}}
-{{--                                        <hr class="mt-0">--}}
-{{--                                        <div class="row">--}}
-{{--                                            <div class="col-md-12">--}}
-{{--                                                <div class="uploader">--}}
-{{--                                                    <input id="file-upload" type="file" name="bukti_pembayaran"--}}
-{{--                                                           accept="image/*">--}}
-{{--                                                    <label for="file-upload" id="file-drag">--}}
-{{--                                                        <img id="file-image" src="#" alt="Bukti Pembayaran"--}}
-{{--                                                             class="hidden img-responsive">--}}
-{{--                                                        <div id="start"><i class="fa fa-download"--}}
-{{--                                                                           aria-hidden="true"></i>--}}
-{{--                                                            <div>Pilih file bukti pembayaran Anda atau seret filenya--}}
-{{--                                                                kesini--}}
-{{--                                                            </div>--}}
-{{--                                                            <div id="notimage" class="hidden">Mohon untuk memilih file--}}
-{{--                                                                gambar--}}
-{{--                                                            </div>--}}
-{{--                                                            <span id="file-upload-btn" class="btn btn-link btn-sm">Pilih File</span>--}}
-{{--                                                        </div>--}}
-{{--                                                        <div id="response" class="hidden">--}}
-{{--                                                            <div id="messages"></div>--}}
-{{--                                                        </div>--}}
-{{--                                                        <div id="progress-upload">--}}
-{{--                                                            <div--}}
-{{--                                                                class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"--}}
-{{--                                                                role="progressbar" aria-valuenow="0"--}}
-{{--                                                                aria-valuemin="0" aria-valuemax="100">--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
-{{--                                                    </label>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="card-read-more">--}}
-{{--                                    <button type="reset" class="btn btn-link btn-block">--}}
-{{--                                        <i class="fa fa-undo mr-2"></i>BATAL--}}
-{{--                                    </button>--}}
-{{--                                </div>--}}
-{{--                            </form>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
+                    {{--                    <div id="bukti-pembayaran" style="display: none">--}}
+                    {{--                        <div class="card">--}}
+                    {{--                            <form id="upload-form" class="form-horizontal" role="form" method="POST"--}}
+                    {{--                                  enctype="multipart/form-data">--}}
+                    {{--                                @csrf--}}
+                    {{--                                {{method_field('put')}}--}}
+                    {{--                                <div class="card-content">--}}
+                    {{--                                    <div class="card-title">--}}
+                    {{--                                        <small id="invoice"></small>--}}
+                    {{--                                        <hr class="mt-0">--}}
+                    {{--                                        <div class="row">--}}
+                    {{--                                            <div class="col-md-12">--}}
+                    {{--                                                <div class="uploader">--}}
+                    {{--                                                    <input id="file-upload" type="file" name="bukti_pembayaran"--}}
+                    {{--                                                           accept="image/*">--}}
+                    {{--                                                    <label for="file-upload" id="file-drag">--}}
+                    {{--                                                        <img id="file-image" src="#" alt="Bukti Pembayaran"--}}
+                    {{--                                                             class="hidden img-responsive">--}}
+                    {{--                                                        <div id="start"><i class="fa fa-download"--}}
+                    {{--                                                                           aria-hidden="true"></i>--}}
+                    {{--                                                            <div>Pilih file bukti pembayaran Anda atau seret filenya--}}
+                    {{--                                                                kesini--}}
+                    {{--                                                            </div>--}}
+                    {{--                                                            <div id="notimage" class="hidden">Mohon untuk memilih file--}}
+                    {{--                                                                gambar--}}
+                    {{--                                                            </div>--}}
+                    {{--                                                            <span id="file-upload-btn" class="btn btn-link btn-sm">Pilih File</span>--}}
+                    {{--                                                        </div>--}}
+                    {{--                                                        <div id="response" class="hidden">--}}
+                    {{--                                                            <div id="messages"></div>--}}
+                    {{--                                                        </div>--}}
+                    {{--                                                        <div id="progress-upload">--}}
+                    {{--                                                            <div--}}
+                    {{--                                                                class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"--}}
+                    {{--                                                                role="progressbar" aria-valuenow="0"--}}
+                    {{--                                                                aria-valuemin="0" aria-valuemax="100">--}}
+                    {{--                                                            </div>--}}
+                    {{--                                                        </div>--}}
+                    {{--                                                    </label>--}}
+                    {{--                                                </div>--}}
+                    {{--                                            </div>--}}
+                    {{--                                        </div>--}}
+                    {{--                                    </div>--}}
+                    {{--                                </div>--}}
+                    {{--                                <div class="card-read-more">--}}
+                    {{--                                    <button type="reset" class="btn btn-link btn-block">--}}
+                    {{--                                        <i class="fa fa-undo mr-2"></i>BATAL--}}
+                    {{--                                    </button>--}}
+                    {{--                                </div>--}}
+                    {{--                            </form>--}}
+                    {{--                        </div>--}}
+                    {{--                    </div>--}}
 
                     <div id="ulas-hasil" style="display: none">
                         <div class="card">
@@ -902,7 +911,8 @@
     <script src="{{asset('vendor/lightgallery/dist/js/lightgallery-all.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
     <script>
         $(function () {
             var export_pesanan = 'Daftar Pesanan Layanan ({{now()->format('j F Y')}})';
@@ -1096,7 +1106,7 @@
         $("#pay-form").on('submit', function (e) {
             e.preventDefault();
             if ($(".card-rb").is(":checked")) {
-                if($("#pay_undagi").is(":checked")) {
+                if ($("#pay_undagi").is(":checked")) {
                     // bayar undagi
                     swal({
                         title: 'Apakah anda yakin?',
@@ -1133,19 +1143,23 @@
                                 $("#pay-form button[type=submit]").prop("disabled", false)
                                     .html('BAYAR SEKARANG <i class="fa fa-chevron-right float-right"></i>');
                             },
-                            success: function (data) {
-                                snap.pay(data, {
-                                    language: '{{app()->getLocale()}}',
-                                    onSuccess: function (result) {
-                                        responseMidtrans('finish', result);
-                                    },
-                                    onPending: function (result) {
-                                        responseMidtrans('unfinish', result);
-                                    },
-                                    onError: function (result) {
-                                        swal('Oops..', result.status_message, 'error');
-                                    }
-                                });
+                            success: function (val) {
+                                if (val.error == true) {
+                                    swal('PERHATIAN!', val.message, 'warning');
+                                } else {
+                                    snap.pay(val.data, {
+                                        language: '{{app()->getLocale()}}',
+                                        onSuccess: function (result) {
+                                            responseMidtrans('finish', result);
+                                        },
+                                        onPending: function (result) {
+                                            responseMidtrans('unfinish', result);
+                                        },
+                                        onError: function (result) {
+                                            swal('Oops..', result.status_message, 'error');
+                                        }
+                                    });
+                                }
                             },
                             error: function () {
                                 swal('Oops..', 'Terjadi kesalahan! Silahkan, segarkan browser Anda.', 'error');
