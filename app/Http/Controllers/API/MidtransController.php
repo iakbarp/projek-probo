@@ -8,8 +8,10 @@ use App\Model\Pembayaran;
 use App\Model\PembayaranLayanan;
 use App\Model\Pengerjaan;
 use App\Model\PengerjaanLayanan;
+use App\Model\Topup;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -41,63 +43,85 @@ class MidtransController extends Controller
     {
         app()->setLocale('id');
         $cek = $request->cek;
+        $amount = $cek == 'topup' ? $request->jumlah : $request->jumlah_pembayaran;
 
         if ($cek == 'project') {
             $pengerjaan = Pengerjaan::find($request->id);
             $name = $pengerjaan->get_project->judul;
-        } else {
+        } elseif ($cek == 'service') {
             $pengerjaan = PengerjaanLayanan::find($request->id);
             $name = $pengerjaan->get_service->judul;
+        } else{
+            $topup = Topup::firstOrCreate([
+                'user_id' => $request->user_id,
+                'jumlah' => ceil(str_replace('.','',$amount)),
+            ]);
+            $name = 'TOPUP UNDAGI: Rp'.number_format($topup->jumlah,2,',','.');
         }
         $user = User::find($request->user_id);
         $split_name = explode(" ", $user->name);
 
-        return Snap::getSnapToken([
-            'enabled_payments' => $this->channels,
-            'transaction_details' => [
-                'order_id' => $cek == 'project' ?
-                    strtoupper('PRO-' . $pengerjaan->proyek_id . '_' . now()->timestamp) : strtoupper('SER-' . $pengerjaan->id . '_' . now()->timestamp),
-                'gross_amount' => ceil(str_replace('.', '', $request->jumlah_pembayaran)),
-            ],
-            'customer_details' => [
-                'first_name' => array_shift($split_name),
-                'last_name' => implode(" ", $split_name),
-                'phone' => $user->get_bio->hp,
-                'email' => $user->email,
-                'address' => $user->get_bio->alamat,
-                'billing_address' => [
-                    'first_name' => array_shift($split_name),
-                    'last_name' => implode(" ", $split_name),
-                    'address' => $user->get_bio->alamat,
-                    'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
-                    'postal_code' => $user->get_bio->kode_pos,
-                    'phone' => $user->get_bio->hp,
-                    'country_code' => 'IDN'
-                ],
-                'shipping_address' => [
-                    'first_name' => array_shift($split_name),
-                    'last_name' => implode(" ", $split_name),
-                    'address' => $user->get_bio->alamat,
-                    'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
-                    'postal_code' => $user->get_bio->kode_pos,
-                    'phone' => $user->get_bio->hp,
-                    'country_code' => 'IDN'
-                ],
-            ],
-            'item_details' => [
-                array(
-                    'id' => $cek == 'project' ?
-                        strtoupper('PROJECT-' . str_pad($pengerjaan->proyek_id, 4, STR_PAD_LEFT)) :
-                        strtoupper('SERVICE-' . str_pad($pengerjaan->id, 4, STR_PAD_LEFT)),
-                    'price' => ceil(str_replace('.', '', $request->jumlah_pembayaran)),
-                    'quantity' => 1,
-                    'name' => $request->dp == 1 ? $name . ' (DP)' : $name . ' (FP)',
-                    'category' => $cek == 'project' ? 'Project Payment' : 'Service Payment'
-                )
-            ],
-            'custom_field1' => $user->id,
-            'custom_field2' => $request->dp,
-        ]);
+        if(ceil(str_replace('.', '', $amount)) < 10000) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Maaf saat ini Anda tidak bisa melanjutkan proses checkout, karena total transaksi pembelian Anda masih kurang dari Rp' . number_format(10000, 2, ',', '.') . ' :('
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => false,
+                'data' => Snap::getSnapToken([
+                    'enabled_payments' => $this->channels,
+                    'transaction_details' => [
+                        'order_id' => $cek == 'project' ?
+                            strtoupper('PRO-' . $pengerjaan->proyek_id . '_' . now()->timestamp) :
+                            ($cek == 'service' ? strtoupper('SER-' . $pengerjaan->id . '_' . now()->timestamp) :
+                                strtoupper('TOP-' . $topup->id . '_' . now()->timestamp)),
+                        'gross_amount' => $cek == 'topup' ? ceil($topup->jumlah) : ceil(str_replace('.', '', $amount)),
+                    ],
+                    'customer_details' => [
+                        'first_name' => array_shift($split_name),
+                        'last_name' => implode(" ", $split_name),
+                        'phone' => $user->get_bio->hp,
+                        'email' => $user->email,
+                        'address' => $user->get_bio->alamat,
+                        'billing_address' => [
+                            'first_name' => array_shift($split_name),
+                            'last_name' => implode(" ", $split_name),
+                            'address' => $user->get_bio->alamat,
+                            'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
+                            'postal_code' => $user->get_bio->kode_pos,
+                            'phone' => $user->get_bio->hp,
+                            'country_code' => 'IDN'
+                        ],
+                        'shipping_address' => [
+                            'first_name' => array_shift($split_name),
+                            'last_name' => implode(" ", $split_name),
+                            'address' => $user->get_bio->alamat,
+                            'city' => $user->get_bio->get_kota->get_provinsi->nama . ', ' . $user->get_bio->get_kota->nama,
+                            'postal_code' => $user->get_bio->kode_pos,
+                            'phone' => $user->get_bio->hp,
+                            'country_code' => 'IDN'
+                        ],
+                    ],
+                    'item_details' => [
+                        array(
+                            'id' => $cek == 'project' ?
+                                strtoupper('PROJECT-' . str_pad($pengerjaan->proyek_id, 4, STR_PAD_LEFT)) :
+                                ($cek == 'service' ? strtoupper('SERVICE-' . str_pad($pengerjaan->id, 4, STR_PAD_LEFT)) :
+                                    strtoupper('TOPUP-' . str_pad($topup->id, 4, STR_PAD_LEFT))),
+                            'price' => $cek == 'topup' ? ceil($topup->jumlah) :
+                                ceil(str_replace('.', '', $amount)),
+                            'quantity' => 1,
+                            'name' => $cek == 'topup' ? $name :
+                                ($request->dp == 1 ? $name . ' (DP)' : $name . ' (FP)'),
+                            'category' => $cek == 'topup' ? 'TOPUP Payment' : ($cek == 'project' ? 'Project Payment' : 'Service Payment')
+                        )
+                    ],
+                    'custom_field1' => $user->id,
+                    'custom_field2' => $cek == 'topup' ? null : $request->dp,
+                ])
+            ], 200);
+        }
     }
 
     public function notificationCallback()
@@ -108,10 +132,13 @@ class MidtransController extends Controller
             $pengerjaan = Pengerjaan::where('proyek_id', substr(strtok($notif->order_id, '_'), 4))->first();
             $pembayaran = $pengerjaan->get_project->get_pembayaran;
             $name = 'Pembayaran proyek "' . $pengerjaan->get_project->judul . '"';
-        } else {
+        } elseif (strpos($notif->order_id, 'SER') !== false) {
             $pengerjaan = PengerjaanLayanan::find(substr(strtok($notif->order_id, '_'), 4));
             $pembayaran = $pengerjaan->get_pembayaran;
             $name = 'Pembayaran layanan "' . $pengerjaan->get_service->judul . '"';
+        } else {
+            $pembayaran = Topup::find(substr(strtok($notif->order_id, '_'), 4));
+            $name = 'Pembayaran TOPUP "UNDAGI"';
         }
         $user = User::find($data_tr['custom_field1']);
 
@@ -147,16 +174,18 @@ class MidtransController extends Controller
                                 'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => null,
                             ]);
-                        } else {
+                        } elseif (strpos($notif->order_id, 'SER') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => null,
                             ]);
+                        } else {
+                            // TODO topup pending
                         }
                     }
 
-                    $this->invoiceMail($notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
+                    $this->invoiceMail('unfinish', $notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
 
                     DB::commit();
                     return $name . ' dengan ID #' . $notif->order_id . ' berhasil di checkout!';
@@ -203,7 +232,7 @@ class MidtransController extends Controller
 //                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                                 'selesai' => false,
                             ]);
-                        } else {
+                        } elseif (strpos($notif->order_id, 'SER') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
@@ -215,9 +244,11 @@ class MidtransController extends Controller
 //                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                                 'selesai' => false,
                             ]);
+                        } else {
+                            $pembayaran->update(['konfirmasi' => true]);
                         }
                     }
-                    $this->invoiceMail($notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
+                    $this->invoiceMail('finish', $notif->order_id, $user, null, $data_tr, $pembayaran, $sisa_pembayaran);
 
                     DB::commit();
                     return $name . ' dengan ID #' . $notif->order_id . ' berhasil dikonfirmasi!';
@@ -228,6 +259,7 @@ class MidtransController extends Controller
                     if (!is_null($pembayaran)) {
                         $pembayaran->delete();
                     }
+                    $this->invoiceMail('expired', $notif->order_id, $user, null, $data_tr, $pembayaran, 0);
 
                     DB::commit();
 
@@ -239,7 +271,7 @@ class MidtransController extends Controller
         }
     }
 
-    private function invoiceMail($code, $user, $pdf_url, $data_tr, $pembayaran, $sisa_pembayaran)
+    private function invoiceMail($status, $code, $user, $pdf_url, $data_tr, $pembayaran, $sisa_pembayaran)
     {
         if ($data_tr['payment_type'] == 'credit_card') {
             $type = $data_tr['payment_type'];
@@ -258,7 +290,7 @@ class MidtransController extends Controller
         } else if ($data_tr['payment_type'] == 'echannel') {
             $type = 'bank_transfer';
             $bank = 'mandiri';
-            $account = $data_tr['bill_key'];
+            $account = $data_tr['biller_code'].' / '.$data_tr['bill_key'];
         } else if ($data_tr['payment_type'] == 'cstore') {
             $type = $data_tr['payment_type'];
             $bank = $data_tr['store'];
@@ -282,6 +314,6 @@ class MidtransController extends Controller
             $instruction = null;
         }
 
-        Mail::to($user->email)->send(new PembayaranProyekMail($code, $payment, $instruction, $pembayaran, $sisa_pembayaran));
+        Mail::to($user->email)->send(new PembayaranProyekMail($status, $code, $payment, $instruction, $pembayaran, $sisa_pembayaran));
     }
 }

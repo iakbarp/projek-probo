@@ -389,14 +389,22 @@
                                                     <tr>
                                                         <td>
                                                             <small style="line-height: 2em">
-                                                                @if ($pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null) {
-                                                                <b style="font-size: 22px">Mohon untuk segera
-                                                                    menyeleseaikan pembayaran Anda</b><br>
-                                                                Checkout berhasil
-                                                                pada {{now()->formatLocalized('%d %B %Y – %H:%M')}}
+                                                                @if($status == 'expired')
+                                                                    <b style="font-size: 22px">Pembayaran {{$name}} Anda
+                                                                        telah dibatalkan oleh {{env('APP_NAME')}}</b><br>
+                                                                    Mohon untuk tidak melakukan pembayaran apapun.
+                                                                    Silakan hubungi {{env('APP_NAME')}} jika memiliki
+                                                                    pertanyaan terkait pembayaran Anda.
                                                                 @else
-                                                                    Terima kasih telah menyelesaikan transaksi
-                                                                    di {{env('APP_TITLE')}}
+                                                                    @if ($pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null) {
+                                                                    <b style="font-size: 22px">Mohon untuk segera
+                                                                        menyeleseaikan pembayaran Anda</b><br>
+                                                                    Checkout berhasil
+                                                                    pada {{now()->formatLocalized('%d %B %Y – %H:%M')}}
+                                                                    @else
+                                                                        Terima kasih telah menyelesaikan transaksi
+                                                                        di {{env('APP_TITLE')}}
+                                                                    @endif
                                                                 @endif
                                                             </small>
                                                         </td>
@@ -424,21 +432,22 @@
                                                             <table class="custom">
                                                                 <tr>
                                                                     <td>
-                                                                        <b>{{$data2->judul}}</b>
+                                                                        <b>{{$name == 'TOPUP' ? $data2 : $data2->judul}}</b>
                                                                     </td>
                                                                     <td>&emsp;</td>
                                                                     <td align="center"><b>1</b></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <b>Rp{{number_format($data2->harga,2,',','.')}}</b>
+                                                                        <b>Rp{{number_format($name == 'TOPUP' ? $data->jumlah : $data2->harga,2,',','.')}}</b>
                                                                     </td>
                                                                 </tr>
                                                                 <tr style="border-top: 1px solid #eee">
                                                                     <td><b>Total Tagihan</b></td>
                                                                     <td colspan="4" align="right">
-                                                                        <b>Rp{{number_format($data2->harga,2,',','.')}}</b>
+                                                                        <b>Rp{{number_format($name == 'TOPUP' ? $data->jumlah : $data2->harga,2,',','.')}}</b>
                                                                     </td>
                                                                 </tr>
+                                                                @if($name != 'TOPUP')
                                                                 <tr>
                                                                     <td>Jenis Pembayaran
                                                                         (<b>{{$pembayaran->dp == true ? 'DP' : 'LUNAS'}}</b>)
@@ -448,27 +457,36 @@
                                                                         $data2->harga * 100,1)}}%</b>
                                                                     </td>
                                                                 </tr>
-                                                                @if($sisa > 0)
-                                                                    <tr style="border-top: 1px solid #eee">
-                                                                        <td><b>Jumlah yang Telah Dibayar</b></td>
-                                                                        <td colspan="4" align="right">
-                                                                            <b>Rp{{number_format($sisa,2,',','.')}}</b>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><b style="color: #122752">Jumlah yang Harus
-                                                                                Dibayar</b></td>
-                                                                        <td colspan="4" align="right">
-                                                                            <b style="font-size: 18px;color: #122752">
-                                                                                Rp{{number_format($data2->harga - $sisa,2,',','.')}}</b>
-                                                                        </td>
-                                                                    </tr>
+                                                                    @if($sisa > 0)
+                                                                        <tr style="border-top: 1px solid #eee">
+                                                                            <td><b>Jumlah yang Telah Dibayar</b></td>
+                                                                            <td colspan="4" align="right">
+                                                                                <b>Rp{{number_format($sisa,2,',','.')}}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b style="color: #122752">Jumlah yang Harus
+                                                                                    Dibayar</b></td>
+                                                                            <td colspan="4" align="right">
+                                                                                <b style="font-size: 18px;color: #122752">
+                                                                                    Rp{{number_format($data2->harga - $sisa,2,',','.')}}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @else
+                                                                        <tr>
+                                                                            <td><b style="color: #122752">Jumlah yang Harus
+                                                                                    Dibayar</b></td>
+                                                                            <td colspan="4" align="right">
+                                                                                <b style="font-size: 18px;color: #122752">Rp{{number_format($pembayaran->jumlah_pembayaran,2,',','.')}}</b>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endif
                                                                 @else
                                                                     <tr>
                                                                         <td><b style="color: #122752">Jumlah yang Harus
                                                                                 Dibayar</b></td>
                                                                         <td colspan="4" align="right">
-                                                                            <b style="font-size: 18px;color: #122752">Rp{{number_format($pembayaran->jumlah_pembayaran,2,',','.')}}</b>
+                                                                            <b style="font-size: 18px;color: #122752">Rp{{number_format($pembayaran->jumlah,2,',','.')}}</b>
                                                                         </td>
                                                                     </tr>
                                                                 @endif
@@ -491,7 +509,7 @@
                                                         <td>
                                                             <small><b>Due Date</b></small>
                                                             <hr class="hr-divider">
-                                                            <span>{{now()->addDay()->formatLocalized('%d %B %Y – %H:%M')}}</span>
+                                                            <span>{{$status == 'expired' ? now()->formatLocalized('%d %B %Y – %H:%M') : now()->addDay()->formatLocalized('%d %B %Y – %H:%M')}}</span>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -538,7 +556,7 @@
                                                         <td>
                                                             <small><b>Status Pembayaran</b></small>
                                                             <hr class="hr-divider">
-                                                            <span>{{$pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null ? 'Menunggu Pembayaran' : 'Pembayaran Diterima'}}</span>
+                                                            <span>{{$status == 'expired' ? 'Pembayaran Dibatalkan' : ($pembayaran->selesai == false && $pembayaran->bukti_pembayaran == null ? 'Menunggu Pembayaran' : 'Pembayaran Diterima')}}</span>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -574,6 +592,7 @@
                                             <td>
                                                 <table border="0" cellpadding="10" cellspacing="0"
                                                        style="margin: .5em 1em">
+                                                    @if($name != 'TOPUP')
                                                     <tr>
                                                         <td>
                                                             <small style="line-height: 2em">
@@ -583,12 +602,13 @@
                                                                 Pesanan {{$name}} berikut.</small>
                                                         </td>
                                                     </tr>
+                                                    @endif
                                                     <tr>
                                                         <td align="center" width="600" class="full-width"
                                                             style="padding-left: 20px; padding-right:20px" valign="top">
                                                             <a class="zoom" id="activate" target="_blank"
-                                                               href="{{route('dashboard.klien.'.strtolower($name))}}">
-                                                                PESANAN {{strtoupper($name)}}</a>
+                                                               href="{{$name != 'TOPUP' ? route('dashboard.klien.'.strtolower($name)) : route('user.dompet')}}">
+                                                                {{$name != 'TOPUP' ? 'PESANAN '.strtoupper($name) : 'SALDO UNDAGI'}}</a>
                                                         </td>
                                                     </tr>
                                                 </table>

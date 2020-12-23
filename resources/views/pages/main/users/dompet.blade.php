@@ -219,9 +219,9 @@
                             </div>
                         </div>
                     </div>
-{{--                    <button id="btn_pin" class="btn" type="button"--}}
-{{--                            style="padding: 10px 40px;border-radius: 5px;border: 1px solid black;width: 100%"--}}
-{{--                            title="Topup">--}}
+                    {{--                    <button id="btn_pin" class="btn" type="button"--}}
+                    {{--                            style="padding: 10px 40px;border-radius: 5px;border: 1px solid black;width: 100%"--}}
+                    {{--                            title="Topup">--}}
 
                     <div class="row">
                         <div class="col-lg-12">
@@ -231,22 +231,27 @@
                                     {{ method_field('put') }}
                                     <div class="card-content">
                                         <div class="card-title">
-                                            <i style="color: black;" class="fa fa-key mr-2"></i><b>&nbsp;PENGATURAN PIN</b></button>
+                                            <i style="color: black;" class="fa fa-key mr-2"></i><b>&nbsp;PENGATURAN
+                                                PIN</b></button>
                                             {{--                                            <hr class="mt-0">--}}
                                             {{--                                            <small>E-mail Utama (terverifikasi)</small>--}}
                                             <div class="row form-group has-feedback">
                                                 <div class="col-md-12">
-                                                    <input type="hidden" class="form-control" value="{{$user->email}}" disabled>
-                                                    <span class="glyphicon glyphicon-check form-control-feedback"></span>
+                                                    <input type="hidden" class="form-control" value="{{$user->email}}"
+                                                           disabled>
+                                                    <span
+                                                        class="glyphicon glyphicon-check form-control-feedback"></span>
                                                 </div>
                                             </div>
 
-                                            <small style="cursor: pointer; color: #122752" id="show_pin_settings">Ubah Pin
+                                            <small style="cursor: pointer; color: #122752" id="show_pin_settings">Ubah
+                                                Pin
                                             </small>
                                             <div id="pin_settings" style="display: none">
                                                 <div id="error_curr_pass" class="row form-group has-feedback">
                                                     <div class="col-md-12">
-                                                        <input placeholder="Konfirmasi Password" id="check_password" type="password"
+                                                        <input placeholder="Konfirmasi Password" id="check_password"
+                                                               type="password"
                                                                class="form-control" name="password" required
                                                                autofocus>
                                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"
@@ -260,7 +265,9 @@
                                                 <div id="error_new_pass" class="row form-group has-feedback">
                                                     <div class="col-md-12">
                                                         <input placeholder="Pin baru" id="pin" type="password"
-                                                               class="form-control" name="new_pin" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)" required>
+                                                               class="form-control" name="new_pin" minlength="6"
+                                                               maxlength="6"
+                                                               onkeypress="return numberOnly(event, false)" required>
                                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"
                                                               style="pointer-events: all;cursor: pointer"></span>
                                                         @if ($errors->has('new_pin'))
@@ -274,7 +281,9 @@
                                                     <div class="col-md-12">
                                                         <input placeholder="Ulangi Pin baru" id="pin-confirm"
                                                                type="password"
-                                                               class="form-control" name="pin_confirmation" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)"
+                                                               class="form-control" name="pin_confirmation"
+                                                               minlength="6" maxlength="6"
+                                                               onkeypress="return numberOnly(event, false)"
                                                                required
                                                                onkeyup="return checkPin()">
                                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"
@@ -315,39 +324,44 @@
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <!-- Topup -->
                     @foreach($saldo as $row)
-                    <div class="row card-data">
-                        <div class="col-lg-12">
-                            <div class="card" style="background-color: #2979FF;color: white">
-                                <div class="card-content">
+                        <div class="row card-data">
+                            <div class="col-lg-12">
+                                <div class="card" style="background-color: #2979FF;color: white">
+                                    <div class="card-content">
 
-                                    <div class="card-title">
-                                        <b class="fa fa-wallet" style="font-size: 30px"></b>&nbsp;<small style="font-size: 30px">UNDAGI PAY</small>
-                                        <hr class="mt-0">
-                                        <table>
-                                            <tr>
-                                            <td>
-                                                <b data-scrollbar style="text-transform: none; font-size: 35px;margin-right: 5em">SALDO ANDA :</b>
-                                            </td>
-                                            <td>
-                                                <b data-scrollbar style="text-transform: none; font-size: 35px">Rp. {{number_format($row->saldo,2,',','.')}}</b>
-                                            </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div style="margin-right: 5em">
-                                    <button id="btn_topup" class="btn" type="button"
-                                            style="padding: 10px 40px;border-radius: 5px"
-                                            title="Topup">
-                                        <i style="color:#2979FF;" class="fa fa-plus-circle mr-2"></i><b style="color: #2979FF">&nbsp;TOPUP</b></button>
-                                    <button id="btn_withdraw" class="btn" type="button"
-                                            data-toggle="tooltip" style="padding: 10px 40px;border-radius: 5px"
-                                            title="Withdraw">
-                                        <i style="color:#2979FF;" class="fa fa-wallet mr-2"></i><b style="color: #2979FF">&nbsp;Withdraw</b></button>
+                                        <div class="card-title">
+                                            <b class="fa fa-wallet" style="font-size: 30px"></b>&nbsp;<small
+                                                style="font-size: 30px">UNDAGI PAY</small>
+                                            <hr class="mt-0">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <b data-scrollbar
+                                                           style="text-transform: none; font-size: 35px;margin-right: 5em">SALDO
+                                                            ANDA :</b>
+                                                    </td>
+                                                    <td>
+                                                        <b data-scrollbar style="text-transform: none; font-size: 35px">Rp. {{number_format($row->saldo,2,',','.')}}</b>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div style="margin-right: 5em">
+                                            <button id="btn_topup" class="btn" type="button"
+                                                    style="padding: 10px 40px;border-radius: 5px"
+                                                    title="Topup">
+                                                <i style="color:#2979FF;" class="fa fa-plus-circle mr-2"></i><b
+                                                    style="color: #2979FF">&nbsp;TOPUP</b></button>
+                                            <button id="btn_withdraw" class="btn" type="button"
+                                                    data-toggle="tooltip" style="padding: 10px 40px;border-radius: 5px"
+                                                    title="Withdraw">
+                                                <i style="color:#2979FF;" class="fa fa-wallet mr-2"></i><b
+                                                    style="color: #2979FF">&nbsp;Withdraw</b></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                     <div class="row card-data">
                         <div class="col-lg-12">
@@ -359,14 +373,19 @@
                                         <table>
                                             <tr>
                                                 <td>
-                                                    <div data-scrollbar style="background-color: #2979FF;border: black 1px;height: 116px;width: 119px;margin-right: 1em">
-                                                        <b class="fa fa-wallet" style="font-size: 62px;color: white;display: block;margin-right: auto;margin-left: auto;text-align: center;padding: 30px"></b>
+                                                    <div data-scrollbar
+                                                         style="background-color: #2979FF;border: black 1px;height: 116px;width: 119px;margin-right: 1em">
+                                                        <b class="fa fa-wallet"
+                                                           style="font-size: 62px;color: white;display: block;margin-right: auto;margin-left: auto;text-align: center;padding: 30px"></b>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <b data-scrollbar style="text-transform: none; font-size: 20px">Pembayaran melalui undagipay berhasil</b>
-                                                    <small style="font-size: 10px">Pembayaran untuk transaksi blablabla menggunakan Undagi Pay telah berhasil dan
-                                                        dana sebesar Rp. 5,000,000 telah ditambahkan di Undagi Pay-mu</small>
+                                                    <b data-scrollbar style="text-transform: none; font-size: 20px">Pembayaran
+                                                        melalui undagipay berhasil</b>
+                                                    <small style="font-size: 10px">Pembayaran untuk transaksi blablabla
+                                                        menggunakan Undagi Pay telah berhasil dan
+                                                        dana sebesar Rp. 5,000,000 telah ditambahkan di Undagi
+                                                        Pay-mu</small>
                                                     <br>
                                                     <small style="font-size: 10px">Timestamp</small>
                                                 </td>
@@ -395,13 +414,16 @@
                                 <label for="Konfirmasi Pin" class="col-sm-4 col-form-label">Konfirmasi Pin</label>
                                 <div class="col-sm-8">
                                     <b>KONFIRMASI PIN</b>
-                                    <input type="password" class="form-control" id="pin" name="pin" minlength="6" maxlength="6" onkeypress="return numberOnly(event, false)">
+                                    <input type="password" class="form-control" id="pin_text" name="pin" minlength="6"
+                                           maxlength="6" onkeypress="return numberOnly(event, false)">
+                                    <small class="text-danger" id="message_pin" style="display: none"></small>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn2" id="verifikasi_pin"><span style="color: white">Konfirmasi</span></button>
+                        <button type="button" class="btn2" id="verifikasi_pin"><span
+                                style="color: white">Konfirmasi</span></button>
                     </div>
                 </div>
             </div>
@@ -417,40 +439,46 @@
                     </div>
                     <div class="modal-body">
                         @foreach($dompet as $row)
-                        <form class="form-horizontal" role="form" method="POST" id="form-withdraw"
-                              action="{{route('user.withdraw.saldo')}}">
-                            @csrf
-                            <input type="hidden" name="_method">
-                            <input type="hidden" name="id">
-                            <div class="form-group row">
-                                <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Withdraw</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control rupiah" id="jumlah" placeholder="Rp. " name="jumlah" onkeypress="return numberOnly(event, false)" maxlength="10" required>
+                            <form class="form-horizontal" role="form" method="POST" id="form-withdraw"
+                                  action="{{route('user.withdraw.saldo')}}">
+                                @csrf
+                                <input type="hidden" name="_method">
+                                <input type="hidden" name="id">
+                                <div class="form-group row">
+                                    <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Withdraw</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control rupiah" id="jumlah" placeholder="Rp. "
+                                               name="jumlah" onkeypress="return numberOnly(event, false)" maxlength="10"
+                                               required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="NamaBank" class="col-sm-4 col-form-label">Bank Tujuan</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="bank" name="bank" value="{{$row->get_user->get_bio->get_bank->nama}}" disabled>
+                                <div class="form-group row">
+                                    <label for="NamaBank" class="col-sm-4 col-form-label">Bank Tujuan</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="bank" name="bank"
+                                               value="{{$row->get_user->get_bio->get_bank->nama}}" disabled>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="Nomor Rekening" class="col-sm-4 col-form-label">Nomor Rekening</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="rekening" name="rekening" value="{{$row->get_user->get_bio->rekening}}" disabled>
+                                <div class="form-group row">
+                                    <label for="Nomor Rekening" class="col-sm-4 col-form-label">Nomor Rekening</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="rekening" name="rekening"
+                                               value="{{$row->get_user->get_bio->rekening}}" disabled>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="Atas Nama" class="col-sm-4 col-form-label">Atas Nama</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="an" name="an" value="{{$row->get_user->get_bio->an}}" disabled>
+                                <div class="form-group row">
+                                    <label for="Atas Nama" class="col-sm-4 col-form-label">Atas Nama</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="an" name="an"
+                                               value="{{$row->get_user->get_bio->an}}" disabled>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn2" id="submit_withdraw"><span style="color: white">Withdraw</span></button>
-                            </div>
-                        </form>
-                            @endforeach
+                                <div class="modal-footer">
+                                    <button type="button" class="btn2" id="submit_withdraw"><span style="color: white">Withdraw</span>
+                                    </button>
+                                </div>
+                            </form>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -465,23 +493,27 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @foreach($dompet as $row)
-                            <form class="form-horizontal" role="form" method="POST" id="form-topup"
-                                  action="{{route('user.withdraw.saldo')}}">
-                                @csrf
-                                <input type="hidden" name="_method">
-                                <input type="hidden" name="id">
-                                <div class="form-group row">
-                                    <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Topup</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control rupiah" id="jumlah" placeholder="Rp. " name="jumlah" onkeypress="return numberOnly(event, false)" required>
-                                    </div>
+                        <form class="form-horizontal" role="form" method="POST" id="form-topup">
+                            @csrf
+                            {{method_field('put')}}
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                            <input type="hidden" name="cek" value="topup">
+                            <div class="form-group row">
+                                <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Topup</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control rupiah" id="jumlah" placeholder="Rp. "
+                                           name="jumlah" onkeypress="return numberOnly(event, false)" required>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn2" id=""><span style="color: white">Checkout</span></button>
-                                </div>
-                            </form>
-                        @endforeach
+                            </div>
+                            <div class="modal-footer">
+                                {{--                                    <button type="button" class="btn2" id=""><span style="color: white">Checkout</span></button>--}}
+                                <button type="submit" class="btn btn-link btn-block"
+                                        style="border: none;background-color: #247bff">
+                                    <i class="fa fa-wallet" style="color: white">&nbsp;Checkout</i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -494,13 +526,15 @@
     <script src="{{asset('vendor/lightgallery/dist/js/lightgallery-all.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
     <script>
 
         $("#modal_topup").on('click', function () {
             $("#modal_topup").modal("show");
         });
         var $btn_withdraw = $("#btn_withdraw");
-        var $btn_topup =$("#btn_topup");
+        var $btn_topup = $("#btn_topup");
         var $verifikasiPin = $("#verifikasi_pin");
         var $submitWithdraw = $("#submit_withdraw");
         $btn_withdraw.on('click', function () {
@@ -512,7 +546,29 @@
         });
 
         $verifikasiPin.on('click', function () {
-            $("#modal_withdraw").modal("show");
+            console.log($('#pin_text').val());
+            $.ajax({
+                url : '{{route('user.check_pin')}}',
+                data : {
+                    _token: '{{csrf_token()}}',
+                    pin : $('#pin_text').val()
+                },
+                type : "POST",
+                success: function (response) {
+                    console.log(response.status);
+                    if(response.status == 'success'){
+                        $('#konfirmasi_pin').modal("hide");
+                        $("#modal_withdraw").modal("show");
+
+                    }else{
+                        $('#message_pin').text(response.message).show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Salah");
+                }
+            });
+
         });
 
         $("#show_pin_settings").on('click', function () {
@@ -620,5 +676,76 @@
                 }
             });
         });
+
+        $("#form-topup").on('submit', function (e) {
+            e.preventDefault();
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: '{{route('get.midtrans.snap')}}',
+                    type: "GET",
+                    data: $("#form-topup").serialize(),
+                    beforeSend: function () {
+                        $("#form-topup button[type=submit]").prop("disabled", true)
+                            .html('LOADING&hellip; <span class="spinner-border spinner-border-sm float-right" role="status" aria-hidden="true"></span>');
+                    },
+                    complete: function () {
+                        $("#form-topup button[type=submit]").prop("disabled", false)
+                            .html('BAYAR SEKARANG <i class="fa fa-chevron-right float-right"></i>');
+                    },
+                    success: function (val) {
+                        if (val.error == true) {
+                            swal('PERHATIAN!', val.message, 'warning');
+                        } else {
+                            snap.pay(val.data, {
+                                language: '{{app()->getLocale()}}',
+                                onSuccess: function (result) {
+                                    responseMidtrans('finish', result);
+                                },
+                                onPending: function (result) {
+                                    responseMidtrans('unfinish', result);
+                                },
+                                onError: function (result) {
+                                    swal('Oops..', result.status_message, 'error');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal('Oops..', 'Terjadi kesalahan! Silahkan, segarkan browser Anda.', 'error');
+                    }
+                });
+            }.bind(this), 800);
+        });
+
+        function responseMidtrans(url, result) {
+            if (result.payment_type == 'credit_card' || result.payment_type == 'bank_transfer' || result.payment_type == 'echannel') {
+                swal({
+                    title: 'Loading...',
+                    text: 'Mohon tunggu, transaksi Anda sedang diproses',
+                    icon: 'warning',
+                    buttons: false,
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    timer: 2000
+                });
+                setTimeout(function () {
+                    swal({
+                        title: "SUKSES!",
+                        text: 'Transaksi berhasil! Semoga Anda dan keluarga sehat selalu :) #dirumahaja',
+                        icon: 'success',
+                        buttons: false,
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                        timer: 3000
+                    });
+                    setTimeout(function () {
+                        location.href = '{{url()->current()}}'
+                    }, 3000);
+                }, 2000);
+            } else {
+                swal('Oops..', 'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.', 'error');
+            }
+        }
     </script>
 @endpush
