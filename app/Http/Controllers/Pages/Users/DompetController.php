@@ -13,6 +13,7 @@ use App\Model\ReviewWorker;
 use App\Model\Saldo;
 use App\Model\Services;
 use App\Model\Skill;
+use App\Model\Topup;
 use App\Model\UlasanService;
 use App\Model\Undangan;
 use App\Model\Withdraw;
@@ -59,10 +60,11 @@ class DompetController extends Controller
 
         $dompet = Dompet::where('user_id', $user->id)->orderByDesc('id')->get();
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
+        $topup = Topup::where('id', $user->id)->orderByDesc('id')->get();
 
         return view('pages.main.users.dompet', compact('user', 'total_user', 'bahasa', 'skill',
             'proyek', 'layanan', 'portofolio', 'ulasan_klien', 'rating_klien', 'ulasan_pekerja', 'rating_pekerja',
-            'kategori', 'auth_proyek','dompet','saldo'));
+            'kategori', 'auth_proyek','dompet','saldo','topup'));
     }
 
     public function updatePengaturan(Request $request)

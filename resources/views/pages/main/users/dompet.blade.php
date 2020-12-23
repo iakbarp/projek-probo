@@ -465,12 +465,13 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @foreach($dompet as $row)
                             <form class="form-horizontal" role="form" method="POST" id="form-topup"
                                   action="{{route('user.withdraw.saldo')}}">
                                 @csrf
-                                <input type="hidden" name="_method">
+                                {{method_field('put')}}
                                 <input type="hidden" name="id">
+                                <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                                <input type="hidden" name="cek" value="topup">
                                 <div class="form-group row">
                                     <label for="JumlahWithdraw" class="col-sm-4 col-form-label">Jumlah Topup</label>
                                     <div class="col-sm-8">
@@ -478,10 +479,12 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn2" id=""><span style="color: white">Checkout</span></button>
+{{--                                    <button type="button" class="btn2" id=""><span style="color: white">Checkout</span></button>--}}
+                                    <button type="submit" class="btn btn-link btn-block" style="border: none;background-color: #247bff">
+                                        <i class="fa fa-wallet" style="color: white">&nbsp;Checkout</i>
+                                    </button>
                                 </div>
                             </form>
-                        @endforeach
                     </div>
                 </div>
             </div>
@@ -494,6 +497,7 @@
     <script src="{{asset('vendor/lightgallery/dist/js/lightgallery-all.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
     <script>
 
         $("#modal_topup").on('click', function () {
@@ -620,5 +624,43 @@
                 }
             });
         });
+
+        $("#form-topup").on('submit', function (e) {
+            e.preventDefault();
+                    clearTimeout(this.delay);
+                    this.delay = setTimeout(function () {
+                        $.ajax({
+                            url: '{{route('get.midtrans.snap')}}',
+                            type: "GET",
+                            data: $("#form-topup").serialize(),
+                            beforeSend: function () {
+                                $("#form-topup button[type=submit]").prop("disabled", true)
+                                    .html('LOADING&hellip; <span class="spinner-border spinner-border-sm float-right" role="status" aria-hidden="true"></span>');
+                            },
+                            complete: function () {
+                                $("#form-topup button[type=submit]").prop("disabled", false)
+                                    .html('BAYAR SEKARANG <i class="fa fa-chevron-right float-right"></i>');
+                            },
+                            success: function (data) {
+                                snap.pay(data, {
+                                    language: '{{app()->getLocale()}}',
+                                    onSuccess: function (result) {
+                                        responseMidtrans('finish', result);
+                                    },
+                                    onPending: function (result) {
+                                        responseMidtrans('unfinish', result);
+                                    },
+                                    onError: function (result) {
+                                        swal('Oops..', result.status_message, 'error');
+                                    }
+                                });
+                            },
+                            error: function () {
+                                swal('Oops..', 'Terjadi kesalahan! Silahkan, segarkan browser Anda.', 'error');
+                            }
+                        });
+                    }.bind(this), 800);
+        });
+
     </script>
 @endpush
