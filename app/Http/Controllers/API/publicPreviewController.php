@@ -440,6 +440,15 @@ class publicPreviewController extends Controller
                 })
                 ->whereNotNull('u.id')
                 ->orderBy('bid.id', 'desc')
+                ->when($request->sort_harga, function ($query) use ($request) {
+                    $query->orderBy('bid.negoharga', $request->sort_harga);
+                })
+                ->when($request->sort_waktu, function ($query) use ($request) {
+                    $query->orderBy('bid.negowaktu', $request->sort_waktu);
+                })
+                ->when($request->sort_task, function ($query) use ($request) {
+                    $query->orderBy('bid.task', $request->sort_task);
+                })
                 ->select(
                     'u.id',
                     DB::raw("u.name as nama"),
@@ -447,6 +456,7 @@ class publicPreviewController extends Controller
                     'negoharga',
                     'negowaktu',
                     'task',
+                    'bid.tolak',
                     DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
                 )
                 ->get()->toArray();
