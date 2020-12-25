@@ -42,6 +42,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/frelencer', 'tabDataController@frelencer');
         Route::get('/kategori', 'tabDataController@kategori');
         Route::get('/grup_kategori', 'tabDataController@grupKategori');
+        
 
         Route::get('/aggrement_proyek','aggrementController@proyek');
 
@@ -91,6 +92,7 @@ Route::group(['namespace' => 'API'], function () {
             Route::get('/ulasan', 'publicPreviewController@ulasan');
             Route::get('/layanan/{id}', 'publicPreviewController@getLayanan');
             Route::post('/bid_proyek', 'publicPreviewController@bidProyek');
+            Route::post('/terima_bid', 'publicPreviewController@terimaBid');
 
         });
 
@@ -101,8 +103,19 @@ Route::group(['namespace' => 'API'], function () {
                 Route::post('/', 'ProyekController@tambahProyek');
                 Route::post('/lampiran', 'ProyekController@tambahLampiran');
                 Route::delete('/lampiran', 'ProyekController@deleteLampiran');
+            
+                Route::group(['prefix' => 'payment'], function () {
+                    Route::get('/', [
+                        'uses' => 'ProyekPaymentController@index',
+                  
+                    ]);
+                Route::post('/dompet', 'ProyekPaymentController@viaDompet');
+
+                });
+
                 Route::post('/{proyek_id}', 'ProyekController@updateProyek');
-                Route::delete('/{proyek_id}', 'ProyekController@deleteProyek');
+
+
             });
 
             Route::group(['prefix' => 'layanan','namespace' => 'Users\Klien'], function () {
@@ -123,6 +136,8 @@ Route::group(['namespace' => 'API'], function () {
             });
         });
     });
+
+   
 
     Route::group(['prefix' => 'midtrans'], function () {
 

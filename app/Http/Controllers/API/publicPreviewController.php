@@ -15,6 +15,8 @@ use App\Model\Services;
 use App\Model\Skill;
 use App\Model\SubKategori;
 use App\Model\UlasanService;
+use App\Model\Pengerjaan;
+
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -73,16 +75,29 @@ class publicPreviewController extends Controller
 
                 )
                 ->get()->count();
+                
+                $u=auth('api')->user();
+                $proyek_available=Project::query()
+                ->where('project.user_id',$u->id)
+                ->leftJoin('bid',function($query)use($user){
+                    $query->on('bid.proyek_id','=','project.id');
+                    $query->on('bid.user_id','=',DB::raw($user->id));
+                })
+                ->select('project.id','project.judul','project.thumbnail')
+                ->whereNull('bid.id')
+                ->groupBy('project.id','bid.proyek_id')
+                ->get();
 
+           if($proyek_available->count()){
+            $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'storage/proyek/thumbnail/', 2) : [];
 
+           }
 
-
-
-
-            return response()->json([
+                return response()->json([
                 'error' => false,
                 'data' => [
                     'user' => $bio,
+                    'proyek_tersedia'=>$proyek_available,
                     'jumlah_layanan' => $layanan,
                     'jumlah_proyek' => $proyek,
                     'jumlah_portfolio' => $port,
@@ -372,10 +387,16 @@ class publicPreviewController extends Controller
             $bio = $this->getBio($user);
             $proyek = Project::select('project.id')
 
-
-                ->leftJoin('bid', function ($joins) {
+                ->leftJoin('bid', function ($joins) use($its_me){
                     $joins->on('bid.proyek_id', '=', 'project.id');
-                    $joins->on('bid.tolak', '=', DB::raw('0'));
+                    $joins->when($its_me,function($query){
+                        // show proyek when user role is owner
+                        $query->on('bid.tolak', '=', DB::raw('5'));
+                    });
+                    $joins->when(!$its_me,function($query){
+                        // show proyek when user role is bidder
+                        $query->on('bid.tolak', '=', DB::raw('0'));
+                    });
                 })
                 // ->whereRaw('')
 
@@ -431,6 +452,8 @@ class publicPreviewController extends Controller
                 $proyek->kategori_nama,);
             }
 
+
+
             $bid = Bid::where('proyek_id', $proyek->id)
                 ->join('users as u', function ($joins) {
                     $joins->on('bid.user_id', '=', 'u.id');
@@ -438,7 +461,8 @@ class publicPreviewController extends Controller
                 ->join('bio as b', function ($joins) {
                     $joins->on('bid.user_id', '=', 'b.id');
                 })
-                ->whereNotNull('u.id')
+                // ->whereNotNull('u.id')
+                ->orderBy('bid.tolak', 'asc')
                 ->orderBy('bid.id', 'desc')
                 ->when($request->sort_harga, function ($query) use ($request) {
                     $query->orderBy('bid.negoharga', $request->sort_harga);
@@ -459,8 +483,11 @@ class publicPreviewController extends Controller
                     'bid.tolak',
                     DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
                 )
+                ->groupBy('bid.id')
                 ->get()->toArray();
-            if ($bid[0]['id'] == null) {
+
+
+            if (count($bid)==0||$bid[0]['id'] == null) {
                 $bid = [];
             }
 
@@ -694,7 +721,7 @@ class publicPreviewController extends Controller
             Bid::create(collect($request->all())->toArray());
 
             return response()->json([
-                'error' => true,
+                'error' => false,
                 'data' => [
                     'message' => 'proyek berhasil dibid'
                 ]
@@ -709,6 +736,62 @@ class publicPreviewController extends Controller
 
             ], 400);
         }
+    }
+
+    public function terimaBid(Request $request)
+    {
+        DB::beginTransaction();
+
+        
+        try {
+            $user=User::findOrFail($request->user_id);
+            $proyek=Project::findOrFail($request->proyek_id);
+
+            $bid=Bid::query()
+            ->where('user_id',$request->user_id)
+            ->where('proyek_id',$request->proyek_id)
+            ->firstOrFail();
+
+            Project::findOrFail($request->proyek_id)->update([
+                'harga'=>$bid->negoharga,
+                'waktu_pengerjaan'=>$bid->negowaktu,
+            ]);
+
+            Pengerjaan::FirstOrcreate([
+                'user_id'=>$request->user_id,
+                'proyek_id'=>$request->proyek_id,
+            ]);
+
+            $bid->update([
+                'tolak'=>0,
+            ]);
+
+            Bid::query()
+            ->where('user_id','!=',$request->user_id)
+            ->where('proyek_id',$request->proyek_id)
+            ->update(['tolak'=>1]);
+
+            DB::commit();
+
+            return response()->json([
+                'error' => false,
+                'data' => [
+                    'message' => "Bidder [".$user->name."] untuk tugas/proyek [".$proyek->judul."] berhasil diterima! Mohon untuk segera melakukan pembayaran (minimal DP 30%), terimakasih.",
+                ]
+            ]);
+
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return response()->json([
+                'error' => true,
+
+
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+        
     }
 
     private function get_kategori_img($res, $loc)

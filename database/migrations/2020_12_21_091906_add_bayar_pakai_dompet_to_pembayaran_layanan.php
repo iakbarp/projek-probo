@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddKonfirmasiToTopup extends Migration
+class AddBayarPakaiDompetToPembayaranLayanan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddKonfirmasiToTopup extends Migration
      */
     public function up()
     {
-        Schema::table('topup', function (Blueprint $table) {
-            $table->boolean('konfirmasi')->default(0);
-
+        Schema::table('pembayaran_layanan', function (Blueprint $table) {
+                        $table->double('bayar_pakai_dompet')->default(0);
         });
     }
 
@@ -26,9 +25,8 @@ class AddKonfirmasiToTopup extends Migration
      */
     public function down()
     {
-        Schema::table('topup', function (Blueprint $table) {
-            $table->dropColumn('konfirmasi');
-
+        Schema::table('pembayaran_layanan', function (Blueprint $table) {
+                        $table->dropColumn('bayar_pakai_dompet')->default(0);
         });
     }
 }
