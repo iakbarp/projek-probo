@@ -11,6 +11,7 @@ use App\Model\Portofolio;
 use App\Model\Project;
 use App\Model\Review;
 use App\Model\ReviewWorker;
+use App\Model\Undangan;
 use App\Model\Services;
 use App\Model\Skill;
 use App\Model\SubKategori;
@@ -75,23 +76,8 @@ class publicPreviewController extends Controller
 
                 )
                 ->get()->count();
+                $proyek_available=$this->getProyekAvail($user);
                 
-                $u=auth('api')->user();
-                $proyek_available=Project::query()
-                ->where('project.user_id',$u->id)
-                ->leftJoin('bid',function($query)use($user){
-                    $query->on('bid.proyek_id','=','project.id');
-                    $query->on('bid.user_id','=',DB::raw($user->id));
-                })
-                ->select('project.id','project.judul','project.thumbnail')
-                ->whereNull('bid.id')
-                ->groupBy('project.id','bid.proyek_id')
-                ->get();
-
-           if($proyek_available->count()){
-            $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'storage/proyek/thumbnail/', 2) : [];
-
-           }
 
                 return response()->json([
                 'error' => false,
@@ -126,6 +112,8 @@ class publicPreviewController extends Controller
                 $its_me = false;
                 $user = User::findOrFail($id);
             }
+
+            $proyek_available=$this->getProyekAvail($user);
 
             $bio = $this->getBio($user);
 
@@ -221,6 +209,8 @@ class publicPreviewController extends Controller
                 'error' => false,
                 'data' => [
                     'user' => $bio,
+                    'proyek_tersedia'=>$proyek_available,
+
                     'ulasan' => $data,
 
                     'its_me' => $its_me,
@@ -247,6 +237,8 @@ class publicPreviewController extends Controller
                 $its_me = false;
                 $user = User::findOrFail($id);
             }
+            $proyek_available=$this->getProyekAvail($user);
+
 
             $bio = $this->getBio($user);
 
@@ -264,6 +256,8 @@ class publicPreviewController extends Controller
                 'error' => false,
                 'data' => [
                     'user' => $bio,
+                    'proyek_tersedia'=>$proyek_available,
+
                     'portfolio' => $port,
                     'its_me' => $its_me,
                 ]
@@ -289,6 +283,9 @@ class publicPreviewController extends Controller
                 $its_me = false;
                 $user = User::findOrFail($id);
             }
+
+            $proyek_available=$this->getProyekAvail($user);
+
 
             $bio = $this->getBio($user);
             $proyek = Project::select('project.id')
@@ -354,6 +351,7 @@ class publicPreviewController extends Controller
                 'error' => false,
                 'data' => [
                     'user' => $bio,
+                    'proyek_tersedia'=>$proyek_available,
 
                     'proyek' => $proyek,
                     'its_me' => $its_me,
@@ -519,6 +517,145 @@ class publicPreviewController extends Controller
         }
     }
 
+    public function inviteProyek(Request $request)
+    {
+        try {
+            $proyek_id = $request->proyek_id;
+            $user_id = $request->user_id;
+
+            $proyek=Project::findOrFail($proyek_id);
+            $user=Project::findOrFail($user_id);
+
+            Undangan::create([
+                'user_id'=>$user_id,
+                'proyek_id'=>$proyek_id,
+            ]);
+
+
+            return response()->json([
+                'error' => false,
+                'data' => [
+
+                    'message'=>'Anda telah mengundang ['.$user->name.']'.' ke proyek ['.$proyek->judul.'], kedepannya anda tidak dapat mengundangnya diproyek ini lagi!',
+                ]
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
+    public function invitePrivate(Request $request)
+    {
+        $user = auth('api')->user();
+        $judul = preg_replace("![^a-z0-9]+!i", "-", strtolower($request->judul));
+
+        try {
+        DB::beginTransaction();
+
+            $cek = Project::where('user_id', $user->id)->where('permalink', $judul)->first();
+
+
+            if (!$cek) {
+
+                $validator = Validator::make($request->all(), [
+                    'judul' => 'required|string|max:100',
+                
+                    'waktu_pengerjaan' => 'required|integer',
+                    'harga' => 'required|integer',
+                    'deskripsi' => 'required|string|max:250',
+                    'kategori' => 'required|exists:subkategori,id',
+                    'user_id' => 'required|exists:users,id',
+                    'lampiran' => 'required|array',
+                    'lampiran.*' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120',
+                    'thumbnail' => 'image|mimes:jpg,jpeg,gif,png|max:2048',
+                ]);
+
+                if ($validator->fails()) {
+
+                    return response()->json([
+                        'error' => true,
+                        'data' => [
+                            'message' => $validator->errors()
+                        ]
+                    ], 422);
+                }
+
+
+                if ($request->hasFile('thumbnail')) {
+
+                    $thumbnail =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $request->file('thumbnail')->getClientOriginalName();
+                    $request->file('thumbnail')->storeAs('public/proyek/thumbnail', $thumbnail);
+                } else {
+                    $thumbnail = null;
+                }
+
+                if ($request->hasFile('lampiran')) {
+
+                    $lampiran = [];
+                    $i = 0;
+                    foreach ($request->file('lampiran') as $file) {
+                        $lampiran[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $file->getClientOriginalName();
+
+                        $file->storeAs('public/proyek/lampiran',  $lampiran[$i]);
+                        $i = 1 + $i;
+                    }
+                } else {
+                    $lampiran = null;
+                }
+
+                $proyek=Project::create([
+                    'user_id' => $user->id,
+                    'subkategori_id' => $request->kategori,
+                    'judul' => $request->judul,
+                    'permalink' =>  $judul,
+                    'deskripsi' => $request->deskripsi,
+                    'waktu_pengerjaan' => $request->waktu_pengerjaan,
+                    'harga' =>  $request->harga,
+                    'thumbnail' => $thumbnail,
+                    'lampiran' => $lampiran,
+                    'pribadi' =>  1 ,
+                ]);
+
+                Undangan::create([
+                    'user_id'=>$request->user_id,
+                    'proyek_id'=>$proyek->id,
+                ]);
+                DB::commit();
+                return response()->json([
+                    'error' => false,
+
+                  'data'=>[
+                    'message' =>  'Proyek [' . $request->judul . '] Berhasil! Pekerja berhasil diundang!'
+
+                  ]
+                ], 201);
+            } else {
+                DB::rollback();
+                return response()->json([
+                    'error' => true,
+
+                 
+                    'message' =>  'Judul telah digunakan!'
+
+                  
+                ], 400);
+                
+            }            
+        } catch (\Exception $exception) {           
+            return response()->json([
+                'error' => true,
+
+                    'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
     public function getLayanan(Request $request)
     {
         try {
@@ -615,6 +752,9 @@ class publicPreviewController extends Controller
                 $user = User::findOrFail($id);
             }
 
+            $proyek_available=$this->getProyekAvail($user);
+
+
             $bio = $this->getBio($user);
             $layanan = DB::table('service')
                 ->select(
@@ -643,6 +783,7 @@ class publicPreviewController extends Controller
                 'data' => [
                     'user' => $bio,
                     'layanan' => $layanan,
+                    'proyek_tersedia'=>$proyek_available,
 
                     'its_me' => $its_me,
                 ]
@@ -858,5 +999,34 @@ class publicPreviewController extends Controller
         }
 
         return $res ? $res : [];
+    }
+
+    private function getProyekAvail($user)
+    {
+        $u=auth('api')->user();
+        $proyek_available=Project::query()
+        ->where('project.user_id',$u->id)
+        ->leftJoin('bid',function($query)use($user){
+            $query->on('bid.proyek_id','=','project.id')
+            ->where(function($qq)use($user){
+                $qq->where('bid.user_id',DB::raw($user->id));
+                $qq->orWhere('bid.tolak','=',DB::raw('0'));
+            });
+        })
+        ->leftJoin('undangan as u',function($rel)use($user){
+            $rel->on('u.proyek_id','=','project.id');
+            $rel->on('u.user_id','=',DB::raw($user->id));
+        })
+        ->select('project.id','project.judul','project.thumbnail')
+        ->whereNull('bid.id')
+        ->whereNull('u.id')
+        ->groupBy('project.id','bid.proyek_id')
+        ->get();
+
+   if($proyek_available->count()){
+    $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'storage/proyek/thumbnail/', 2) : [];
+
+   }
+   return $proyek_available;
     }
 }
