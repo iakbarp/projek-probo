@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Pages\Users;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Users\PembayaranProyekMail;
+use App\Mail\Users\ProyekMail;
 use App\Model\Bahasa;
 use App\Model\Kategori;
 use App\Model\Portofolio;
@@ -17,6 +19,7 @@ use App\Support\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -27,7 +30,11 @@ class UserController extends Controller
 
         $bahasa = Bahasa::where('user_id', $user->id)->orderByDesc('id')->get();
         $skill = Skill::where('user_id', $user->id)->orderByDesc('id')->get();
-        $proyek = Project::where('user_id', $user->id)->where('pribadi', false)->orderByDesc('id')->get();
+        $proyek = Project::where('user_id', $user->id)
+            ->whereHas('get_bid',function ($query){
+                $query->whereNull('tolak');
+            })
+            ->where('pribadi', false)->orderByDesc('id')->get();
         $layanan = Services::where('user_id', $user->id)->orderByDesc('id')->get();
         $portofolio = Portofolio::where('user_id', $user->id)->orderByDesc('tahun')->get();
 
@@ -107,10 +114,14 @@ class UserController extends Controller
 
     public function userInviteToBid(Request $request)
     {
+        $user = User::find($request->user_id);
+        $proyek = Project::find($request->proyek_id);
         $undangan = Undangan::create([
             'user_id' => $request->user_id,
             'proyek_id' => $request->proyek_id,
         ]);
+        Mail::to($user->email)
+            ->send(new ProyekMail($user->name, $proyek->judul, $proyek->deskripsi, $proyek->waktu_pengerjaan, $proyek->harga));
 
         return back()->with('invite_to_bid', 'Undangan lelang berhasil dikirim');
     }

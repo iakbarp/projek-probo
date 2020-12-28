@@ -71,7 +71,8 @@ class LayananController extends Controller
                     'pengerjaan_layanan_id' => $pesanan->id,
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
-                    'isDompet' => true
+                    'isDompet' => true,
+                    'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
             } else {
                 $pembayaran = PembayaranLayanan::where('pengerjaan_layanan_id', $pesanan->id)->first();
@@ -80,12 +81,13 @@ class LayananController extends Controller
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => $pesanan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                     'bukti_pembayaran' => 'bukti.jpg',
-                    'isDompet' => true
+                    'isDompet' => true,
+                    'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
             }
 
-//            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
-//                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
+            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
+                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
 
             return back()->with('update', 'Silahkan cek email Anda dan selesaikan pembayaran Anda sebelum batas waktu yang ditentukan! Terimakasih :)');
         }
