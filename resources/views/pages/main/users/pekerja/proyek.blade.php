@@ -478,7 +478,7 @@
                                                                                 class="label label-success">LUNAS</span>
                                                                         @else
                                                                             <span class="label label-default">DP {{round($row
-                                                                            ->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_project->get_pembayaran->jumlah_pembayaran / $row
                                                                             ->get_project->harga * 100,1)}}%</span>
                                                                         @endif |
                                                                         <span class="label label-{{$row->selesai == false ?
@@ -784,14 +784,14 @@
                                                                             class="label label-success">LUNAS</span>
                                                                     @else
                                                                         <span class="label label-default">DP {{round($row
-                                                                            ->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_project->get_pembayaran->jumlah_pembayaran / $row
                                                                             ->get_project->harga * 100,1)}}%</span>
                                                                     @endif |
                                                                     <span class="label label-{{$row->selesai == false ?
                                                                         'warning' : 'success'}}">{{$row->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
                                                                 @else
-                                                                    <span class="label label-info">MENUNGGU KONFIRMASI</span>
+                                                                    <span class="label label-info" style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
                                                                 @endif
                                                             @else
                                                                 <span
