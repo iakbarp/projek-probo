@@ -164,6 +164,7 @@ class publicPreviewController extends Controller
 
                 )
                 ->get();
+                
             $ulasan_pekerja = $this->imgCheck($ulasan_pekerja->toArray(), 'foto', 'storage/users/foto/');
             $ulasan_pekerja = collect($ulasan_pekerja);
             $ulasan_service = UlasanService::query()
@@ -375,6 +376,7 @@ class publicPreviewController extends Controller
             $proyek = Project::findOrFail($id);
 
             $user = auth('api')->user();
+            $uid=$user->id;
             $its_me = true;
 
             if ($user->id != $proyek->user_id && $id) {
@@ -383,25 +385,27 @@ class publicPreviewController extends Controller
             }
 
             $bio = $this->getBio($user);
-            $proyek = Project::select('project.id')
+            $proyek = Project::query()
 
-                ->leftJoin('bid', function ($joins) use($its_me){
+                ->leftJoin('bid', function ($joins) use($its_me,$uid){
                     $joins->on('bid.proyek_id', '=', 'project.id');
                     $joins->when($its_me,function($query){
                         // show proyek when user role is owner
                         $query->on('bid.tolak', '=', DB::raw('5'));
                     });
-                    $joins->when(!$its_me,function($query){
+                    $joins->when(!$its_me,function($query)use($uid){
                         // show proyek when user role is bidder
                         $query->on('bid.tolak', '=', DB::raw('0'));
+                        $query->on('bid.user_id', '!=', DB::raw($uid));
                     });
                 })
                 // ->whereRaw('')
+                ->where('project.id', $id)
 
                 ->where(function ($query) use ($id) {
-                    $query->where('pribadi', false);
-                    $query->where('project.id', $id);
                     $query->whereNull('bid.id');
+                    $query->orWhere('pribadi', false);
+
                 })
 
 
@@ -422,6 +426,7 @@ class publicPreviewController extends Controller
                     DB::raw("(SELECT ifnull(count(id),0) FROM bid where bid.proyek_id=project.id) total_bid"),
                     "thumbnail",
                     "lampiran",
+                    "pribadi"
 
                 )
                 ->orderBy('project.updated_at', 'desc')
@@ -429,11 +434,11 @@ class publicPreviewController extends Controller
                 ->firstOrFail();
 
 
-
             if ($proyek) {
                 $proyek = $this->get_kategori_img_obj($proyek, 'storage/proyek/thumbnail/');
                 // $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
 
+                
 
 
                 $lamp = [];
@@ -450,7 +455,7 @@ class publicPreviewController extends Controller
                 $proyek->kategori_nama,);
             }
 
-
+            
 
             $bid = Bid::where('proyek_id', $proyek->id)
                 ->join('users as u', function ($joins) {
@@ -661,26 +666,12 @@ class publicPreviewController extends Controller
         try {
             $id = $request->id;
 
-
-
-            $layanan = Project::findOrFail($id);
-
-            $user = auth('api')->user();
-            $its_me = true;
-
-            if ($user->id != $layanan->user_id && $id) {
-                $its_me = false;
-                $user = User::findOrFail($layanan->user_id);
-            }
-            $bio = $this->getBio($user);
             $layanan = Services::query()
                 ->select(
                     'service.*',
                     DB::raw('ifnull((select count(id) from pengerjaan_layanan where
             service.id=pengerjaan_layanan.service_id
-            and pengerjaan_layanan.selesai=1
             ),0) as `jumlah_klien`
-
             ')
 
                 )
@@ -691,12 +682,23 @@ class publicPreviewController extends Controller
 
                 ->firstOrFail();
 
+            $user = auth('api')->user();
+            $its_me = true;
+
+            if ( $id&& $user->id != $layanan->user_id ) {
+                $its_me = false;
+                $user = User::findOrFail($layanan->user_id);
+            }
+            
+            $bio = $this->getBio($user);
+        
+
 
             $layanan = $this->get_kategori_img_obj($layanan, 'storage/layanan/thumbnail/');
 
             $ulasan = PengerjaanLayanan::query()
                 ->where('service_id', $layanan->id)
-                ->where('selesai', true)
+                // ->where('selesai', true)
                 ->join('ulasan_service as u', 'u.pengerjaan_layanan_id', '=', 'pengerjaan_layanan.id')
                 ->join('users as s', 's.id', '=', 'u.user_id')
                 ->join('bio as b', 's.id', '=', 'u.user_id')
@@ -708,12 +710,22 @@ class publicPreviewController extends Controller
                     'u.deskripsi'
                 )
                 ->groupBy('u.id')
+                ->orderBy('u.id', 'desc')
                 ->get();
             $ulasan = $this->imgCheck($ulasan->toArray(), 'foto', 'storage/users/foto/', 0);
 
             $layanan->ulasan = $ulasan;
 
+            $hasil = PengerjaanLayanan::where('service_id', $layanan->id)->wherenotnull('file_hasil')->first();
+            $img=[];
+            if($hasil){
+                foreach($hasil->file_hasil as $dt){
+                    $img[] = $this->imgCheck($dt, null, 'storage/layanan/hasil/', 3);
 
+                }
+            }
+            
+            $layanan->hasil=$img;
 
             return response()->json([
                 'error' => false,
@@ -738,6 +750,46 @@ class publicPreviewController extends Controller
             ], 400);
         }
     }
+
+    public function orderLayanan($id)
+    {
+        try {
+            $user = auth('api')->user();
+            
+            $layanan = Services::query()
+            ->leftJoin('pengerjaan_layanan as pl',function($rel)use($user){
+                $rel->on('pl.service_id','=','service.id');
+                $rel->on('pl.user_id','=',DB::raw($user->id));
+                $rel->on('pl.selesai','=',DB::raw(0));
+            })
+            ->where('service.id',$id)
+            ->whereNull('pl.id')
+            ->where('service.user_id','!=',$user->id)
+            ->firstOrFail();
+
+            
+
+            $pengerjaan = PengerjaanLayanan::create([
+                'user_id' => $user->id,
+                'service_id' => $id,
+                'selesai' => false
+            ]);
+
+            return response()->json([
+                'error' => false,
+                'data' => [
+                    'message'=>'Pesanan Layanan ['.$layanan->judul.'] berhasil dibuat!'
+                ]
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
 
 
     public function layanan(Request $request)
@@ -861,6 +913,12 @@ class publicPreviewController extends Controller
         try {
             Bid::create(collect($request->all())->toArray());
 
+            Undangan::where('user_id',$user->id)
+            ->where('proyek_id',$request->proyek_id)
+            ->update([
+                'terima'=>1
+            ]);
+
             return response()->json([
                 'error' => false,
                 'data' => [
@@ -973,6 +1031,7 @@ class publicPreviewController extends Controller
             asset('admins/img/avatar/avatar-' . rand(1, 2) . '.png'),
             asset('images/porto.jpg'),
             asset('images/undangan-' . rand(1, 2) . '.jpg'),
+            asset('images/noimage.jpg'),
 
         ];
         $res = $data;

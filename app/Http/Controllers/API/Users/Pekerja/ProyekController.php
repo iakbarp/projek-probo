@@ -28,7 +28,13 @@ class ProyekController extends Controller
     public function dashboard(Request $request)
     {
         try{
+            $search=$request->q;
             $user=auth('api')->user();
+            $id=$user->id;
+            $user=Bio::find($user->id,['status','foto']);
+            $user =  $this->imgCheck($user, 'foto', 'storage/users/foto/', 0) ;
+            
+            
 
             $bid=Bid::query()
             ->join('project as p','bid.proyek_id','=','p.id')
@@ -43,13 +49,18 @@ class ProyekController extends Controller
                 DB::raw("(select ifnull(count(b.id),0) from bid as b where b.proyek_id=bid.proyek_id) as jumlah_bid"),
                 'p.waktu_pengerjaan',
                 'bid.tolak',
-                DB::raw('if(bid.tolak !=0,false,true) as deleteable'),
+                DB::raw('if(bid.tolak =0,false,true) as deleteable'),
 
 
             )
-            ->where('bid.user_id',$user->id)
+            ->where('bid.user_id',$id)
             ->orderBy('bid.id','desc')
+            ->when($search,function($q)use($search){
+                $q->where('p.judul','like',"%$search%");
+            })
             ->get();
+
+         
 
             $undangan=Undangan::query()
             ->join('project as p','undangan.proyek_id','=','p.id')
@@ -64,16 +75,44 @@ class ProyekController extends Controller
                 DB::raw("(select ifnull(count(b.id),0) from bid as b where b.proyek_id=undangan.proyek_id) as jumlah_bid"),
                 'p.waktu_pengerjaan',
                 'undangan.terima',
-                DB::raw('if(undangan.terima is not null,false,true) as approveable'),
+                DB::raw('if(undangan.terima = 1,false,true) as approveable'),
 
             )
-            ->where('undangan.user_id',$user->id)
+            ->when($search,function($q)use($search){
+
+                $q->where('p.judul','like',"%$search%");
+
+            })
+            ->where('undangan.user_id',$id)
             ->orderBy('undangan.id','desc')
             ->get();
 
             $pengerjaan=Pengerjaan::query()
-            ->where('user_id',$user->id)
-            ->get(['id','proyek_id','selesai','file_hasil','tautan','created_at','updated_at']);
+            ->join('project as p','pengerjaan.proyek_id','=','p.id')
+
+            ->where('pengerjaan.user_id',$id)
+            ->when($search,function($q)use($search){
+                $q->where('p.judul','like',"%$search%");
+            })
+            ->get([DB::raw('p.user_id as user_proyek'),'pengerjaan.id','proyek_id','selesai','file_hasil','tautan','pengerjaan.created_at','pengerjaan.updated_at']);
+
+           
+            foreach($bid as $dt){
+                $dt->status=is_numeric($dt->tolak)?($dt->tolak?'DITOLAK':'DITERIMA'):'MENUNGGU';
+                $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 2) ;
+
+                $sub=SubKategori::where('id',$dt->subkategori_id)->first(['id','nama','kategori_id']);
+                $kat=null;
+                if($sub){
+                    $kat=Kategori::where('id',$sub->kategori_id)->first(['id','nama']);
+                }
+                $dt->subkategori=$sub;
+                $dt->kategori=$kat;
+                unset($dt->tolak);
+                unset($dt->subkategori_id);
+                unset($dt->subkategori->kategori_id);
+
+            }
 
             foreach ($pengerjaan as $dt) {
                 $file = [];
@@ -107,29 +146,63 @@ class ProyekController extends Controller
 
                 $dt->file_hasil = $file;
                 $dt->proyek = collect($bid)->where('id', $dt->proyek_id)->first();
-                
-                unset($dt->selesai);
-            }
-            foreach($bid as $dt){
-            $dt->status=$dt->tolak==null?($dt->tolak?'DITOLAK':'DITERIMA'):'MENUNGGU';
-            $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 1) ;
+                $u=auth('api')->user();
+                $pekerja=Bio::query()
+                ->where('user_id',$id)
+                ->select(
+                    DB::raw('user_id as id'),
+                    'summary',
+                DB::raw('ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) as bintang'))
+                ->first();
 
-            $sub=SubKategori::where('id',$dt->subkategori_id)->first(['id','nama','kategori_id']);
-            $kat=null;
-            if($sub){
-                $kat=Kategori::where('id',$sub->kategori_id)->first(['id','nama']);
-            }
-            $dt->subkategori=$sub;
-            $dt->kategori=$kat;
-            unset($dt->tolak);
-            unset($dt->subkategori_id);
-            unset($dt->subkategori->kategori_id);
+                $owner = DB::table('users')
+                        ->where('users.id', $dt->user_proyek)
+
+                        ->leftJoin('bio', 'bio.user_id', '=', 'users.id')
+                        ->select('users.id', 'users.name as nama', 'bio.foto', 'bio.status')
+                        ->first();
+                $owner =  $this->imgCheck($owner, 'foto', 'storage/users/foto/', 0) ;
+                
+
+                $pekerja->id=$id;
+                $pekerja->nama=$u->name;
+                $pekerja->status=$user->status;
+                $pekerja->foto=$user->foto;
+
+                $ulasan_pekerja = DB::table('ulasan_pekerja')
+                        ->where('user_id', $dt->user_proyek)
+                        ->where('pengerjaan_id', $dt->id)
+                        ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
+                        ->orderBy('id', 'desc')->first();
+                $ulasan_pekerja->foto=$owner->foto;
+                $ulasan_pekerja->nama=$owner->nama;
+                $ulasan_pekerja->id=$owner->id;
+
+                $kliens = DB::table('ulasan_klien')
+                    ->where('user_id', $id)
+                    ->where('proyek_id', $dt->proyek->id)
+                    ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
+                    ->orderBy('id', 'desc')->first();
+             
+                $kliens->foto=$pekerja->foto;
+                $kliens->nama=$pekerja->nama;
+                $kliens->id=$pekerja->id;
+
+
+                $ulasan=(Object)[];
+                $ulasan->ulasan_pekerja=$ulasan_pekerja;
+                $ulasan->ulasan_klien=$kliens;
+                $dt->ulasan=$ulasan;
+
+                $dt->pekerja=$pekerja;
+                unset($dt->selesai);
+                unset($dt->user_proyek);
 
             }
 
             foreach($undangan as $dt){
-                $dt->status=$dt->terima==null?($dt->terima?'DITOLAK':'DITERIMA'):'MENUNGGU';
-                $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 1) ;
+                $dt->status=is_numeric($dt->terima)?($dt->terima?'DITERIMA':'DITOLAK'):'MENUNGGU';
+                $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 2) ;
     
                 $sub=SubKategori::where('id',$dt->subkategori_id)->first(['id','nama','kategori_id']);
                 $kat=null;
@@ -138,7 +211,7 @@ class ProyekController extends Controller
                 }
                 $dt->subkategori=$sub;
                 $dt->kategori=$kat;
-                unset($dt->terima);
+                // unset($dt->terima);
                 unset($dt->subkategori_id);
                 unset($dt->subkategori->kategori_id);
     
@@ -153,11 +226,11 @@ class ProyekController extends Controller
                     'bid'=>$bid,
                     'undangan'=>$undangan,
                     'pengerjaan'=>$pengerjaan,
-                    'count'=>[
-                        'bid'=>collect($bid)->count(),
-                        'undangan'=>collect($undangan)->count(),
-                        'pengerjaan'=>collect($pengerjaan)->count(),
-                    ]
+                    
+                    'bid_count'=>collect($bid)->count(),
+                    'undangan_count'=>collect($undangan)->count(),
+                    'pengerjaan_count'=>collect($pengerjaan)->count(),
+                    
                 ]
 
             ]);
@@ -179,7 +252,10 @@ class ProyekController extends Controller
             $cek=Bid::query()
             ->where('id',$id)
             ->where('user_id',$user->id)
-            ->where('tolak','!=',0)
+            ->where(function($query){
+                $query->whereNull('tolak');
+                $query->orWhere('tolak','0');
+            })
             ->firstOrFail();
 
             $cek->delete();
@@ -212,7 +288,10 @@ class ProyekController extends Controller
             $cek=Undangan::query()
             ->where('id',$id)
             ->where('user_id',$user->id)
-            ->whereNull('terima')
+            ->where(function($q){
+                $q->whereNull('terima');
+                $q->orWhere('terima',0);
+            })
             ->firstOrFail();
 
             $cek->update([

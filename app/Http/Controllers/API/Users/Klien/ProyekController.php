@@ -98,12 +98,13 @@ class ProyekController extends Controller
             $Pengerjaan =
                 [];
             $i = 0;
-
+//TODO:: GANTI KE ELOQUENT UNTUK DEETECT CAST
             foreach ($proyek as $dt) {
                 $d = DB::table('pengerjaan as a')
                     ->select(
                         'a.*',
-                        DB::raw('(select ifnull(format(AVG(b.bintang),1),0.0) from ulasan_pekerja as b where a.id=b.pengerjaan_id) as bintang')
+                        DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where a.user_id=b.user_id) as bintang'),
+                    
                     )
                     ->where('proyek_id', $dt['id'])
                     // ->where('a.selesai',DB::raw('1'))
