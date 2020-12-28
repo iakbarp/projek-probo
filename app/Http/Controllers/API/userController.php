@@ -40,6 +40,7 @@ class userController extends Controller
             $user->makeHidden(['id', 'created_at', 'deleted_at', 'updated_at', 'role']);
 
             $user->bio = $this->imgCheck($user->bio, 'foto', 'storage/users/foto/');
+            
             $user->portofolio = $this->imgCheck($user->portofolio->toArray(), 'foto', 'storage/users/portofolio/', 1);
 
             $user->bio->bank = Bank::find($user->bio->bank);

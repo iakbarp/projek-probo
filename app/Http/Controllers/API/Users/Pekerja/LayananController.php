@@ -97,7 +97,7 @@ class LayananController extends Controller
                         DB::raw("format(ulasan_service.bintang,1) as bintang")
                     )
                     ->first();
-                $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto');
+                $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto/');
 
                 $dt->ulasan = $ulasan;
 
@@ -127,7 +127,7 @@ class LayananController extends Controller
                 )
                 ->first();
             $bio->nama = $user->name;
-            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto');
+            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
 
             return response()->json([
                 'error' => false,

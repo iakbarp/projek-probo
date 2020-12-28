@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Bio;
 use App\Model\Pengerjaan;
 use App\Model\Project;
+use App\Model\Pembayaran;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,9 +62,10 @@ class ProyekController extends Controller
 
             foreach ($proyek as $dt) {
                 $lamp = [];
-
-                foreach ($dt->lampiran as $row) {
-                    $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
+                if(is_array($dt->lampiran)){
+                    foreach ($dt->lampiran as $row) {
+                        $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
+                    }
                 }
                 $dt->lampiran = $lamp;
 
@@ -90,18 +92,19 @@ class ProyekController extends Controller
             // return response()->json($proyek);
             $bio = Bio::where('user_id', $user->id)->select(['status', 'foto'])->first();
             $bio->nama = $user->name;
-            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto');
+            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
 
 
             $Pengerjaan =
                 [];
             $i = 0;
-
+//TODO:: GANTI KE ELOQUENT UNTUK DEETECT CAST
             foreach ($proyek as $dt) {
                 $d = DB::table('pengerjaan as a')
                     ->select(
                         'a.*',
-                        DB::raw('(select ifnull(format(AVG(b.bintang),1),0.0) from ulasan_pekerja as b where a.id=b.pengerjaan_id) as bintang')
+                        DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where a.user_id=b.user_id) as bintang'),
+                    
                     )
                     ->where('proyek_id', $dt['id'])
                     // ->where('a.selesai',DB::raw('1'))
@@ -109,12 +112,34 @@ class ProyekController extends Controller
                     // ->groupBy('a.id')
                     // ->groupBy('b.pengerjaan_id')
                     ->orderBy('id', 'desc')
+                    ->groupBy('a.id')
                     ->first();
+
+          
+
+                
 
 
                 if ($d) {
                  
+                    $pembayaran=Pembayaran::where('proyek_id',$dt['id'])->first();
 
+                    if($pembayaran){
+                        if(is_numeric(strpos($pembayaran->bukti_pembayaran,'DP'))){
+                           $d->status= 'Pembayaran DP '.round($pembayaran->jumlah_pembayaran*100/$dt['harga']).'%';
+                        }elseif((is_numeric(strpos($pembayaran->bukti_pembayaran,'FP')))){
+                            $d->status='Pembayaran Lunas';
+                        }else{
+                            $d->status='Menunggu Pembayaran';
+                        }
+                    }else{
+                        $d->status='Menunggu Pembayaran';
+                    }
+    
+                    if($d->selesai){
+                        $d->status='Proyek Selesai';
+    
+                    }
                     $pekerjas = DB::table('users')
                         ->where('users.id', $d->user_id)
 
@@ -122,7 +147,7 @@ class ProyekController extends Controller
                         ->select('users.id', 'users.name as nama', 'bio.foto', 'bio.status')
                         ->first();
                     $pekerjas->bintang = $d->bintang;
-                    $pekerjas = $this->imgCheck($pekerjas, 'foto', 'storage/users/foto');
+                    $pekerjas = $this->imgCheck($pekerjas, 'foto', 'storage/users/foto/');
 
                     $ulasan_pekerja = DB::table('ulasan_pekerja')
                         ->where('user_id', $user->id)
@@ -529,7 +554,7 @@ class ProyekController extends Controller
     {
         $dummy_photo = [
 
-            asset('admins/img/avatar/avatar-' . rand(1, 2) . '.png'),
+            asset('admins/img/avatar/avatar-1'. '.png'),
             asset('images/porto.jpg'),
             asset('images/undangan-' . rand(1, 2) . '.jpg'),
 
