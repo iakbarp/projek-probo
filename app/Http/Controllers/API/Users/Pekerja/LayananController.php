@@ -6,10 +6,12 @@ namespace App\Http\Controllers\API\Users\Pekerja;
 use App\Http\Controllers\Controller;
 use App\Model\Bio;
 use App\Model\Kategori;
+use App\Model\PembayaranLayanan;
 use App\Model\PengerjaanLayanan;
 use App\Model\Services;
 use App\Model\SubKategori;
 use App\Model\UlasanService;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -74,37 +76,6 @@ class LayananController extends Controller
 
                 ->limit($limit ?? 8)
                 ->get();
-
-            foreach ($pengerjaan as $dt) {
-                $file = [];
-
-                if ($dt->file_hasil) {
-                    foreach ($dt->file_hasil as $d) {
-                        $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 2) : [];
-                    }
-                }
-
-                $ulasan = UlasanService::query()
-                    ->where('pengerjaan_layanan_id', $dt->id)
-                    ->where('ulasan_service.user_id', $dt->user_id)
-                    ->leftJoin('bio', 'bio.user_id', '=', 'ulasan_service.user_id')
-                    ->leftJoin('users as u', 'u.id', '=', 'ulasan_service.user_id')
-                    ->select(
-                        'ulasan_service.id',
-                        DB::raw('u.name as nama'),
-                        'bio.foto',
-                        'ulasan_service.deskripsi',
-                        DB::raw("format(ulasan_service.bintang,1) as bintang")
-                    )
-                    ->first();
-                $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto/');
-
-                $dt->ulasan = $ulasan;
-
-                $dt->file_hasil = $file;
-                $dt->layanan = collect($layanan)->where('id', $dt->service_id)->first();
-            }
-
             foreach ($layanan as $dt) {
                 $sub = SubKategori::where('id', $dt->subkategori_id)->first(['nama', 'id', 'kategori_id']);
                 if ($sub) {
@@ -116,8 +87,79 @@ class LayananController extends Controller
                 }
                 $dt = $dt ? $this->imgCheck($dt, 'thumbnail', 'storage/layanan/thumbnail/', 2) : [];
 
-                unset($dt->kategori_id);
+                unset($dt->subkategori_id);
             }
+
+            foreach ($pengerjaan as $dt) {
+                $file = [];
+
+                if ($dt->file_hasil) {
+                    foreach ($dt->file_hasil as $d) {
+                        $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 2) : [];
+                    }
+                }
+
+
+                $ulasan = UlasanService::query()
+                    ->where('pengerjaan_layanan_id', $dt->id)
+                    ->where('ulasan_service.user_id', $dt->user_id)
+                    ->leftJoin('bio', 'bio.user_id', '=', 'ulasan_service.user_id')
+                    ->leftJoin('users as u', 'u.id', '=', 'ulasan_service.user_id')
+                    ->select(
+                        'u.id',
+                        DB::raw('u.name as nama'),
+                        'bio.foto',
+                        'ulasan_service.deskripsi',
+                        DB::raw("format(ulasan_service.bintang,1) as bintang")
+                    )
+                    ->first();
+
+                if (!$ulasan) {
+                    $ulasan = User::query()
+                        ->where('users.id', $dt->user_id)
+                        ->leftJoin('bio', 'bio.user_id', '=', 'users.id')
+                        ->select(
+                            'users.id',
+                            DB::raw('name as nama'),
+                            'foto',
+                            DB::raw('null as bintang'),
+                            DB::raw('null as deskripsi'),
+                        )
+                        ->first();
+                }
+                $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto/');
+
+                $dt->ulasan = $ulasan;
+
+                $dt->file_hasil = $file;
+                $dt->layanan = collect($layanan)->where('id', $dt->service_id)->first();
+
+                $pembayaran = PembayaranLayanan::where('pengerjaan_layanan_id', $dt->id)->first();
+
+                $gabung = true;
+                if ($pembayaran) {
+                    if (is_numeric(strpos($pembayaran->bukti_pembayaran, 'DP'))) {
+                        $dt->status = ' (DP ' . round($pembayaran->jumlah_pembayaran * 100 / $dt->layanan->harga) . '%)';
+                    } elseif ((is_numeric(strpos($pembayaran->bukti_pembayaran, 'FP')))) {
+                        $dt->status = ' (Lunas)';
+                    } else {
+                        $dt->status = 'Menunggu Pembayaran';
+                    }
+                } else {
+                    $gabung = false;
+                    $dt->status = 'Menunggu Pembayaran';
+                }
+
+                if ($gabung) {
+                    if ($dt->selesai) {
+                        $dt->status = 'Selesai' . $dt->status;
+                    } else {
+                        $dt->status = 'Pengerjaan' . $dt->status;
+                    }
+                }
+            }
+
+
             $bio = Bio::where('user_id', $user->id)
                 ->select(
                     DB::raw('user_id as id'),
@@ -143,7 +185,7 @@ class LayananController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'error' => false,
+                'error' => true,
                 'message' => $e->getMessage()
             ], 500);
         }
@@ -200,7 +242,7 @@ class LayananController extends Controller
                     'deskripsi' => $request->deskripsi,
                     'subkategori_id' => $request->kategori,
                     'thumbnail' => $thumbnail,
-                    'user_id'=>$user->id,
+                    'user_id' => $user->id,
 
                 ]);
 

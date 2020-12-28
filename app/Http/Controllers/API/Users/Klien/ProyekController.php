@@ -62,7 +62,7 @@ class ProyekController extends Controller
 
             foreach ($proyek as $dt) {
                 $lamp = [];
-                if(is_array($dt->lampiran)){
+                if (is_array($dt->lampiran)) {
                     foreach ($dt->lampiran as $row) {
                         $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
                     }
@@ -98,13 +98,13 @@ class ProyekController extends Controller
             $Pengerjaan =
                 [];
             $i = 0;
-//TODO:: GANTI KE ELOQUENT UNTUK DEETECT CAST
+            //TODO:: GANTI KE ELOQUENT UNTUK DEETECT CAST
             foreach ($proyek as $dt) {
                 $d = DB::table('pengerjaan as a')
                     ->select(
                         'a.*',
                         DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where a.user_id=b.user_id) as bintang'),
-                    
+
                     )
                     ->where('proyek_id', $dt['id'])
                     // ->where('a.selesai',DB::raw('1'))
@@ -115,31 +115,37 @@ class ProyekController extends Controller
                     ->groupBy('a.id')
                     ->first();
 
-          
 
-                
+
+
 
 
                 if ($d) {
-                 
-                    $pembayaran=Pembayaran::where('proyek_id',$dt['id'])->first();
 
-                    if($pembayaran){
-                        if(is_numeric(strpos($pembayaran->bukti_pembayaran,'DP'))){
-                           $d->status= 'Pembayaran DP '.round($pembayaran->jumlah_pembayaran*100/$dt['harga']).'%';
-                        }elseif((is_numeric(strpos($pembayaran->bukti_pembayaran,'FP')))){
-                            $d->status='Pembayaran Lunas';
-                        }else{
-                            $d->status='Menunggu Pembayaran';
+                    $pembayaran = Pembayaran::where('proyek_id', $dt['id'])->first();
+
+                    $gabung = true;
+
+                    if ($pembayaran) {
+                        if (is_numeric(strpos($pembayaran->bukti_pembayaran, 'DP'))) {
+                            $d->status = ' (DP ' . round($pembayaran->jumlah_pembayaran * 100 / $dt['harga']) . '%)';
+                        } elseif ((is_numeric(strpos($pembayaran->bukti_pembayaran, 'FP')))) {
+                            $d->status = ' (Lunas)';
+                        } else {
+                            $d->status = 'Menunggu Pembayaran';
                         }
-                    }else{
-                        $d->status='Menunggu Pembayaran';
+                    } else {
+                        $gabung = false;
+                        $d->status = 'Menunggu Pembayaran';
                     }
-    
-                    if($d->selesai){
-                        $d->status='Proyek Selesai';
-    
+                    if ($gabung) {
+                        if ($d->selesai) {
+                            $d->status = 'Selesai' . $d->status;
+                        } else {
+                            $d->status = 'Pengerjaan' . $d->status;
+                        }
                     }
+
                     $pekerjas = DB::table('users')
                         ->where('users.id', $d->user_id)
 
@@ -289,7 +295,7 @@ class ProyekController extends Controller
             return response()->json([
                 'error' => true,
 
-                    'message' => $exception->getMessage()
+                'message' => $exception->getMessage()
 
             ], 400);
         }
@@ -554,7 +560,7 @@ class ProyekController extends Controller
     {
         $dummy_photo = [
 
-            asset('admins/img/avatar/avatar-1'. '.png'),
+            asset('admins/img/avatar/avatar-1' . '.png'),
             asset('images/porto.jpg'),
             asset('images/undangan-' . rand(1, 2) . '.jpg'),
 

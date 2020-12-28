@@ -42,9 +42,9 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('/frelencer', 'tabDataController@frelencer');
         Route::get('/kategori', 'tabDataController@kategori');
         Route::get('/grup_kategori', 'tabDataController@grupKategori');
-        
 
-        Route::get('/aggrement_proyek','aggrementController@proyek');
+
+        Route::get('/aggrement_proyek', 'aggrementController@proyek');
 
         Route::group(['prefix' => 'message'], function () {
 
@@ -53,7 +53,6 @@ Route::group(['namespace' => 'API'], function () {
             Route::group(['middleware' => 'optimizeImages'], function () {
 
                 Route::post('send', 'messageController@sendChat');
-
             });
         });
 
@@ -96,45 +95,37 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('/terima_bid', 'publicPreviewController@terimaBid');
             Route::post('/invite_proyek', 'publicPreviewController@inviteProyek');
             Route::post('/invite_private', 'publicPreviewController@invitePrivate');
-
-
         });
 
         Route::group(['prefix' => 'klien'], function () {
 
-            Route::group(['prefix' => 'proyek','namespace' => 'Users\Klien'], function () {
+            Route::group(['prefix' => 'proyek', 'namespace' => 'Users\Klien'], function () {
                 Route::get('/', 'ProyekController@dashboard');
                 Route::post('/', 'ProyekController@tambahProyek');
                 Route::post('/lampiran', 'ProyekController@tambahLampiran');
                 Route::delete('/lampiran', 'ProyekController@deleteLampiran');
-              
+
                 Route::group(['prefix' => 'payment'], function () {
                     Route::get('/', [
                         'uses' => 'ProyekPaymentController@index',
-                  
-                    ]);
-                Route::post('/dompet', 'ProyekPaymentController@viaDompet');
 
+                    ]);
+                    Route::post('/dompet', 'ProyekPaymentController@viaDompet');
                 });
 
                 Route::post('/{proyek_id}', 'ProyekController@updateProyek');
                 Route::delete('/{proyek_id}', 'ProyekController@deleteProyek');
-           
             });
 
-        
 
-
-            Route::group(['prefix' => 'layanan','namespace' => 'Users\Klien'], function () {
+            Route::group(['prefix' => 'layanan', 'namespace' => 'Users\Klien'], function () {
                 Route::get('/', 'LayananController@dashboard');
-                Route::post('/', 'LayananController@tambahLayanan');
-                Route::post('/{proyek_id}', 'LayananController@updateLayanan');
-                Route::delete('/{proyek_id}', 'LayananController@deleteLayanan');
+                Route::delete('/{id}', 'LayananController@deleteOrder');
+                Route::post('/{id}/ulasan', 'LayananController@komenLayanan');
             });
-
         });
 
-        Route::group(['prefix' => 'pekerja','namespace' => 'Users\Pekerja'], function () {
+        Route::group(['prefix' => 'pekerja', 'namespace' => 'Users\Pekerja'], function () {
             Route::group(['prefix' => 'layanan'], function () {
                 Route::get('/', 'LayananController@dashboard');
                 Route::post('/', 'LayananController@tambahLayanan');
@@ -148,13 +139,11 @@ Route::group(['namespace' => 'API'], function () {
                 Route::post('/invitation', 'ProyekController@inviteApproval');
                 Route::get('/progress', 'ProyekController@pengerjaanData');
                 Route::post('/progress', 'ProyekController@pengerjaanPost');
-
-
             });
         });
     });
 
-   
+
 
     Route::group(['prefix' => 'midtrans'], function () {
 
@@ -180,5 +169,4 @@ Route::group(['namespace' => 'API'], function () {
             ]);
         });
     });
-
 });

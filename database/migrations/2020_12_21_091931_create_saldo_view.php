@@ -28,21 +28,13 @@ class CreateSaldoView extends Migration
                 FROM   `withdraw` `w`
                 WHERE  `w`.`user_id` = `u`.`id`
                        AND `w`.`konfirmasi` = 1)   AS `withdraw`,
-<<<<<<< HEAD
-               (SELECT Ifnull(Sum(`p`.`jumlah_pembayaran`), 0)
-=======
                (SELECT Ifnull(Sum(`p`.`bayar_pakai_dompet`), 0)
->>>>>>> 152bbd7a18f30954c4d36cba755fe1be14e661fa
                 FROM   (`pembayaran` `p`
                         JOIN `project` `pr`
                           ON( `pr`.`id` = `p`.`proyek_id`
                               AND `p`.`isdompet` = 1 ))
                 WHERE  `pr`.`user_id` = `u`.`id`)  AS `pembayaran`,
-<<<<<<< HEAD
-               (SELECT Ifnull(Sum(`pl`.`jumlah_pembayaran`), 0)
-=======
                (SELECT Ifnull(Sum(`pl`.`bayar_pakai_dompet`), 0)
->>>>>>> 152bbd7a18f30954c4d36cba755fe1be14e661fa
                 FROM   (`pembayaran_layanan` `pl`
                         JOIN `pengerjaan_layanan` `pl2`
                           ON( `pl2`.`id` = `pl`.`pengerjaan_layanan_id`
