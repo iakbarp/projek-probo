@@ -662,8 +662,15 @@
                                             <div class="col-md-6">
                                                 @foreach($saldo as $row)
                                                     <label class="card-label mb-0" for="pay_undagi">
-                                                        <input id="pay_undagi" class="card-rb" type="radio"
-                                                               name="payment_method" value="undagi">
+                                                        @foreach($pesanan as $object)
+                                                            @if($row -> saldo < $object->get_service->harga)
+                                                                <input id="pay_undagi" class="card-rb" type="radio"
+                                                                       name="payment_method" value="undagi" disabled>
+                                                            @else
+                                                                <input id="pay_undagi" class="card-rb" type="radio"
+                                                                       name="payment_method" value="undagi">
+                                                            @endif
+                                                        @endforeach
                                                         <div class="card card-input">
                                                             <div class="row">
                                                                 <div class="col-lg-12">

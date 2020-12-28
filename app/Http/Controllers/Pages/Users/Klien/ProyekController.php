@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Pages\Users\Klien;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Users\AcceptBidMail;
 use App\Mail\Users\PembayaranProyekMail;
 use App\Model\Bid;
 use App\Model\Kategori;
 use App\Model\Pembayaran;
 use App\Model\Pengerjaan;
+use App\Model\PengerjaanProgress;
 use App\Model\Project;
 use App\Model\ReviewWorker;
 use App\Model\Saldo;
@@ -39,9 +41,10 @@ class ProyekController extends Controller
         $req_harga = $request->harga;
         $req_judul = $request->judul;
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
+        $progress = PengerjaanProgress::where('pengerjaan_id', $pengerjaan->pluck ('id'))->get();
 
         return view('pages.main.users.klien.proyek', compact('user', 'kategori', 'proyek', 'pengerjaan',
-            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo'));
+            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo', 'progress'));
     }
 
     public function tambahProyek(Request $request)
@@ -250,6 +253,9 @@ class ProyekController extends Controller
             'proyek_id' => $bid->proyek_id,
         ]);
 
+        Mail::to($bid->get_user->email)
+            ->send(new AcceptBidMail($bid->get_user->name, $proyek->judul, $proyek->deskripsi, $proyek->waktu_pengerjaan, $proyek->harga));
+
         return redirect()->route('dashboard.klien.proyek', ['id' => $pengerjaan->id,
             'judul' => $bid->get_project->judul, 'harga' => $bid->get_project->harga])
             ->with('bid', 'Bidder [' . $bid->get_user->name . '] untuk tugas/proyek [' . $bid->get_project->judul .
@@ -276,8 +282,9 @@ class ProyekController extends Controller
                     'proyek_id' => $pengerjaan->proyek_id,
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
-//                    'bukti_pembayaran' => 'bukti.jpg',
-                    'isDompet' => true
+                    'bukti_pembayaran' => 'bukti.jpg',
+                    'isDompet' => true,
+                    'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
             } else {
                 $pembayaran = Pembayaran::where('proyek_id', $pengerjaan->proyek_id)->first();
@@ -286,7 +293,8 @@ class ProyekController extends Controller
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                     'bukti_pembayaran' => 'bukti.jpg',
-                    'isDompet' => true
+                    'isDompet' => true,
+                    'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
             }
 
