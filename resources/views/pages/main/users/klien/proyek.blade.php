@@ -877,8 +877,13 @@
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
                                                     <button class="btn btn-link btn-sm btn-block" title="Lihat Progress Pengerjaan"
-                                                       data-toggle="tooltip" onclick="lihatProgress">
-                                                        <i class="far fa-file" style="margin-right: 0"></i></button>
+                                                       data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',
+                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
+                                                        '{{$row->get_project->judul}}')" {{is_null($row->get_project->get_pembayaran) ||
+                                                                (!is_null($row->get_project->get_pembayaran) &&
+                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
+                                                                $row->selesai == true ? 'disabled' : ''}}>
+                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i></button>
                                                     <hr style="margin: .5em 0">
                                                     <a class="btn btn-link btn-sm btn-block" title="Lihat Proyek"
                                                        data-toggle="tooltip" href="{{route('detail.proyek',
@@ -1115,63 +1120,6 @@
                                     </div>
                                 </div>
 
-{{--                                <div id="bukti-pembayaran" style="display: none">--}}
-{{--                                    <div class="card">--}}
-{{--                                        <form id="upload-form" class="form-horizontal" role="form" method="POST"--}}
-{{--                                              enctype="multipart/form-data">--}}
-{{--                                            @csrf--}}
-{{--                                            {{method_field('put')}}--}}
-{{--                                            <div class="card-content">--}}
-{{--                                                <div class="card-title">--}}
-{{--                                                    <small id="invoice"></small>--}}
-{{--                                                    <hr class="mt-0">--}}
-{{--                                                    <div class="row">--}}
-{{--                                                        <div class="col-md-12">--}}
-{{--                                                            <div class="uploader">--}}
-{{--                                                                <input id="file-upload" type="file"--}}
-{{--                                                                       name="bukti_pembayaran"--}}
-{{--                                                                       accept="image/*">--}}
-{{--                                                                <label for="file-upload" id="file-drag">--}}
-{{--                                                                    <img id="file-image" src="#" alt="Bukti Pembayaran"--}}
-{{--                                                                         class="hidden img-responsive">--}}
-{{--                                                                    <div id="start"><i class="fa fa-download"--}}
-{{--                                                                                       aria-hidden="true"></i>--}}
-{{--                                                                        <div>Pilih file bukti pembayaran Anda atau seret--}}
-{{--                                                                            filenya--}}
-{{--                                                                            kesini--}}
-{{--                                                                        </div>--}}
-{{--                                                                        <div id="notimage" class="hidden">Mohon untuk--}}
-{{--                                                                            memilih file--}}
-{{--                                                                            gambar--}}
-{{--                                                                        </div>--}}
-{{--                                                                        <span id="file-upload-btn"--}}
-{{--                                                                              class="btn btn-link btn-sm">Pilih File</span>--}}
-{{--                                                                    </div>--}}
-{{--                                                                    <div id="response" class="hidden">--}}
-{{--                                                                        <div id="messages"></div>--}}
-{{--                                                                    </div>--}}
-{{--                                                                    <div id="progress-upload">--}}
-{{--                                                                        <div--}}
-{{--                                                                            class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated active"--}}
-{{--                                                                            role="progressbar" aria-valuenow="0"--}}
-{{--                                                                            aria-valuemin="0" aria-valuemax="100">--}}
-{{--                                                                        </div>--}}
-{{--                                                                    </div>--}}
-{{--                                                                </label>--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="card-read-more">--}}
-{{--                                                <button type="reset" class="btn btn-link btn-block">--}}
-{{--                                                    <i class="fa fa-undo mr-2"></i>BATAL--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
-{{--                                        </form>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-
                                 <div id="ulas-hasil" style="display: none">
                                     <div class="card">
                                         <form class="form-horizontal" role="form" method="POST">
@@ -1276,6 +1224,90 @@
 {{--                                                </button>--}}
 {{--                                            </div>--}}
                                         </form>
+                                    </div>
+                                </div>
+                                <div id="lihat-progress" style="display: none">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div class="card-title">
+                                                <div class="row form-group">
+                                                    @foreach($pengerjaan as $row)
+                                                    <div class="col-md-12">
+                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
+                                                             alt="Thumbnail"
+                                                             src="{{$row->get_project->thumbnail != "" ?
+                                                                     asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
+                                                                     : asset('images/slider/beranda-1.jpg')}}">
+                                                        <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
+                                                        <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}&nbsp;HARI)</b>
+                                                        <br>
+                                                        <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
+                                                        </b>
+                                                        <br>
+                                                        @if(!is_null($row->get_project->get_pembayaran))
+                                                            @if(!is_null($row->get_project->get_pembayaran->bukti_pembayaran))
+                                                                @if($row->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
+                                                                    <span
+                                                                        class="label label-success">LUNAS</span>
+                                                                @else
+                                                                    <span class="label label-default">DP {{round($row
+                                                                            ->get_project->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_project->harga * 100,1)}}%</span>
+                                                                @endif |
+                                                                <span class="label label-{{$row->selesai == false ?
+                                                                        'warning' : 'success'}}">{{$row->selesai == false ?
+                                                                        'PROSES PENGERJAAN' : 'SELESAI'}}</span>
+                                                            @else
+                                                                <span class="label label-info" style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
+                                                            @endif
+                                                        @else
+                                                            <span
+                                                                class="label label-danger">MENUNGGU PEMBAYARAN</span>
+                                                        @endif
+                                                    </div>
+                                                        @endforeach
+                                                </div>
+
+                                                <table class="table" id="dt-progress">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center">Bukti Pengerjaan</th>
+                                                        <th class="text-center">Progress</th>
+                                                        <th class="text-center">Tanggal Update</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @php $no = 1; @endphp
+                                                    @foreach($progress as $row)
+                                                        <tr>
+                                                            <td style="vertical-align: middle"><a href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}" target="_blank"><img class="img-responsive text-center" width="160"
+                                                                                                                                                                                       alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
+                                                         asset('storage/proyek/progress/'.$row->bukti_gambar)
+                                                         : asset('images/undangan-1.jpg')}}"></a></td>
+                                                            <td style="vertical-align: middle"><span class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
+                                                                <br>
+                                                                <p>{{$row->deskripsi}}</p>
+                                                            </td>
+                                                            <td style="vertical-align: middle" align="center">
+                                                                {{$row->created_at->formatLocalized('%d %B %Y')}}
+                                                                <br>
+                                                                {{$row->created_at->format('H : i : s')}}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col-lg-12">
+                                                    <button type="reset" class="btn btn-link btn-sm"
+                                                            style="border: 1px solid #ccc">
+                                                        <i class="fa fa-undo mr-2"></i>KEMBALI
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{--                                            </div>--}}
                                     </div>
                                 </div>
                             </div>
@@ -1740,7 +1772,23 @@
             }
         }
         <!-- lihat progress -->
+        function lihatProgress(id, action, judul) {
+            $("#judul").text(judul);
+            $("#dt-pengerjaan").toggle(300);
+            $("#lihat-progress").toggle(300);
+            $("#lihat-progress form").attr('action', action);
 
+            $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
+        }
+
+        $("#lihat-progress button[type=reset]").on('click', function () {
+            $("#judul").text(null);
+            $("#dt-pengerjaan").toggle(300);
+            $("#lihat-progress").toggle(300);
+            $("#lihat-progress form").removeAttr('action');
+
+            $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
+        });
         <!-- bukti pembayaran -->
         function buktiPembayaran(id, invoice, url, data_url, harga) {
             var bisa_upload = false;

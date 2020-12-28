@@ -455,7 +455,7 @@
                                                 $rating_klien = count($ulasan_klien) > 0 ? $klien->get_bio->total_bintang_klien / count($ulasan_klien) : 0;
                                             @endphp
                                             <tr>
-                                                <td style="vertical-align: middle" align="center"></td>
+                                                <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                                 <td style="vertical-align: middle">
                                                     <div class="row mb-1" style="border-bottom: 1px solid #eee;">
                                                         <div class="col-lg-12">
@@ -799,24 +799,36 @@
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    <hr class="mt-0">
-                                                    <div class="row form-group">
-                                                        <div class="col-lg-12">
+
+                                                        <table class="table" id="dt-progress">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="text-center">Bukti Pengerjaan</th>
+                                                                <th class="text-center">Progress</th>
+                                                                <th class="text-center">Tanggal Update</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
                                                             @php $no = 1; @endphp
-                                                            @foreach($progress as $object)
-                                                            <a href="{{asset('storage/proyek/progress/'.$object->bukti_gambar)}}" target="_blank"><img style="width: 125px;height: 125px" class="img-responsive float-left mr-2"
-                                                                 alt="Thumbnail"
-                                                                 src="{{$object->bukti_gambar != "" ?
-                                                                         asset('storage/proyek/progress/'.$object->bukti_gambar)
-                                                                         : asset('images/slider/beranda-1.jpg')}}">
-                                                            </a>
-                                                            <b>PROGRESS PENGERJAAN #{{$no++}}</b>
-                                                                <i class="pull-right" style="color: black;font-size: 15px">{{$object->created_at->formatLocalized('%d %B %Y')}}</i>
-                                                                    <hr class="mt-0">
-                                                            <br>
-                                                            <p>{{$object->deskripsi}}</p>
+                                                            @foreach($progress as $row)
+                                                                <tr>
+                                                                    <td style="vertical-align: middle"><a href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}" target="_blank"><img class="img-responsive text-center" width="160"
+                                                                                                                           alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
+                                                         asset('storage/proyek/progress/'.$row->bukti_gambar)
+                                                         : asset('images/undangan-1.jpg')}}"></a></td>
+                                                                    <td style="vertical-align: middle"><span class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
+                                                                        <br>
+                                                                        <p>{{$row->deskripsi}}</p>
+                                                                    </td>
+                                                                    <td style="vertical-align: middle" align="center">
+                                                                        {{$row->created_at->formatLocalized('%d %B %Y')}}
+                                                                        <br>
+                                                                        {{$row->created_at->format('H : i : s')}}
+                                                                    </td>
+                                                                </tr>
                                                             @endforeach
-                                                        </div>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                     <div class="row form-group">
                                                         <div class="col-lg-12">
@@ -827,7 +839,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+{{--                                            </div>--}}
                                     </div>
                                 </div>
 
@@ -1165,7 +1177,7 @@
             $("#dt-undangan").DataTable({
                 dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'B><'col-sm-12 col-md-4'f>>" +
                     "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-                columnDefs: [{"sortable": false, "targets": 6}],
+                columnDefs: [{"sortable": false, "targets": 5}],
                 language: {
                     "emptyTable": "Anda belum menerima undangan untuk tugas/proyek apapun",
                     "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",
@@ -1220,6 +1232,11 @@
                     $('[data-toggle="tooltip"]').tooltip();
                 },
             });
+
+            $('#dt-progress').DataTable();
+
+
+
 
             $("#dt-pengerjaan table").DataTable({
                 dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'B><'col-sm-12 col-md-4'f>>" +

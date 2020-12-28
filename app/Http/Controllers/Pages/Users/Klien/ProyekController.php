@@ -9,6 +9,7 @@ use App\Model\Bid;
 use App\Model\Kategori;
 use App\Model\Pembayaran;
 use App\Model\Pengerjaan;
+use App\Model\PengerjaanProgress;
 use App\Model\Project;
 use App\Model\ReviewWorker;
 use App\Model\Saldo;
@@ -40,9 +41,10 @@ class ProyekController extends Controller
         $req_harga = $request->harga;
         $req_judul = $request->judul;
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
+        $progress = PengerjaanProgress::where('pengerjaan_id', $pengerjaan->pluck ('id'))->get();
 
         return view('pages.main.users.klien.proyek', compact('user', 'kategori', 'proyek', 'pengerjaan',
-            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo'));
+            'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo', 'progress'));
     }
 
     public function tambahProyek(Request $request)
