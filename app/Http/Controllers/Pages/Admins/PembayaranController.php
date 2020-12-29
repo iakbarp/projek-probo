@@ -122,7 +122,7 @@ class PembayaranController extends Controller
         try {
             $data = Withdraw::find($request->id);
             $data->update([
-                'selesai' => true
+                'konfirmasi' => true
             ]);
             return response()->json([
                 'status' => 200,

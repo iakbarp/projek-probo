@@ -46,7 +46,7 @@
                                         <td>{{$item->updated_at->diffForHumans()}}</td>
                                         <td>@if($item->konfirmasi == true)
                                                 {{--                                                belum lunas--}}
-                                                <div class="badge badge-info">Lunas</div>
+                                                <div class="badge badge-info">Terbayarkan</div>
                                             @else
                                                 <div class="badge badge-danger">Belum terbayarkan</div>
                                             @endif
@@ -149,13 +149,13 @@
             $('#rekening_withdraw').val(rekening.toString());
             $('#bank_withdraw').val(bank.toString());
             $('#an_withdraw').val(an.toString());
-            $('#jumlah_withdraw').val(jumlah.toString());
+            $('#jumlah').val(jumlah.toString());
             $('#id_withdraw').val(id.toString());
             $("#modalProsesWithdraw").modal('show');
         }
 
-        function payment() {
-            $('#modal-payment').ajaxSubmit({
+        function withdraw() {
+            $('#modal-withdraw').ajaxSubmit({
                 success: function (data) {
                     $("#modalProsesWithdraw").modal('hide');
                     console.log(data);

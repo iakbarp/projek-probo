@@ -27,8 +27,6 @@
                                     </th>
                                     <th>Nama User</th>
                                     <th>Email </th>
-                                    <th>No. Rekening </th>
-                                    <th>Proyek/Layanan </th>
                                     <th>Update Terakhir</th>
 {{--                                    <th>Action</th>--}}
                                 </tr>
@@ -41,8 +39,6 @@
                                         </td>
                                         <td>{{$item->name}}</td>
                                         <td>{{$item->email}}</td>
-                                        <td></td>
-                                        <td></td>
                                         <td>{{$item->updated_at->diffForHumans()}}</td>
 
 {{--                                        Button search action--}}

@@ -508,7 +508,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="modal-service" action="{{route('admin.withdraw.done')}}"
+                            <form id="modal-withdraw" action="{{route('admin.withdraw.done')}}"
                                   method="post">
                                 @CSRF
                                 <div class="row">
@@ -522,7 +522,7 @@
                                             </div>
                                             <input type="text" class="form-control disabled" placeholder="indonesia "
                                                    name="rekening" id="rekening_withdraw" required readonly>
-                                            <input type="hidden" name="id" id="id_service">
+                                            <input type="hidden" name="id" id="id_withdraw">
                                         </div>
                                     </div>
                                     <div class="form-group col-md-4 col-12">
@@ -550,7 +550,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-12 col-12">
-                                        <label>Jumlah Withdraw</label>
+                                        <label>Jumlah Withdraws</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
@@ -566,7 +566,7 @@
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="service()">Proses Pembayaran
+                            <button type="button" class="btn btn-primary" onclick="withdraw()">Proses Pembayaran
                             </button>
                         </div>
                     </div>
