@@ -157,13 +157,13 @@ class MidtransController extends Controller
                             $pembayaran = Pembayaran::firstOrCreate([
                                 'proyek_id' => $pengerjaan->proyek_id,
                                 'dp' => $data_tr['custom_field2'],
-//                                'jumlah_pembayaran' => $data_tr['gross_amount'],
+                                'jumlah_pembayaran' => $data_tr['gross_amount'],
                             ]);
                         } else {
                             $pembayaran = PembayaranLayanan::firstOrCreate([
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
-//                                'jumlah_pembayaran' => $data_tr['gross_amount'],
+                                'jumlah_pembayaran' => $data_tr['gross_amount'],
                             ]);
                         }
                     } else {
