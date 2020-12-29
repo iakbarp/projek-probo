@@ -163,7 +163,7 @@ class MidtransController extends Controller
                             $pembayaran = PembayaranLayanan::firstOrCreate([
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
-                                'jumlah_pembayaran' => $data_tr['gross_amount'],
+//                                'jumlah_pembayaran' => $data_tr['gross_amount'],
                             ]);
                         }
                     } else {
@@ -236,7 +236,8 @@ class MidtransController extends Controller
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
-                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
+//                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
+                                    $data_tr['gross_amount'] :
                                     $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
