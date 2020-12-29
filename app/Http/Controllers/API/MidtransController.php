@@ -177,7 +177,7 @@ class MidtransController extends Controller
                         } elseif (strpos($notif->order_id, 'SER') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+//                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => null,
                             ]);
                         } else {
@@ -238,6 +238,7 @@ class MidtransController extends Controller
                                 'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
 //                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
                                     $data_tr['gross_amount'] :
+//                                    $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                     $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
