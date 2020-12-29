@@ -114,6 +114,7 @@ class ProyekController extends Controller
 
             }
 
+
             foreach ($pengerjaan as $dt) {
                 $file = [];
 
@@ -163,20 +164,25 @@ class ProyekController extends Controller
                         ->first();
                 $owner =  $this->imgCheck($owner, 'foto', 'storage/users/foto/', 0) ;
                 
-
-                $pekerja->id=$id;
-                $pekerja->nama=$u->name;
-                $pekerja->status=$user->status;
-                $pekerja->foto=$user->foto;
+                if($pekerja){
+                    $pekerja->id=$id;
+                    $pekerja->nama=$u->name;
+                    $pekerja->status=$user->status;
+                    $pekerja->foto=$user->foto;
+                }
 
                 $ulasan_pekerja = DB::table('ulasan_pekerja')
                         ->where('user_id', $dt->user_proyek)
                         ->where('pengerjaan_id', $dt->id)
                         ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                         ->orderBy('id', 'desc')->first();
-                $ulasan_pekerja->foto=$owner->foto;
-                $ulasan_pekerja->nama=$owner->nama;
-                $ulasan_pekerja->id=$owner->id;
+                if(!$ulasan_pekerja){
+                    $ulasan_pekerja=(object)[];
+                }
+                    $ulasan_pekerja->foto=$owner->foto;
+                    $ulasan_pekerja->nama=$owner->nama;
+                    $ulasan_pekerja->id=$owner->id;
+                
 
                 $kliens = DB::table('ulasan_klien')
                     ->where('user_id', $id)
@@ -184,9 +190,13 @@ class ProyekController extends Controller
                     ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                     ->orderBy('id', 'desc')->first();
              
-                $kliens->foto=$pekerja->foto;
-                $kliens->nama=$pekerja->nama;
-                $kliens->id=$pekerja->id;
+                if(!$kliens){
+                    $kliens=(object)[];
+                }
+                    $kliens->foto=$pekerja->foto;
+                    $kliens->nama=$pekerja->nama;
+                    $kliens->id=$pekerja->id;
+                
 
 
                 $ulasan=(Object)[];
