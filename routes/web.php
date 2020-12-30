@@ -6,6 +6,10 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
         'uses' => 'MainController@index',
         'as' => 'beranda'
     ]);
+    Route::get('suratkontrak',[
+        'uses' => 'MainController@suratKontrak',
+        'as' => 'user.surat-kontrak'
+    ]);
 
     Route::group(['prefix' => 'cari'], function () {
 
@@ -302,6 +306,11 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'pekerja-update-progress.proyek'
                 ]);
 
+                Route::get('pengerjaanprogress/{id}/data',[
+                    'uses' => 'ProyekController@dataProgressPengerjaan',
+                    'as' => 'pekerja-data-progress.proyek'
+                    ]);
+
                 Route::post('pengerjaan/{id}/ulas', [
                     'uses' => 'ProyekController@ulasPengerjaanProyek',
                     'as' => 'pekerja.ulas-pengerjaan.proyek'
@@ -310,6 +319,11 @@ Route::group(['prefix' => 'akun'], function () {
                 Route::get('pengerjaan/{id}/ulas/data', [
                     'uses' => 'ProyekController@dataUlasanProyek',
                     'as' => 'pekerja.data-ulasan.proyek'
+                ]);
+
+                Route::get('download/contract/{id}',[
+                    'uses' => 'ProyekController@download_contract',
+                    'as' => 'download.contract'
                 ]);
 
             });

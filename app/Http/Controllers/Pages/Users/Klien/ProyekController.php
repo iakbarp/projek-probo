@@ -41,7 +41,8 @@ class ProyekController extends Controller
         $req_harga = $request->harga;
         $req_judul = $request->judul;
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
-        $progress = PengerjaanProgress::where('pengerjaan_id', $pengerjaan->pluck ('id'))->get();
+//        $progress = PengerjaanProgress::where('user_id', $pengerjaan->pluck ('id'))->get();
+        $progress = PengerjaanProgress::where('user_id', $user->id)->get();
 
         return view('pages.main.users.klien.proyek', compact('user', 'kategori', 'proyek', 'pengerjaan',
             'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo', 'progress'));

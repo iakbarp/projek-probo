@@ -127,22 +127,33 @@ class ProyekController extends Controller
                   }
 
                 $pembayaran=Pembayaran::where('proyek_id',$dt->proyek_id)->first();
-
+                  $gabung=true;
+                  $dt->progressable=0;
                 if($pembayaran){
                     if(is_numeric(strpos($pembayaran->bukti_pembayaran,'DP'))){
-                       $dt->status= 'Pembayaran DP '.round($pembayaran->jumlah_pembayaran*100/$dt['harga']).'%';
+                       $dt->status= ' (DP'.round($pembayaran->jumlah_pembayaran*100/$dt['harga']).'%)';
                     }elseif((is_numeric(strpos($pembayaran->bukti_pembayaran,'FP')))){
-                        $dt->status='Pembayaran Lunas';
+                        $dt->status=' (Lunas)';
                     }else{
+                        $gabung = false;
+
                         $dt->status='Menunggu Pembayaran';
                     }
                 }else{
+                    $gabung = false;
+
                     $dt->status='Menunggu Pembayaran';
                 }
 
-                if($dt->selesai){
-                    $dt->status='Proyek Selesai';
+                if($gabung){
+                    if($dt->selesai){
+                     $dt->status='Selesai';
 
+                    }else{
+                        $dt->progressable=1;
+
+                        $dt->status='Pengerjaan';
+                    }
                 }
 
                 $dt->file_hasil = $file;
@@ -258,6 +269,8 @@ class ProyekController extends Controller
     {
         $id=$request->id;
         $user=auth('api')->user();
+        DB::beginTransaction();
+
         try{
             $cek=Bid::query()
             ->where('id',$id)
@@ -268,7 +281,18 @@ class ProyekController extends Controller
             })
             ->firstOrFail();
 
+            $proyek_id=$cek->proyek_id;
+
             $cek->delete();
+
+           $undangan= Undangan::query()
+            ->where('proyek_id',$proyek_id)
+            ->where('user_id',$user->id)->first();
+
+            if($undangan){
+                $undangan->delete();
+            }
+            DB::commit();
 
             return response()->json([
                 'error' => false,
@@ -280,6 +304,7 @@ class ProyekController extends Controller
 
             
         } catch (\Exception $exception) {
+            DB::rollback();
             return response()->json([
                 'error' => true,
 
@@ -291,6 +316,8 @@ class ProyekController extends Controller
 
     public function inviteApproval(Request $request)
     {
+        DB::beginTransaction();
+
         $id=$request->id;
         $terima=$request->terima;
         $user=auth('api')->user();
@@ -304,9 +331,19 @@ class ProyekController extends Controller
             })
             ->firstOrFail();
 
+            $proyek=Project::find($cek->proyek_id);
+
             $cek->update([
                 'terima'=>$terima,
             ]);
+
+            Bid::create([
+                'user_id'=>$user->id,
+                'proyek_id'=>$proyek->id,
+                'negoharga'=>$proyek->harga,
+                'negowaktu'=>$proyek->waktu_pengerjaan,
+            ]);
+            DB::commit();
 
             return response()->json([
                 'error' => false,
@@ -318,6 +355,7 @@ class ProyekController extends Controller
 
             
         } catch (\Exception $exception) {
+            DB::rollback();
             return response()->json([
                 'error' => true,
 
@@ -417,7 +455,7 @@ class ProyekController extends Controller
 
             asset('admins/img/avatar/avatar-1' . '.png'),
             asset('images/porto.jpg'),
-            asset('images/undangan-' . rand(1, 2) . '.jpg'),
+            asset('images/undangan-2'  . '.jpg'),
 
         ];
         $res = $data;

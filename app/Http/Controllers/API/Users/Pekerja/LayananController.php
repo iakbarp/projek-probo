@@ -112,6 +112,7 @@ class LayananController extends Controller
                         'ulasan_service.deskripsi',
                         DB::raw("format(ulasan_service.bintang,1) as bintang")
                     )
+                    ->orderBy('ulasan_service.id','desc')
                     ->first();
 
                 if (!$ulasan) {
@@ -137,12 +138,15 @@ class LayananController extends Controller
                 $pembayaran = PembayaranLayanan::where('pengerjaan_layanan_id', $dt->id)->first();
 
                 $gabung = true;
+                $dt->progressable=0;
                 if ($pembayaran) {
                     if (is_numeric(strpos($pembayaran->bukti_pembayaran, 'DP'))) {
                         $dt->status = ' (DP ' . round($pembayaran->jumlah_pembayaran * 100 / $dt->layanan->harga) . '%)';
                     } elseif ((is_numeric(strpos($pembayaran->bukti_pembayaran, 'FP')))) {
                         $dt->status = ' (Lunas)';
                     } else {
+                        $gabung = false;
+
                         $dt->status = 'Menunggu Pembayaran';
                     }
                 } else {
@@ -154,6 +158,8 @@ class LayananController extends Controller
                     if ($dt->selesai) {
                         $dt->status = 'Selesai' . $dt->status;
                     } else {
+                        $dt->progressable=1;
+
                         $dt->status = 'Pengerjaan' . $dt->status;
                     }
                 }
@@ -407,9 +413,9 @@ class LayananController extends Controller
     {
         $dummy_photo = [
 
-            asset('admins/img/avatar/avatar-' . rand(1, 2) . '.png'),
+            asset('admins/img/avatar/avatar-1'  . '.png'),
             asset('images/porto.jpg'),
-            asset('images/undangan-' . rand(1, 2) . '.jpg'),
+            asset('images/undangan-1' .'.jpg'),
 
         ];
         $res = $data;

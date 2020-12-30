@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Model\Bid;
 use App\Model\Pengerjaan;
 use App\Model\PengerjaanProgress;
+use App\Model\Project;
 use App\Model\Review;
 use App\Model\Undangan;
+use Barryvdh\DomPDF\Facade as PDFDOM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +26,7 @@ class ProyekController extends Controller
         $bid = Bid::where('user_id', $user->id)->get();
         $undangan = Undangan::where('user_id', $user->id)->get();
         $pengerjaan = Pengerjaan::where('user_id', $user->id)->get();
-        $progress = PengerjaanProgress::where('user_id', $user->id)->get();
+        $progress = PengerjaanProgress::whereIn('proyek_id', $pengerjaan->pluck('proyek_id'))->get();
 
         return view('pages.main.users.pekerja.proyek', compact('user', 'bid', 'undangan', 'pengerjaan', 'progress'));
     }
@@ -96,7 +98,7 @@ class ProyekController extends Controller
 
     public function updatePengerjaanProgressProyek(Request $request)
     {
-        $progress = PengerjaanProgress::find($request->id);
+        $proyek = Project::find($request->id);
         $pengerjaan = Pengerjaan::find($request->id);
 
         if ($request->hasFile('bukti_gambar')) {
@@ -125,6 +127,7 @@ class ProyekController extends Controller
 //        }
         PengerjaanProgress::create([
             'user_id' => Auth::id(),
+            'proyek_id' => $proyek->id,
             'pengerjaan_id' => $pengerjaan->id,
             'bukti_gambar' => $bukti_gambar,
             'deskripsi' => $request->deskripsi,
@@ -154,10 +157,9 @@ class ProyekController extends Controller
             $file_hasil = null;
         }
 
-        $pengerjaan->create([
+        $pengerjaan->update([
             'file_hasil' => $file_hasil,
             'tautan' => $request->tautan,
-            'deskripsi' => $request->deskripsi,
         ]);
 
         return back()->with('pengerjaan', 'Hasil pengerjaan tugas/proyek [' . $pengerjaan->get_project->judul . '] berhasil diperbarui!');
@@ -179,5 +181,21 @@ class ProyekController extends Controller
     public function dataUlasanProyek(Request $request)
     {
         return Review::where('proyek_id', $request->id)->first();
+    }
+
+    public function dataProgressPengerjaan(Request $request)
+    {
+//        return PengerjaanProgress::where('proyek_id', $request->id)->first();
+    }
+
+    public function download_contract($id)
+    {
+        $data = Pengerjaan::query()->find($id);
+        $pdf = PDFDOM::loadView('export.surat-kontrak',[
+            'data' => $data
+        ])
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('Surat Perjanjian.pdf');
     }
 }

@@ -115,11 +115,6 @@ class ProyekController extends Controller
                     ->groupBy('a.id')
                     ->first();
 
-
-
-
-
-
                 if ($d) {
 
                     $pembayaran = Pembayaran::where('proyek_id', $dt['id'])->first();
@@ -132,6 +127,7 @@ class ProyekController extends Controller
                         } elseif ((is_numeric(strpos($pembayaran->bukti_pembayaran, 'FP')))) {
                             $d->status = ' (Lunas)';
                         } else {
+                        $gabung = false;
                             $d->status = 'Menunggu Pembayaran';
                         }
                     } else {
@@ -562,7 +558,7 @@ class ProyekController extends Controller
 
             asset('admins/img/avatar/avatar-1' . '.png'),
             asset('images/porto.jpg'),
-            asset('images/undangan-' . rand(1, 2) . '.jpg'),
+            asset('images/undangan-2' . '.jpg'),
 
         ];
         $res = $data;
