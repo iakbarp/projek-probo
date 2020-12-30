@@ -19,8 +19,7 @@ use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
 use Midtrans\Transaction;
-
-class MidtransController extends Controller
+class MidtransMobileController extends Controller
 {
     public $channels;
 

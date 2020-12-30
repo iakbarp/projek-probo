@@ -7,4 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Saldo extends Model
 {
     public $table = "view_saldo";
+
+    protected $primaryKey = 'id'; // or null
+
 }
