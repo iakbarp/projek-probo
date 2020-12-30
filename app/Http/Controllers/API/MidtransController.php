@@ -172,13 +172,13 @@ class MidtransController extends Controller
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
 //                                'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                                'bukti_pembayaran' => null,
+//                                'bukti_pembayaran' => null,
                             ]);
                         } elseif (strpos($notif->order_id, 'SER') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
 //                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
-                                'bukti_pembayaran' => null,
+//                                'bukti_pembayaran' => null,
                             ]);
                         } else {
                             // TODO topup pending
