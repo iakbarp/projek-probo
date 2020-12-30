@@ -31,9 +31,9 @@ class UserController extends Controller
         $bahasa = Bahasa::where('user_id', $user->id)->orderByDesc('id')->get();
         $skill = Skill::where('user_id', $user->id)->orderByDesc('id')->get();
         $proyek = Project::where('user_id', $user->id)
-            ->whereHas('get_bid',function ($query){
-                $query->whereNull('tolak');
-            })
+//            ->whereHas('get_bid',function ($query){
+//                $query->whereNull('tolak');
+//            })
             ->where('pribadi', false)->orderByDesc('id')->get();
         $layanan = Services::where('user_id', $user->id)->orderByDesc('id')->get();
         $portofolio = Portofolio::where('user_id', $user->id)->orderByDesc('tahun')->get();

@@ -682,7 +682,7 @@ class publicPreviewController extends Controller
 
                 ->firstOrFail();
 
-            $user = auth('api')->user();
+           $u= $user = auth('api')->user();
             $its_me = true;
 
             if ( $id&& $user->id != $layanan->user_id ) {
@@ -732,9 +732,9 @@ class publicPreviewController extends Controller
                 'data' => [
                     'user' => $bio,
                     'layanan' => $layanan,
-                    'already_take' => PengerjaanLayanan::where('user_id', $user->id)
+                    'already_take' => PengerjaanLayanan::where('user_id', $u->id)
                         ->where('service_id', $layanan->id)
-                        ->where('selesai', false)
+                        ->where('selesai', 0)
                         ->get()->count() ? true : false,
                     'its_me' => $its_me,
                 ]
@@ -766,8 +766,6 @@ class publicPreviewController extends Controller
             ->whereNull('pl.id')
             ->where('service.user_id','!=',$user->id)
             ->firstOrFail();
-
-            
 
             $pengerjaan = PengerjaanLayanan::create([
                 'user_id' => $user->id,

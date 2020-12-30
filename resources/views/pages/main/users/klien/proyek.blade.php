@@ -227,22 +227,22 @@
     </style>
 @endpush
 @section('content')
-{{--    <div class="breadcrumbs" style="background-image: url('{{$user->get_bio->latar_belakang != null ?--}}
-{{--    asset('storage/users/latar_belakang/'.$user->get_bio->latar_belakang) : asset('images/slider/beranda-proyek.jpg')}}')">--}}
-{{--        <div class="breadcrumbs-overlay"></div>--}}
-{{--        <div class="page-title">--}}
-{{--            <h2>Dashboard Klien: Tugas/Proyek</h2>--}}
-{{--            <p>Halaman ini menampilkan daftar tugas/proyek yang Anda tawarkan beserta status bid, pembayaran, dan--}}
-{{--                pengerjaannya.</p>--}}
-{{--        </div>--}}
-{{--        <ul class="crumb">--}}
-{{--            <li><a href="{{route('beranda')}}"><i class="fa fa-home"></i></a></li>--}}
-{{--            <li><i class="fa fa-angle-double-right"></i> <a href="#">Dashboard Klien</a></li>--}}
-{{--            <li><i class="fa fa-angle-double-right"></i> <a href="{{url()->current()}}">Tugas/Proyek</a></li>--}}
-{{--            <li><a href="#" onclick="goToAnchor()"><i class="fa fa-angle-double-right"></i> Daftar Tugas/Proyek &--}}
-{{--                    Pengerjaan</a></li>--}}
-{{--        </ul>--}}
-{{--    </div>--}}
+    {{--    <div class="breadcrumbs" style="background-image: url('{{$user->get_bio->latar_belakang != null ?--}}
+    {{--    asset('storage/users/latar_belakang/'.$user->get_bio->latar_belakang) : asset('images/slider/beranda-proyek.jpg')}}')">--}}
+    {{--        <div class="breadcrumbs-overlay"></div>--}}
+    {{--        <div class="page-title">--}}
+    {{--            <h2>Dashboard Klien: Tugas/Proyek</h2>--}}
+    {{--            <p>Halaman ini menampilkan daftar tugas/proyek yang Anda tawarkan beserta status bid, pembayaran, dan--}}
+    {{--                pengerjaannya.</p>--}}
+    {{--        </div>--}}
+    {{--        <ul class="crumb">--}}
+    {{--            <li><a href="{{route('beranda')}}"><i class="fa fa-home"></i></a></li>--}}
+    {{--            <li><i class="fa fa-angle-double-right"></i> <a href="#">Dashboard Klien</a></li>--}}
+    {{--            <li><i class="fa fa-angle-double-right"></i> <a href="{{url()->current()}}">Tugas/Proyek</a></li>--}}
+    {{--            <li><a href="#" onclick="goToAnchor()"><i class="fa fa-angle-double-right"></i> Daftar Tugas/Proyek &--}}
+    {{--                    Pengerjaan</a></li>--}}
+    {{--        </ul>--}}
+    {{--    </div>--}}
 
     <section class="none-margin" style="padding: 40px 0 40px 0">
         <div class="container">
@@ -311,7 +311,8 @@
                                 </tr>
                             </table>
                             <div class="card-title">
-                                <a href="{{route('profil.user', ['username' => $user->username])}}" class="btn btn-sm btn-link btn-block"
+                                <a href="{{route('profil.user', ['username' => $user->username])}}"
+                                   class="btn btn-sm btn-link btn-block"
                                    style="border: 1px solid #ccc;color: #333;background: #247bff;
     text-transform: uppercase;
     font-size: 12px;
@@ -328,18 +329,18 @@
     text-align: center;"><small style="color: white">Tampilan Publik</small>
                                 </a>
                                 <hr style="margin: 10px 0">
-{{--                                <table class="stats" style="font-size: 14px; margin-top: 0">--}}
-{{--                                    <tr data-toggle="tooltip" data-placement="left" title="Bergabung Sejak">--}}
-{{--                                        <td><i class="fa fa-calendar-check"></i></td>--}}
-{{--                                        <td>&nbsp;</td>--}}
-{{--                                        <td>{{$user->created_at->formatLocalized('%d %B %Y')}}</td>--}}
-{{--                                    </tr>--}}
-{{--                                    <tr data-toggle="tooltip" data-placement="left" title="Update Terakhir">--}}
-{{--                                        <td><i class="fa fa-clock"></i></td>--}}
-{{--                                        <td>&nbsp;</td>--}}
-{{--                                        <td style="text-transform: none;">{{$user->updated_at->diffForHumans()}}</td>--}}
-{{--                                    </tr>--}}
-{{--                                </table>--}}
+                                {{--                                <table class="stats" style="font-size: 14px; margin-top: 0">--}}
+                                {{--                                    <tr data-toggle="tooltip" data-placement="left" title="Bergabung Sejak">--}}
+                                {{--                                        <td><i class="fa fa-calendar-check"></i></td>--}}
+                                {{--                                        <td>&nbsp;</td>--}}
+                                {{--                                        <td>{{$user->created_at->formatLocalized('%d %B %Y')}}</td>--}}
+                                {{--                                    </tr>--}}
+                                {{--                                    <tr data-toggle="tooltip" data-placement="left" title="Update Terakhir">--}}
+                                {{--                                        <td><i class="fa fa-clock"></i></td>--}}
+                                {{--                                        <td>&nbsp;</td>--}}
+                                {{--                                        <td style="text-transform: none;">{{$user->updated_at->diffForHumans()}}</td>--}}
+                                {{--                                    </tr>--}}
+                                {{--                                </table>--}}
                             </div>
                         </div>
                     </div>
@@ -468,17 +469,34 @@
                                                     </div>
                                                     <hr>
                                                     @if($row->pribadi == false)
+                                                        @if(count($row->get_bid) > 0)
                                                         <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
-                                                           title="Lihat Bidder" style="text-transform: none;align-content: center;background: #2879fe"
+                                                           title="Lihat Bidder"
+                                                           style="text-transform: none;align-content: center;background: #2879fe"
                                                            href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
-                                                            <span style="color: white">{{$bid}}&nbsp;<i class="fa fa-paper-plane"></i> </span>
+                                                            <span style="color: white">{{$bid}}&nbsp;<i
+                                                                    class="fa fa-paper-plane"></i> </span>
                                                         </a>
+                                                            @else
+                                                            <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                               title="Lihat Bidder"
+                                                               style="text-transform: none;align-content: center;background: #2879fe"
+                                                               href="javascript:void(0)" disabled>
+                                                            <span style="color: white">0 bid<i
+                                                                    class="fa fa-paper-plane"></i> </span>
+                                                            </a>
+                                                            @endif
                                                     @else
-                                                        <a class="btn2 btn-link btn-sm btn-block" data-toggle="tooltip"
-                                                           title="Lihat Bidder" style="text-transform: none;align-content: center"
-                                                           href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
-                                                            <span style="color: white">{{$bid}}&nbsp;<i class="fa fa-paper-plane"></i> </span>
-                                                        </a>
+                                                        @if(count($row->get_bid) > 0)
+                                                            <a class="btn btn-link btn-sm btn-block"
+                                                               data-toggle="tooltip"
+                                                               title="Lihat Bidder"
+                                                               style="text-transform: none;align-content: center;background: #2879fe"
+                                                               href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
+                                                                <span style="color: white">{{$bid}}&nbsp;<i
+                                                                        class="fa fa-paper-plane"></i> </span>
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>
@@ -495,7 +513,9 @@
                                         <input type="hidden" name="id">
                                         <div class="card-content">
                                             <div class="card-title">
-                                                <button type="reset" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <button type="reset" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">&times;
+                                                </button>
                                                 <small></small>
                                                 <hr class="mt-0">
                                                 <div class="row form-group">
@@ -563,7 +583,8 @@
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><b>Rp</b></span>
                                                             <input id="harga" class="form-control rupiah" name="harga"
-                                                                   type="text" placeholder="0" onkeypress="return numberOnly(event, false)"
+                                                                   type="text" placeholder="0"
+                                                                   onkeypress="return numberOnly(event, false)"
                                                                    required>
                                                             <span class="input-group-addon"><i
                                                                     class="fa fa-money-bill-wave-alt"></i></span>
@@ -623,35 +644,37 @@
                                                     <div class="col-lg-12 pull-right">
                                                         <label class="form-control-label" for="jenis">
                                                             Jenis Proyek <span class="required">*</span></label>
-                                                        <select name="pribadi" id="pribadi" class="form-control use-select2" required>
+                                                        <select name="pribadi" id="pribadi"
+                                                                class="form-control use-select2" required>
                                                             <option disabled selected>Pilih Jenis</option>
                                                             <option value="0">PUBLIK</option>
                                                             <option value="1">PRIVATE</option>
                                                         </select>
                                                     </div>
                                                 </div>
-{{--                                                <div class="row form-group">--}}
-{{--                                                    <div class="col-lg-12">--}}
-{{--                                                        <button type="reset" class="btn btn-link btn-sm"--}}
-{{--                                                                style="border: 1px solid #ccc">--}}
-{{--                                                            <i class="fa fa-undo mr-2"></i>BATAL--}}
-{{--                                                        </button>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
+                                                {{--                                                <div class="row form-group">--}}
+                                                {{--                                                    <div class="col-lg-12">--}}
+                                                {{--                                                        <button type="reset" class="btn btn-link btn-sm"--}}
+                                                {{--                                                                style="border: 1px solid #ccc">--}}
+                                                {{--                                                            <i class="fa fa-undo mr-2"></i>BATAL--}}
+                                                {{--                                                        </button>--}}
+                                                {{--                                                    </div>--}}
+                                                {{--                                                </div>--}}
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
                                                         <button class="btn2 btn-sm pull-right"
-                                                                style="border: 1px solid #ccc"><span style="color: white">SIMPAN</span>
+                                                                style="border: 1px solid #ccc"><span
+                                                                style="color: white">SIMPAN</span>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-{{--                                        <div class="card-read-more">--}}
-{{--                                            <button class="btn btn-link btn-block">--}}
-{{--                                                <i class="fa fa-tools"></i>&nbsp;SIMPAN PERUBAHAN--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
+                                        {{--                                        <div class="card-read-more">--}}
+                                        {{--                                            <button class="btn btn-link btn-block">--}}
+                                        {{--                                                <i class="fa fa-tools"></i>&nbsp;SIMPAN PERUBAHAN--}}
+                                        {{--                                            </button>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </form>
                             </div>
@@ -661,7 +684,7 @@
                                     <table class="table table-striped" style="background-color: #f2f8ff">
                                         <thead>
                                         <tr>
-{{--                                            <th class="text-center">#</th>--}}
+                                            {{--                                            <th class="text-center">#</th>--}}
                                             <th>#Detail</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
@@ -681,7 +704,7 @@
                                                     $pekerja->get_bio->total_bintang_pekerja / (count($ulasan_pekerja) + $ulasan_layanan) : 0;
                                             @endphp
                                             <tr>
-{{--                                                <td style="vertical-align: middle" align="center">{{$no++}}</td>--}}
+                                                {{--                                                <td style="vertical-align: middle" align="center">{{$no++}}</td>--}}
                                                 <td style="vertical-align: middle">
                                                     <div class="row mb-1" style="border-bottom: 1px solid #eee;">
                                                         <div class="col-lg-12">
@@ -710,7 +733,8 @@
                                                                         'warning' : 'success'}}">{{$row->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
                                                                     @else
-                                                                        <span class="label label-info" style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
+                                                                        <span class="label label-info"
+                                                                              style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
                                                                     @endif
                                                                 @else
                                                                     <span
@@ -720,7 +744,8 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-1" style="border-bottom: 1px solid #eee;padding: 2px 6.5em">
+                                                    <div class="row mb-1"
+                                                         style="border-bottom: 1px solid #eee;padding: 2px 6.5em">
                                                         <div class="col-lg-12">
                                                             <b>PEKERJA</b><br>
                                                             <div class="media">
@@ -752,7 +777,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-1" style="border-bottom: 1px solid #eee;padding: 2px 6.5em">
+                                                    <div class="row mb-1"
+                                                         style="border-bottom: 1px solid #eee;padding: 2px 6.5em">
                                                         <div class="col-lg-12">
                                                             <ul class="none-margin">
                                                                 <li><b>LAMPIRAN HASIL PENGERJAAN</b></li>
@@ -789,14 +815,15 @@
                                                                         (kosong)
                                                                     @endif
                                                                 </li>
-{{--                                                                <li><b>PROGRESS PENGERJAAN</b></li>--}}
-{{--                                                                        <li class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
-{{--                                                                            <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
-{{--                                                                        </li>--}}
+                                                                {{--                                                                <li><b>PROGRESS PENGERJAAN</b></li>--}}
+                                                                {{--                                                                        <li class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
+                                                                {{--                                                                            <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
+                                                                {{--                                                                        </li>--}}
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-1" style="border-bottom: 1px solid #eee;padding: 2px 10em">
+                                                    <div class="row mb-1"
+                                                         style="border-bottom: 1px solid #eee;padding: 2px 10em">
                                                         <div class="col-lg-12">
                                                             <b>ULASAN ANDA</b><br>
                                                             @if(!is_null($row->get_ulasan_pekerja))
@@ -876,14 +903,16 @@
                                                     </div>
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
-                                                    <button class="btn btn-link btn-sm btn-block" title="Lihat Progress Pengerjaan"
-                                                       data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',
+                                                    <button class="btn btn-link btn-sm btn-block"
+                                                            title="Lihat Progress Pengerjaan"
+                                                            data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',
                                                         '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
                                                         '{{$row->get_project->judul}}')" {{is_null($row->get_project->get_pembayaran) ||
                                                                 (!is_null($row->get_project->get_pembayaran) &&
                                                                 is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
                                                                 $row->selesai == true ? 'disabled' : ''}}>
-                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i></button>
+                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i>
+                                                    </button>
                                                     <hr style="margin: .5em 0">
                                                     <a class="btn btn-link btn-sm btn-block" title="Lihat Proyek"
                                                        data-toggle="tooltip" href="{{route('detail.proyek',
@@ -912,14 +941,14 @@
                                                                            style="margin-right: 0"></i>
                                                                     </button>
                                                                 @endif
-{{--                                                                <button class="btn btn-link btn-sm" type="button"--}}
-{{--                                                                        data-toggle="tooltip" title="Bukti Pembayaran"--}}
-{{--                                                                        onclick="buktiPembayaran('{{$row->id}}','#INV/{{\Carbon\Carbon::parse($row->get_project->get_pembayaran->created_at)->format('Ymd').'/'.$row->get_project->get_pembayaran->id}}',--}}
-{{--                                                                            '{{route('klien.update-pembayaran.proyek',['id' => $row->id])}}',--}}
-{{--                                                                            '{{route('klien.data-pembayaran.proyek',['id' => $row->get_project->get_pembayaran->id])}}',--}}
-{{--                                                                            '{{$row->get_project->harga}}',0)">--}}
-{{--                                                                    <i class="fa fa-upload" style="margin-right: 0"></i>--}}
-{{--                                                                </button>--}}
+                                                                {{--                                                                <button class="btn btn-link btn-sm" type="button"--}}
+                                                                {{--                                                                        data-toggle="tooltip" title="Bukti Pembayaran"--}}
+                                                                {{--                                                                        onclick="buktiPembayaran('{{$row->id}}','#INV/{{\Carbon\Carbon::parse($row->get_project->get_pembayaran->created_at)->format('Ymd').'/'.$row->get_project->get_pembayaran->id}}',--}}
+                                                                {{--                                                                            '{{route('klien.update-pembayaran.proyek',['id' => $row->id])}}',--}}
+                                                                {{--                                                                            '{{route('klien.data-pembayaran.proyek',['id' => $row->get_project->get_pembayaran->id])}}',--}}
+                                                                {{--                                                                            '{{$row->get_project->harga}}',0)">--}}
+                                                                {{--                                                                    <i class="fa fa-upload" style="margin-right: 0"></i>--}}
+                                                                {{--                                                                </button>--}}
                                                             </span>
                                                         </div>
                                                     @else
@@ -943,7 +972,8 @@
                                                         <i class="fa fa-edit" style="margin-right: 0"></i>
                                                     </button>
                                                     <hr style="margin: .5em 0">
-                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip" title="Surat Kontrak" onclick="">
+                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip"
+                                                            title="Surat Kontrak" onclick="">
                                                         <i class="fa fa-file" style="margin-right: 0"></i>
                                                     </button>
                                                 </td>
@@ -1000,7 +1030,8 @@
                                                                 Harga/Budget Proyek</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon"><b>Rp</b></span>
-                                                                <input id="harga2" class="form-control rupiah" name="harga2"
+                                                                <input id="harga2" class="form-control rupiah"
+                                                                       name="harga2"
                                                                        type="text" readonly>
                                                                 <span class="input-group-addon">
                                                         <i class="fa fa-money-bill-wave-alt"></i></span>
@@ -1024,43 +1055,54 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             @foreach($saldo as $row)
-                                                            <label class="card-label mb-0" for="pay_undagi">
-                                                                @foreach($pengerjaan as $object)
-                                                                @if($row -> saldo < $object->get_project->harga)
-                                                                <input id="pay_undagi" class="card-rb" type="radio"
-                                                                       name="payment_method" value="undagi" disabled>
-                                                                    @else
-                                                                        <input id="pay_undagi" class="card-rb" type="radio"
-                                                                               name="payment_method" value="undagi">
-                                                                @endif
-                                                                @endforeach
-                                                                <div class="card card-input">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <div class="media p-4">
-                                                                                <div class="media-left media-middle"
-                                                                                     style="width: 20%">
-                                                                                    <img class="media-object" alt="icon"
-                                                                                         src="{{asset('images/logo/undagi_pay.png')}}">
-                                                                                </div>
-                                                                                <div class="ml-2 media-body">
-                                                                                    <h5 class="mt-0 mb-1">
-                                                                                        <i class="fa fa-wallet mr-2"></i>UNDAGI PAY
-                                                                                        <small class="pull-right">Saldo : {{number_format($row->saldo,2,',','.')}}</small>
-                                                                                    </h5>
-                                                                                    <blockquote class="mb-0"
-                                                                                                style="font-size: 14px;text-transform: none;border-color: #eee">
-                                                                                        <p align="justify">
-                                                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                                                        </p>
-                                                                                    </blockquote>
+                                                                <label class="card-label mb-0" for="pay_undagi">
+                                                                    @foreach($pengerjaan as $object)
+                                                                        @if($row -> saldo < $object->get_project->harga)
+                                                                            <input id="pay_undagi" class="card-rb"
+                                                                                   type="radio"
+                                                                                   name="payment_method" value="undagi"
+                                                                                   disabled>
+                                                                        @else
+                                                                            <input id="pay_undagi" class="card-rb"
+                                                                                   type="radio"
+                                                                                   name="payment_method" value="undagi">
+                                                                        @endif
+                                                                    @endforeach
+                                                                    <div class="card card-input">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="media p-4">
+                                                                                    <div class="media-left media-middle"
+                                                                                         style="width: 20%">
+                                                                                        <img class="media-object"
+                                                                                             alt="icon"
+                                                                                             src="{{asset('images/logo/undagi_pay.png')}}">
+                                                                                    </div>
+                                                                                    <div class="ml-2 media-body">
+                                                                                        <h5 class="mt-0 mb-1">
+                                                                                            <i class="fa fa-wallet mr-2"></i>UNDAGI
+                                                                                            PAY
+                                                                                            <small class="pull-right">Saldo
+                                                                                                : {{number_format($row->saldo,2,',','.')}}</small>
+                                                                                        </h5>
+                                                                                        <blockquote class="mb-0"
+                                                                                                    style="font-size: 14px;text-transform: none;border-color: #eee">
+                                                                                            <p align="justify">
+                                                                                                Lorem ipsum dolor sit
+                                                                                                amet, consectetur
+                                                                                                adipiscing elit, sed do
+                                                                                                eiusmod tempor
+                                                                                                incididunt ut labore et
+                                                                                                dolore magna aliqua.
+                                                                                            </p>
+                                                                                        </blockquote>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </label>
-                                                                @endforeach
+                                                                </label>
+                                                            @endforeach
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="card-label mb-0" for="pay_midtrans">
@@ -1082,7 +1124,11 @@
                                                                                     <blockquote class="mb-0"
                                                                                                 style="font-size: 14px;text-transform: none;border-color: #eee">
                                                                                         <p align="justify">
-                                                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                                            Lorem ipsum dolor sit amet,
+                                                                                            consectetur adipiscing elit,
+                                                                                            sed do eiusmod tempor
+                                                                                            incididunt ut labore et
+                                                                                            dolore magna aliqua.
                                                                                         </p>
                                                                                     </blockquote>
                                                                                 </div>
@@ -1112,7 +1158,8 @@
                                                 </div>--}}
                                             </div>
                                             <div class="card-read-more">
-                                                <button type="submit" class="btn btn-link btn-block" style="border: none">
+                                                <button type="submit" class="btn btn-link btn-block"
+                                                        style="border: none">
                                                     <i class="fa fa-wallet"></i>&nbsp;BAYAR SEKARANG
                                                 </button>
                                             </div>
@@ -1218,97 +1265,105 @@
                                                     </div>
                                                 </div>
                                             </div>
-{{--                                            <div class="card-read-more">--}}
-{{--                                                <button class="btn btn-link btn-block">--}}
-{{--                                                    <i class="fa fa-edit"></i>&nbsp;SIMPAN PERUBAHAN--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="card-read-more">--}}
+                                            {{--                                                <button class="btn btn-link btn-block">--}}
+                                            {{--                                                    <i class="fa fa-edit"></i>&nbsp;SIMPAN PERUBAHAN--}}
+                                            {{--                                                </button>--}}
+                                            {{--                                            </div>--}}
                                         </form>
                                     </div>
                                 </div>
                                 <div id="lihat-progress" style="display: none">
-                                    <div class="card">
-                                        <div class="card-content">
-                                            <div class="card-title">
-                                                <div class="row form-group">
-                                                    @foreach($pengerjaan as $row)
-                                                    <div class="col-md-12">
-                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
-                                                             alt="Thumbnail"
-                                                             src="{{$row->get_project->thumbnail != "" ?
+                                    @foreach($pengerjaan as $row)
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <div class="card-title">
+                                                    <div class="row form-group">
+
+                                                        <div class="col-md-12">
+                                                            <img style="width: 15%;height: auto"
+                                                                 class="img-responsive float-left mr-2"
+                                                                 alt="Thumbnail"
+                                                                 src="{{$row->get_project->thumbnail != "" ?
                                                                      asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
                                                                      : asset('images/slider/beranda-1.jpg')}}">
-                                                        <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
-                                                        <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}&nbsp;HARI)</b>
-                                                        <br>
-                                                        <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
-                                                        </b>
-                                                        <br>
-                                                        @if(!is_null($row->get_project->get_pembayaran))
-                                                            @if(!is_null($row->get_project->get_pembayaran->bukti_pembayaran))
-                                                                @if($row->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
-                                                                    <span
-                                                                        class="label label-success">LUNAS</span>
-                                                                @else
-                                                                    <span class="label label-default">DP {{round($row
+                                                            <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
+                                                            <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}
+                                                                &nbsp;HARI)</b>
+                                                            <br>
+                                                            <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
+                                                            </b>
+                                                            <br>
+                                                            @if(!is_null($row->get_project->get_pembayaran))
+                                                                @if(!is_null($row->get_project->get_pembayaran->bukti_pembayaran))
+                                                                    @if($row->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
+                                                                        <span
+                                                                            class="label label-success">LUNAS</span>
+                                                                    @else
+                                                                        <span class="label label-default">DP {{round($row
                                                                             ->get_project->get_pembayaran->jumlah_pembayaran / $row
                                                                             ->get_project->harga * 100,1)}}%</span>
-                                                                @endif |
-                                                                <span class="label label-{{$row->selesai == false ?
+                                                                    @endif |
+                                                                    <span class="label label-{{$row->selesai == false ?
                                                                         'warning' : 'success'}}">{{$row->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
+                                                                @else
+                                                                    <span class="label label-info"
+                                                                          style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
+                                                                @endif
                                                             @else
-                                                                <span class="label label-info" style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
+                                                                <span
+                                                                    class="label label-danger">MENUNGGU PEMBAYARAN</span>
                                                             @endif
-                                                        @else
-                                                            <span
-                                                                class="label label-danger">MENUNGGU PEMBAYARAN</span>
-                                                        @endif
+                                                        </div>
                                                     </div>
-                                                        @endforeach
-                                                </div>
 
-                                                <table class="table" id="dt-progress">
-                                                    <thead>
-                                                    <tr>
-                                                        <th class="text-center">Bukti Pengerjaan</th>
-                                                        <th class="text-center">Progress</th>
-                                                        <th class="text-center">Tanggal Update</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    @php $no = 1; @endphp
-                                                    @foreach($progress as $row)
+                                                    <table class="table" id="dt-progress">
+                                                        <thead>
                                                         <tr>
-                                                            <td style="vertical-align: middle"><a href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}" target="_blank"><img class="img-responsive text-center" width="160"
-                                                                                                                                                                                       alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
+                                                            <th class="text-center">Bukti Pengerjaan</th>
+                                                            <th class="text-center">Progress</th>
+                                                            <th class="text-center">Tanggal Update</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @php $no = 1; @endphp
+                                                        @foreach($progress as $row)
+                                                            <tr>
+                                                                <td style="vertical-align: middle"><a
+                                                                        href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}"
+                                                                        target="_blank"><img
+                                                                            class="img-responsive text-center"
+                                                                            width="160" alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
                                                          asset('storage/proyek/progress/'.$row->bukti_gambar)
                                                          : asset('images/undangan-1.jpg')}}"></a></td>
-                                                            <td style="vertical-align: middle"><span class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
-                                                                <br>
-                                                                <p>{{$row->deskripsi}}</p>
-                                                            </td>
-                                                            <td style="vertical-align: middle" align="center">
-                                                                {{$row->created_at->formatLocalized('%d %B %Y')}}
-                                                                <br>
-                                                                {{$row->created_at->format('H : i : s')}}
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="row form-group">
-                                                <div class="col-lg-12">
-                                                    <button type="reset" class="btn btn-link btn-sm"
-                                                            style="border: 1px solid #ccc">
-                                                        <i class="fa fa-undo mr-2"></i>KEMBALI
-                                                    </button>
+                                                                <td style="vertical-align: middle"><span
+                                                                        class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
+                                                                    <br>
+                                                                    <p>{{$row->deskripsi}}</p>
+                                                                </td>
+                                                                <td style="vertical-align: middle" align="center">
+                                                                    {{$row->created_at->formatLocalized('%d %B %Y')}}
+                                                                    <br>
+                                                                    {{$row->created_at->format('H : i : s')}}
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col-lg-12">
+                                                        <button type="reset" class="btn btn-link btn-sm"
+                                                                style="border: 1px solid #ccc">
+                                                            <i class="fa fa-undo mr-2"></i>KEMBALI
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            {{--                                            </div>--}}
                                         </div>
-                                        {{--                                            </div>--}}
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -1329,7 +1384,8 @@
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
     {{--<script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_CLIENT_KEY')}}"></script>--}}
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{env('MIDTRANS_SERVER_KEY')}}"></script>
     <script>
         $(function () {
             var export_proyek = 'Daftar Tugas/Proyek ({{now()->format('j F Y')}})',
@@ -1675,7 +1731,7 @@
         $("#pay-form").on('submit', function (e) {
             e.preventDefault();
             if ($(".card-rb").is(":checked")) {
-                if($("#pay_undagi").is(":checked")) {
+                if ($("#pay_undagi").is(":checked")) {
                     // bayar undagi
                     swal({
                         title: 'Apakah anda yakin?',
@@ -1771,6 +1827,7 @@
                 swal('Oops..', 'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.', 'error');
             }
         }
+
         <!-- lihat progress -->
         function lihatProgress(id, action, judul) {
             $("#judul").text(judul);
@@ -1789,6 +1846,7 @@
 
             $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
         });
+
         <!-- bukti pembayaran -->
         function buktiPembayaran(id, invoice, url, data_url, harga) {
             var bisa_upload = false;

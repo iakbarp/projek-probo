@@ -212,7 +212,8 @@
                                 </tr>
                             </table>
                             <div class="card-title">
-                                <a href="{{route('profil.user', ['username' => $user->username])}}" class="btn btn-sm btn-link btn-block"
+                                <a href="{{route('profil.user', ['username' => $user->username])}}"
+                                   class="btn btn-sm btn-link btn-block"
                                    style="border: 1px solid #ccc;color: #333;background: #247bff;
     text-transform: uppercase;
     font-size: 12px;
@@ -228,18 +229,18 @@
     transition-duration: 0.1s;
     text-align: center;"><small style="color: white">Tampilan Publik</small>
                                 </a>
-{{--                                <table class="stats" style="font-size: 14px; margin-top: 0">--}}
-{{--                                    <tr data-toggle="tooltip" data-placement="left" title="Bergabung Sejak">--}}
-{{--                                        <td><i class="fa fa-calendar-check"></i></td>--}}
-{{--                                        <td>&nbsp;</td>--}}
-{{--                                        <td>{{$user->created_at->formatLocalized('%d %B %Y')}}</td>--}}
-{{--                                    </tr>--}}
-{{--                                    <tr data-toggle="tooltip" data-placement="left" title="Update Terakhir">--}}
-{{--                                        <td><i class="fa fa-clock"></i></td>--}}
-{{--                                        <td>&nbsp;</td>--}}
-{{--                                        <td style="text-transform: none;">{{$user->updated_at->diffForHumans()}}</td>--}}
-{{--                                    </tr>--}}
-{{--                                </table>--}}
+                                {{--                                <table class="stats" style="font-size: 14px; margin-top: 0">--}}
+                                {{--                                    <tr data-toggle="tooltip" data-placement="left" title="Bergabung Sejak">--}}
+                                {{--                                        <td><i class="fa fa-calendar-check"></i></td>--}}
+                                {{--                                        <td>&nbsp;</td>--}}
+                                {{--                                        <td>{{$user->created_at->formatLocalized('%d %B %Y')}}</td>--}}
+                                {{--                                    </tr>--}}
+                                {{--                                    <tr data-toggle="tooltip" data-placement="left" title="Update Terakhir">--}}
+                                {{--                                        <td><i class="fa fa-clock"></i></td>--}}
+                                {{--                                        <td>&nbsp;</td>--}}
+                                {{--                                        <td style="text-transform: none;">{{$user->updated_at->diffForHumans()}}</td>--}}
+                                {{--                                    </tr>--}}
+                                {{--                                </table>--}}
                             </div>
                         </div>
                     </div>
@@ -304,13 +305,15 @@
                                                 }
                                             @endphp
                                             <tr>
-                                                <td style="vertical-align: middle" align="center"><img class="img-responsive float-left mr-2" width="160"
-                                                                                                       alt="Thumbnail" src="{{$row->get_project->thumbnail != "" ?
+                                                <td style="vertical-align: middle" align="center"><img
+                                                        class="img-responsive float-left mr-2" width="160"
+                                                        alt="Thumbnail" src="{{$row->get_project->thumbnail != "" ?
                                                          asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
                                                          : asset('images/slider/beranda-1.jpg')}}"></td>
                                                 <td style="vertical-align: middle"><a href="{{route('detail.proyek', ['username' =>
                                                 $row->get_project->get_user->username, 'judul' => $row->get_project->permalink])}}">
-                                                        <span class="label label-info">{{$row->get_project->judul}}</span></a>
+                                                        <span
+                                                            class="label label-info">{{$row->get_project->judul}}</span></a>
                                                     <br>
                                                     {{$row->get_project->deskripsi}}
                                                 </td>
@@ -320,7 +323,7 @@
                                                 <td style="vertical-align: middle" align="right">
                                                     Rp. {{number_format($row->get_project->harga,2,',','.')}}</td>
                                                 <td style="vertical-align: middle" align="center">
-{{--                                                    <span class="label label-{{$class}}">{{$status}}</span>--}}
+                                                    {{--                                                    <span class="label label-{{$class}}">{{$status}}</span>--}}
                                                     <span class="label label-info">{{$status}}</span>
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
@@ -355,7 +358,7 @@
                                         <tr>
                                             <th class="text-center">#</th>
                                             <th>Proyek</th>
-{{--                                            <th class="text-center">Jenis Proyek</th>--}}
+                                            {{--                                            <th class="text-center">Jenis Proyek</th>--}}
                                             <th class="text-center">Batas Waktu</th>
                                             <th class="text-right">Harga (Rp)</th>
                                             <th class="text-center">Status</th>
@@ -383,21 +386,23 @@
                                                 }
                                             @endphp
                                             <tr>
-                                                <td style="vertical-align: middle" align="center"><img class="img-responsive float-left" width="160"
-                                                                                                       alt="Thumbnail" src="{{$row->get_project->thumbnail != "" ?
+                                                <td style="vertical-align: middle" align="center"><img
+                                                        class="img-responsive float-left" width="160"
+                                                        alt="Thumbnail" src="{{$row->get_project->thumbnail != "" ?
                                                          asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
                                                          : asset('images/undangan-1.jpg')}}"></td>
                                                 <td style="vertical-align: middle"><a href="{{route('detail.proyek', ['username' =>
                                                 $row->get_project->get_user->username, 'judul' => $row->get_project->permalink])}}">
-                                                        <span class="label label-info">{{$row->get_project->judul}}</span></a>
+                                                        <span
+                                                            class="label label-info">{{$row->get_project->judul}}</span></a>
                                                     <br>
                                                     <small>{{$row->get_project->deskripsi}}</small>
                                                 </td>
-{{--                                                <td style="vertical-align: middle" align="center">--}}
-{{--                                                    <span class="label label-{{$row->get_project->pribadi == false ?--}}
-{{--                                                    'info' : 'primary'}}">{{$row->get_project->pribadi == false ?--}}
-{{--                                                    'PUBLIK' : 'PRIVAT'}}</span>--}}
-{{--                                                </td>--}}
+                                                {{--                                                <td style="vertical-align: middle" align="center">--}}
+                                                {{--                                                    <span class="label label-{{$row->get_project->pribadi == false ?--}}
+                                                {{--                                                    'info' : 'primary'}}">{{$row->get_project->pribadi == false ?--}}
+                                                {{--                                                    'PUBLIK' : 'PRIVAT'}}</span>--}}
+                                                {{--                                                </td>--}}
                                                 <td style="vertical-align: middle" align="center">
                                                     {{$row->get_project->waktu_pengerjaan}} hari
                                                 </td>
@@ -461,7 +466,8 @@
                                                         <div class="col-lg-12">
                                                             <a href="{{route('detail.proyek', ['username' => $user->username,
                                                             'judul' => $row->get_project->permalink])}}">
-                                                                <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
+                                                                <img style="width: 15%;height: auto"
+                                                                     class="img-responsive float-left mr-2"
                                                                      alt="Thumbnail"
                                                                      src="{{$row->get_project->thumbnail != "" ?
                                                                      asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
@@ -493,13 +499,14 @@
                                                                 @endif
                                                                 <br>
                                                             </a>
-{{--                                                            <p>--}}
-{{--                                                                Tugas/Proyek {{$row->get_project->pribadi == false ? 'PUBLIK' : 'PRIVAT'}}--}}
-{{--                                                                :--}}
-{{--                                                                Rp{{number_format($row->get_project->harga,2,',','.')}}</p>--}}
+                                                            {{--                                                            <p>--}}
+                                                            {{--                                                                Tugas/Proyek {{$row->get_project->pribadi == false ? 'PUBLIK' : 'PRIVAT'}}--}}
+                                                            {{--                                                                :--}}
+                                                            {{--                                                                Rp{{number_format($row->get_project->harga,2,',','.')}}</p>--}}
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-1" style="border-bottom: 1px solid #eee;padding: 2px 6.5em">
+                                                    <div class="row mb-1"
+                                                         style="border-bottom: 1px solid #eee;padding: 2px 6.5em">
                                                         <div class="col-lg-12">
                                                             <b>ULASAN ANDA</b><br>
                                                             <div class="media">
@@ -531,7 +538,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-1" style="border-bottom: 1px solid #eee;padding: 2px 10em">
+                                                    <div class="row mb-1"
+                                                         style="border-bottom: 1px solid #eee;padding: 2px 10em">
                                                         <div class="col-lg-12">
                                                             <ul class="none-margin">
                                                                 <li><b>LAMPIRAN HASIL PENGERJAAN</b></li>
@@ -568,16 +576,17 @@
                                                                         (kosong)
                                                                     @endif
                                                                 </li>
-{{--                                                                <li><b>PROGRESS PENGERJAAN</b></li>--}}
-{{--                                                                <li>--}}
-{{--                                                                    <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
-{{--                                                                        <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
-{{--                                                                    </div>--}}
-{{--                                                                </li>--}}
+                                                                {{--                                                                <li><b>PROGRESS PENGERJAAN</b></li>--}}
+                                                                {{--                                                                <li>--}}
+                                                                {{--                                                                    <div class="progress" style="height: 30px;border-radius: 15px;width: 350px">--}}
+                                                                {{--                                                                        <div class="progress-bar" role="progressbar" style="width: 50%;background-color: #0077FF;border-radius: 15px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span style="display: block;margin: auto">50%</span></div>--}}
+                                                                {{--                                                                    </div>--}}
+                                                                {{--                                                                </li>--}}
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-1" style="border-bottom: 1px solid #eee;padding: 2px 10em">
+                                                    <div class="row mb-1"
+                                                         style="border-bottom: 1px solid #eee;padding: 2px 10em">
                                                         <div class="col-lg-12">
                                                             <b>ULASAN KLIEN</b><br>
                                                             <div class="media">
@@ -618,56 +627,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-{{--                                                    <div class="row">--}}
-{{--                                                        <div class="col-lg-12">--}}
-{{--                                                            <b>ULASAN ANDA</b><br>--}}
-{{--                                                            @if(!is_null($row->get_project->get_ulasan))--}}
-{{--                                                                <div class="media">--}}
-{{--                                                                    <div class="media-left media-middle">--}}
-{{--                                                                        <a href="{{route('profil.user', ['username' => $row->get_user->username])}}">--}}
-{{--                                                                            <img width="48" alt="avatar" src="{{$row->get_user->get_bio->foto == "" ?--}}
-{{--                                                                            asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg') :--}}
-{{--                                                                            asset('storage/users/foto/'.$row->get_user->get_bio->foto)}}"--}}
-{{--                                                                                 class="media-object img-thumbnail"--}}
-{{--                                                                                 style="border-radius: 100%">--}}
-{{--                                                                        </a>--}}
-{{--                                                                    </div>--}}
-{{--                                                                    <div class="media-body">--}}
-{{--                                                                        <p class="media-heading">--}}
-{{--                                                                            <i class="fa fa-hard-hat mr-2"--}}
-{{--                                                                               style="color: #4d4d4d"></i>--}}
-{{--                                                                            <a href="{{route('profil.user', ['username' => $row->get_user->username])}}">--}}
-{{--                                                                                {{$row->get_user->name}}</a>--}}
-{{--                                                                            <br>--}}
-{{--                                                                            <i class="fa fa-star"--}}
-{{--                                                                               style="color: #ffc100;margin: 0 0 0 .5rem"></i>--}}
-{{--                                                                            <b>{{round($row->get_project->get_ulasan->bintang * 2) / 2}}</b>--}}
-{{--                                                                            <span class="pull-right"--}}
-{{--                                                                                  style="color: #999">--}}
-{{--                                                                                <i class="fa fa-clock"--}}
-{{--                                                                                   style="color: #aaa;margin: 0"></i>--}}
-{{--                                                                                {{$row->get_project->get_ulasan->created_at->diffForHumans()}}--}}
-{{--                                                                            </span>--}}
-{{--                                                                        </p>--}}
-{{--                                                                        <blockquote>--}}
-{{--                                                                            {!! $row->get_project->get_ulasan->deskripsi !!}--}}
-{{--                                                                        </blockquote>--}}
-{{--                                                                    </div>--}}
-{{--                                                                </div>--}}
-{{--                                                            @else--}}
-{{--                                                                (kosong)--}}
-{{--                                                            @endif--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                            <button class="btn btn-link btn-sm btn-block"
+                                                                    data-toggle="tooltip"
                                                                     title="Lihat Progress"
-                                                                    onclick="lihatProgress('{{$row->id}}',
-                                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
-                                                                        '{{$row->get_project->judul}}')"
+                                                                    onclick="lihatProgress('{{route('pekerja-data-progress.proyek', ['id' => $row->proyek_id])}}')"
                                                                 {{is_null($row->get_project->get_pembayaran) ||
                                                                 (!is_null($row->get_project->get_pembayaran) &&
                                                                 is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
@@ -719,12 +686,17 @@
                                                                 $row->selesai == true ? 'disabled' : ''}}>
                                                                 <i class="fa fa-upload" style="margin-right: 0"></i>
                                                             </button>
+                                                            <a class="btn btn-link btn-sm" data-toggle="tooltip" href="{{route('download.contract',['id'=> $row->id])}}"
+                                                               title="Surat Kontrak" onclick="">
+                                                         <i class="fa fa-file" style="margin-right: 0"></i>
+                                                    </a>
                                                         </span>
                                                     </div>
                                                     <hr style="margin: .5em 0">
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                            <button class="btn btn-link btn-sm btn-block"
+                                                                    data-toggle="tooltip"
                                                                     title="Ulas Hasil"
                                                                     onclick="ulasHasil('{{$row->id}}',
                                                                         '{{route('pekerja.ulas-pengerjaan.proyek', ['id' => $row->id])}}',
@@ -761,21 +733,32 @@
                                 </div>
 
                                 <div id="lihat-progress" style="display: none">
-                                    <div class="card">
+                                    @foreach($progress as $row)
+                                        {{--                                        TODO --}}
+                                        <div class="card">
                                             <div class="card-content">
                                                 <div class="card-title">
                                                     <div class="row form-group">
                                                         <div class="col-md-12">
-                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"
-                                                             alt="Thumbnail"
-                                                             src="{{$row->get_project->thumbnail != "" ?
+                                                            {{--                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"--}}
+                                                            {{--                                                             alt="Thumbnail" id="thumbnail">--}}
+                                                            {{--                                                        <b style="color: #2878ff;font-size: 25px" id="judul"><span id="judul"></span> </b>--}}
+                                                            {{--                                                        <b style="color: black;font-size: 25px" id="waktu_pengerjaan"></b>--}}
+                                                            {{--                                                        <br>--}}
+                                                            {{--                                                        <b id="harga">--}}
+                                                            {{--                                                        </b>--}}
+                                                            <img style="width: 15%;height: auto"
+                                                                 class="img-responsive float-left mr-2"
+                                                                 alt="Thumbnail"
+                                                                 src="{{$row->get_project->thumbnail != "" ?
                                                                      asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
                                                                      : asset('images/slider/beranda-1.jpg')}}">
-                                                        <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
-                                                        <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}&nbsp;HARI)</b>
-                                                        <br>
-                                                        <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
-                                                        </b>
+                                                            <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
+                                                            <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}
+                                                                &nbsp;HARI)</b>
+                                                            <br>
+                                                            <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
+                                                            </b>
                                                             <br>
                                                             @if(!is_null($row->get_project->get_pembayaran))
                                                                 @if(!is_null($row->get_project->get_pembayaran->bukti_pembayaran))
@@ -791,7 +774,8 @@
                                                                         'warning' : 'success'}}">{{$row->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
                                                                 @else
-                                                                    <span class="label label-info" style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
+                                                                    <span class="label label-info"
+                                                                          style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
                                                                 @endif
                                                             @else
                                                                 <span
@@ -800,47 +784,50 @@
                                                         </div>
                                                     </div>
 
-                                                        <table class="table" id="dt-progress">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="text-center">Bukti Pengerjaan</th>
-                                                                <th class="text-center">Progress</th>
-                                                                <th class="text-center">Tanggal Update</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            @php $no = 1; @endphp
-                                                            @foreach($progress as $row)
-                                                                <tr>
-                                                                    <td style="vertical-align: middle"><a href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}" target="_blank"><img class="img-responsive text-center" width="160"
-                                                                                                                           alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
+                                                    <table class="table" id="dt-progress">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="text-center">Bukti Pengerjaan</th>
+                                                            <th class="text-center">Progress</th>
+                                                            <th class="text-center">Tanggal Pengerjaan</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @php $no = 1; @endphp
+                                                        <tr>
+                                                            <td style="vertical-align: middle"><a
+                                                                    href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}"
+                                                                    target="_blank"><img
+                                                                        class="img-responsive text-center" width="160"
+                                                                        alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
                                                          asset('storage/proyek/progress/'.$row->bukti_gambar)
                                                          : asset('images/undangan-1.jpg')}}"></a></td>
-                                                                    <td style="vertical-align: middle"><span class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
-                                                                        <br>
-                                                                        <p>{{$row->deskripsi}}</p>
-                                                                    </td>
-                                                                    <td style="vertical-align: middle" align="center">
-                                                                        {{$row->created_at->formatLocalized('%d %B %Y')}}
-                                                                        <br>
-                                                                        {{$row->created_at->format('H : i : s')}}
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <div class="row form-group">
-                                                        <div class="col-lg-12">
-                                                            <button type="reset" class="btn btn-link btn-sm"
-                                                                    style="border: 1px solid #ccc">
-                                                                <i class="fa fa-undo mr-2"></i>KEMBALI
-                                                            </button>
-                                                        </div>
+                                                            <td style="vertical-align: middle"><span
+                                                                    class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
+                                                                <br>
+                                                                <p>{{$row->deskripsi}}</p>
+                                                            </td>
+                                                            <td style="vertical-align: middle" align="center">
+                                                                {{$row->created_at->formatLocalized('%d %B %Y')}}
+                                                                <br>
+                                                                {{$row->created_at->format('H : i : s')}}
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col-lg-12">
+                                                        <button type="reset" class="btn btn-link btn-sm"
+                                                                style="border: 1px solid #ccc">
+                                                            <i class="fa fa-undo mr-2"></i>KEMBALI
+                                                        </button>
                                                     </div>
                                                 </div>
-{{--                                            </div>--}}
-                                    </div>
+                                            </div>
+                                            {{--                                            </div>--}}
+                                        </div>
+                                    @endforeach
                                 </div>
 
                                 <div id="update-hasil" style="display: none">
@@ -891,38 +878,38 @@
                                                                 class="glyphicon glyphicon-globe form-control-feedback"></span>
                                                         </div>
                                                     </div>
-                                                    <div class="row form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="deskripsi" class="form-control-label">Deskripsi
-                                                                <span class="required">*</span></label>
-                                                            <textarea id="deskripsi" name="deskripsi"
-                                                                      class="form-control"></textarea>
-                                                        </div>
-                                                    </div>
-{{--                                                    <div class="row form-group">--}}
-{{--                                                        <div class="col-md-6 has-feedback">--}}
-{{--                                                            <label for="progress"--}}
-{{--                                                                   class="form-control-label">Progress Sementara</label>--}}
-{{--                                                            <div class="input-group">--}}
-{{--                                                                <span class="input-group-addon"><i--}}
-{{--                                                                        class="fa fa-percent"></i></span>--}}
-{{--                                                            <input type="text" disabled--}}
-{{--                                                                   class="form-control"--}}
-{{--                                                                   placeholder="http://example.com">--}}
-{{--                                                        </div>--}}
-{{--                                                        </div>--}}
-{{--                                                        <div class="col-md-6 has-feedback">--}}
-{{--                                                            <label for="update-progress"--}}
-{{--                                                                   class="form-control-label">Progress Terbaru</label>--}}
-{{--                                                            <div class="input-group">--}}
-{{--                                                                <span class="input-group-addon"><i--}}
-{{--                                                                        class="fa fa-percent"></i></span>--}}
-{{--                                                                <input type="text"--}}
-{{--                                                                       class="form-control"--}}
-{{--                                                                       placeholder="80">--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
+                                                    {{--                                                    <div class="row form-group">--}}
+                                                    {{--                                                        <div class="col-md-12">--}}
+                                                    {{--                                                            <label for="deskripsi" class="form-control-label">Deskripsi--}}
+                                                    {{--                                                                <span class="required">*</span></label>--}}
+                                                    {{--                                                            <textarea id="deskripsi" name="deskripsi"--}}
+                                                    {{--                                                                      class="form-control"></textarea>--}}
+                                                    {{--                                                        </div>--}}
+                                                    {{--                                                    </div>--}}
+                                                    {{--                                                    <div class="row form-group">--}}
+                                                    {{--                                                        <div class="col-md-6 has-feedback">--}}
+                                                    {{--                                                            <label for="progress"--}}
+                                                    {{--                                                                   class="form-control-label">Progress Sementara</label>--}}
+                                                    {{--                                                            <div class="input-group">--}}
+                                                    {{--                                                                <span class="input-group-addon"><i--}}
+                                                    {{--                                                                        class="fa fa-percent"></i></span>--}}
+                                                    {{--                                                            <input type="text" disabled--}}
+                                                    {{--                                                                   class="form-control"--}}
+                                                    {{--                                                                   placeholder="http://example.com">--}}
+                                                    {{--                                                        </div>--}}
+                                                    {{--                                                        </div>--}}
+                                                    {{--                                                        <div class="col-md-6 has-feedback">--}}
+                                                    {{--                                                            <label for="update-progress"--}}
+                                                    {{--                                                                   class="form-control-label">Progress Terbaru</label>--}}
+                                                    {{--                                                            <div class="input-group">--}}
+                                                    {{--                                                                <span class="input-group-addon"><i--}}
+                                                    {{--                                                                        class="fa fa-percent"></i></span>--}}
+                                                    {{--                                                                <input type="text"--}}
+                                                    {{--                                                                       class="form-control"--}}
+                                                    {{--                                                                       placeholder="80">--}}
+                                                    {{--                                                            </div>--}}
+                                                    {{--                                                        </div>--}}
+                                                    {{--                                                    </div>--}}
                                                     <div class="row form-group">
                                                         <div class="col-lg-12">
                                                             <button type="reset" class="btn btn-link btn-sm"
@@ -941,16 +928,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-{{--                                            <div class="card-read-more">--}}
-{{--                                                <button class="btn btn-link btn-block">--}}
-{{--                                                    <i class="fa fa-upload"></i>&nbsp;SIMPAN--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="card-read-more">--}}
+                                            {{--                                                <button class="btn btn-link btn-block">--}}
+                                            {{--                                                    <i class="fa fa-upload"></i>&nbsp;SIMPAN--}}
+                                            {{--                                                </button>--}}
+                                            {{--                                            </div>--}}
                                         </form>
                                     </div>
                                 </div>
 
-{{--                                Update Progress--}}
+                                {{--                                Update Progress--}}
                                 <div id="update-progress" style="display: none">
                                     <div class="card">
                                         <form class="form-horizontal" role="form" method="POST"
@@ -963,7 +950,8 @@
                                                     <hr class="mt-0">
                                                     <div class="row form-group has-feedback">
                                                         <div class="col-md-12">
-                                                            <label for="txt_bukti_gambar" class="form-control-label">File Progress
+                                                            <label for="txt_bukti_gambar" class="form-control-label">File
+                                                                Progress
                                                                 <span class="required">*</span></label>
                                                             <input type="file" name="bukti_gambar[]" accept="image/*"
                                                                    id="attach-bukti_gambar" style="display: none;"
@@ -977,8 +965,9 @@
                                                                        placeholder="Pilih File" data-toggle="tooltip"
                                                                        title="Ekstensi yang diizinkan: jpg, jpeg, gif, png. Ukuran yang diizinkan: < 5 MB">
                                                                 <span class="input-group-btn">
-                                                        <button class="browse_bukti_gambar btn btn-link btn-sm btn-block"
-                                                                type="button" style="border: 1px solid #ccc">
+                                                        <button
+                                                            class="browse_bukti_gambar btn btn-link btn-sm btn-block"
+                                                            type="button" style="border: 1px solid #ccc">
                                                             <i class="fa fa-search"></i>
                                                         </button>
                                                     </span>
@@ -1017,7 +1006,7 @@
                                     </div>
                                 </div>
 
-{{--                                Ulas Hasil--}}
+                                {{--                                Ulas Hasil--}}
                                 <div id="ulas-hasil" style="display: none">
                                     <div class="card">
                                         <form class="form-horizontal" role="form" method="POST">
@@ -1233,10 +1222,44 @@
                 },
             });
 
-            $('#dt-progress').DataTable();
+            $('#dt-progress').DataTable({
+                columnDefs: [{"sortable": false, "targets": 2}],
+                language: {
+                    "emptyTable": "Anda belum menambahkan progress apapun",
+                    "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",
+                    "infoEmpty": "Menampilkan 0 entri",
+                    "infoFiltered": "(difilter dari _MAX_ total entri)",
+                    "lengthMenu": "Tampilkan _MENU_ entri",
+                    "loadingRecords": "Memuat...",
+                    "processing": "Mengolah...",
+                    "search": "Cari:",
+                    "zeroRecords": "Data yang Anda cari tidak ditemukan.",
+                    "paginate": {
+                        "first": "Pertama",
+                        "last": "Terakhir",
+                        "next": "Selanjutnya",
+                        "previous": "Sebelumnya"
+                    },
+                    "aria": {
+                        "sortAscending": ": aktifkan untuk mengurutkan kolom dari kecil ke besar (asc)",
+                        "sortDescending": ": aktifkan untuk mengurutkan kolom dari besar ke kecil (desc)"
+                    }
+                },
+                fnDrawCallback: function (oSettings) {
+                    $('.use-nicescroll').getNiceScroll().resize();
+                    $('[data-toggle="tooltip"]').tooltip();
 
-
-
+                    var file_hasil = $(".use-lightgallery");
+                    file_hasil.masonry({
+                        itemSelector: '.item'
+                    });
+                    file_hasil.lightGallery({
+                        selector: '.item',
+                        loadYoutubeThumbnail: true,
+                        youtubeThumbSize: 'default',
+                    });
+                },
+            });
 
             $("#dt-pengerjaan table").DataTable({
                 dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'B><'col-sm-12 col-md-4'f>>" +
@@ -1422,10 +1445,9 @@
         }
 
         function lihatProgress(id, action, judul) {
-            $("#judul").text(judul);
+            $("#judul").val(judul);
             $("#dt-pengerjaan").toggle(300);
             $("#lihat-progress").toggle(300);
-            $("#lihat-progress form").attr('action', action);
 
             $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
         }
@@ -1434,7 +1456,6 @@
             $("#judul").text(null);
             $("#dt-pengerjaan").toggle(300);
             $("#lihat-progress").toggle(300);
-            $("#lihat-progress form").removeAttr('action');
 
             $('html,body').animate({scrollTop: $(".none-margin").offset().top}, 500);
         });

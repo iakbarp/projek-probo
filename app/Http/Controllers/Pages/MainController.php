@@ -204,4 +204,9 @@ class MainController extends Controller
 
         return back()->with('kontak', 'Terima kasih telah meninggalkan kami pesan! Karena setiap komentar atau kritik yang Anda berikan, akan membuat kami menjadi perusahaan yang lebih baik.');
     }
+
+    public function suratKontrak(Request $request)
+    {
+        return view('pages.main.users.surat-kontrak');
+    }
 }
