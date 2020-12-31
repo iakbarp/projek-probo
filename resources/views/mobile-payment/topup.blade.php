@@ -14,6 +14,7 @@
                             <input type="hidden" name="cek" value="topup">
                             <input type="hidden" value="{{$jumlah}}"
                                            name="jumlah" >
+                                           <input type="submit">
                             
 
                         </form>
