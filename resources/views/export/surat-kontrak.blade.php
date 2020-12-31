@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+<style>
+    .pos { position: absolute; z-index: 0; left: 0px; top: 0px }
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,7 +11,8 @@
     <title>Document</title>
 </head>
 <body>
-
+{{--<div class="pos" id="_0:0" style="top:0">--}}
+{{--    <img name="_1170:827" src="{{public_path('images/page_001.jpg')}}" height="1170" width="827" border="0" usemap="#Map"></div>--}}
 <p align="center">
     <strong>SURAT PERJANJIAN KERJASAMA {{$data->get_project->judul}}</strong>
     <strong>
