@@ -7,6 +7,8 @@ use App\Model\Bio;
 use App\Model\Pengerjaan;
 use App\Model\Project;
 use App\Model\Pembayaran;
+use App\Model\PengerjaanProgress;
+
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -543,6 +545,136 @@ class ProyekController extends Controller
                 ]);
             }
         } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ], 400);
+        }
+    }
+
+    public function ratingPekerja(Request $request)
+    {
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;
+        
+
+        $validator = Validator::make($request->all(), [
+            'bintang' => 'required|numeric|max:5|min:0',
+            'deskripsi' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        DB::beginTransaction();
+
+
+        try {
+           $pengerjaan=Project::query()
+           ->where('project.id',$proyek_id)
+            ->where('project.user_id',$user->id)
+            ->join('pengerjaan as p',function($query){
+                $query->on('project.id','=','p.proyek_id');
+                $query->whereNotNull('file_hasil');
+                $query->where('selesai','!=',DB::raw('0'));
+            })
+            ->select('p.id','p.proyek_id','p.user_id','project.judul')
+           ->firstOrFail();
+
+           $bio=Bio::where('user_id',$pengerjaan->user_id)->first();
+
+           $bintang_avg=($request->bintang+($bio->total_bintang_pekerja?$bio->total_bintang_pekerja:0))/2;
+
+
+           \App\Model\ReviewWorker::create([
+               'user_id'=>$user->id,
+               'pengerjaan_id'=>$pengerjaan->id,
+               'bintang'=>$request->bintang,
+               'deskripsi'=>$request->deskripsi,
+           ]);
+
+           $bio->update([
+            'total_bintang_pekerja'=>$bintang_avg
+           ]);
+                       DB::commit();
+                       return response()->json([
+                           'error'=>false,
+                           'data'=>[
+                            'message' => 'Komen untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
+                           ]
+                       ], 201);
+           
+
+        } catch (\Exception $exception) {
+                        DB::rollback();
+            return response()->json([
+                'error' => true,
+                
+                    'message' => $exception->getMessage()
+                
+            ], 400);
+        }
+    }
+
+    public function progressProyek(Request $request)
+    {
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;   
+        $search=$request->q;
+
+        try {
+
+            $pengerjaan=Project::query()
+            ->where('project.id',$proyek_id)
+             ->where('project.user_id',$user->id)
+             ->join('pengerjaan as p',function($query){
+                 $query->on('project.id','=','p.proyek_id');
+                 
+             })
+             ->select('p.id','p.proyek_id','p.user_id','project.judul')
+            ->firstOrFail();
+
+           $progress= PengerjaanProgress::where('pengerjaan_id',$pengerjaan->id)
+            ->get();
+
+             foreach($progress as $i=>$dt){
+                 $dt->urutan=$i+1;
+                $dt = $this->imgCheck($dt, 'bukti_gambar', 'proyek/progress/');
+                 
+             }
+
+             $progress=collect($progress)->reverse()->all();
+
+             $res=[];
+
+             foreach($progress as $dt){
+                 $kond=$search?(is_numeric(strpos($dt['created_at'],$search)) 
+                 || is_numeric(strpos($dt['deskripsi'],$search))):true;
+                 if($kond){
+                    $res[]=$dt;
+                 }
+             }
+
+            return response()->json([
+                'error' => false,
+                'data' => [
+                    'proses'=>$res,
+                ]
+            ], 200);
+          
+           
+
+        } catch (\Exception $exception) {
+                        
             return response()->json([
                 'error' => true,
                 'data' => [

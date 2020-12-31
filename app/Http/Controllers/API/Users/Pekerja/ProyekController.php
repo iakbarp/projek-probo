@@ -365,84 +365,360 @@ class ProyekController extends Controller
         }
     }
 
-    public function pengerjaanData(Request $request)
+    // public function pengerjaanData(Request $request)
+    // {
+    //     $id=$request->id;
+    //     $q=$request->q;
+
+    //     $user=auth('api')->user();
+    //     try{
+    //         $cek=pengerjaan::query()
+    //         ->where('id',$id)
+    //         ->where('user_id',$user->id)
+    //         ->firstOrFail();
+
+    //         $progress=PengerjaanProgress::query()
+    //         ->where('pengerjaan_id',$id)
+    //         ->get();
+
+
+
+    //         return response()->json([
+    //             'error' => false,
+    //             'data'=>[
+
+    //                 'list'=>$progress,
+    //                 'count'=>collect($progress)->count()
+    //             ]
+    //         ], 201);
+
+
+    //     } catch (\Exception $exception) {
+    //         return response()->json([
+    //             'error' => true,
+
+    //             'message' => $exception->getMessage()
+
+    //         ], 400);
+    //     }
+    // }
+
+    // public function pengerjaanPost(Request $request)
+    // {
+    //     $id=$request->id;
+    //     $terima=$request->terima;
+    //     $user=auth('api')->user();
+    //     try{
+    //         $cek=pengerjaanProgress::query()
+    //         ->where('id',$id)
+    //         ->where('user_id',$user->id)
+    //         ->whereNull('terima')
+    //         ->firstOrFail();
+
+    //         if ($request->hasFile('bukti_gambar')) {
+
+    //             $thumbnail =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $request->file('bukti_gambar')->getClientOriginalName();
+    //             $request->file('bukti_gambar')->storeAs('public/proyek/progress', $thumbnail);
+    //         } else {
+    //             $thumbnail = null;
+    //         }
+
+    //         PengerjaanProgress::create([
+    //             'bukti_gambar'=>$thumbnail,
+    //             'deskripsi'=>$request->deskripsi,
+    //         ]);
+
+    //         return response()->json([
+    //             'error' => false,
+    //             'data'=>[
+
+    //                 'message' => 'Berhasil ditambahkan!',
+    //             ]
+    //         ], 201);
+
+
+    //     } catch (\Exception $exception) {
+    //         return response()->json([
+    //             'error' => true,
+
+    //             'message' => $exception->getMessage()
+
+    //         ], 400);
+    //     }
+    // }
+
+    public function ratingKlien(Request $request)
     {
-        $id=$request->id;
-        $q=$request->q;
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;
+        
 
-        $user=auth('api')->user();
-        try{
-            $cek=pengerjaan::query()
-            ->where('id',$id)
-            ->where('user_id',$user->id)
-            ->firstOrFail();
+        $validator = Validator::make($request->all(), [
+            'bintang' => 'required|numeric|max:5|min:0',
+            'deskripsi' => 'required|string',
+        ]);
 
-            $progress=PengerjaanProgress::query()
-            ->where('pengerjaan_id',$id)
-            ->get();
+        if ($validator->fails()) {
 
-
-
-            return response()->json([
-                'error' => false,
-                'data'=>[
-
-                    'list'=>$progress,
-                    'count'=>collect($progress)->count()
-                ]
-            ], 201);
-
-
-        } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
 
-                'message' => $exception->getMessage()
+        DB::beginTransaction();
 
+
+        try {
+           $pengerjaan=Project::query()
+           ->where('project.id',$proyek_id)
+            
+            ->join('pengerjaan as p',function($query)use($user){
+                $query->on('project.id','=','p.proyek_id');
+                $query->where('p.user_id',$user->id);
+            })
+            ->select('p.id','p.proyek_id','project.user_id','project.judul')
+           ->firstOrFail();
+
+           $bio=Bio::where('user_id',$pengerjaan->user_id)->first();
+
+           $bintang_avg=($request->bintang+($bio->total_bintang_klien?$bio->total_bintang_klien:0))/2;
+
+           \App\Model\Review::create([
+               'user_id'=>$user->id,
+               'proyek_id'=>$pengerjaan->proyek_id,
+               'bintang'=>$request->bintang,
+               'deskripsi'=>$request->deskripsi,
+           ]);
+
+           $bio->update([
+            'total_bintang_klien'=>$bintang_avg
+           ]);
+                       DB::commit();
+                       return response()->json([
+                           'error'=>false,
+                           'data'=>[
+                            'message' => 'Komen untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
+                           ]
+                       ], 201);
+           
+
+        } catch (\Exception $exception) {
+                        DB::rollback();
+            return response()->json([
+                'error' => true,
+                
+                    'message' => $exception->getMessage()
+                
             ], 400);
         }
     }
 
-    public function pengerjaanPost(Request $request)
+    public function progressProyek(Request $request)
     {
-        $id=$request->id;
-        $terima=$request->terima;
-        $user=auth('api')->user();
-        try{
-            $cek=pengerjaanProgress::query()
-            ->where('id',$id)
-            ->where('user_id',$user->id)
-            ->whereNull('terima')
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;   
+        $search=$request->q;
+
+        try {
+
+            $pengerjaan=Project::query()
+            ->where('project.id',$proyek_id)
+             
+             ->join('pengerjaan as p',function($query)use($user){
+                 $query->on('project.id','=','p.proyek_id');
+                $query->where('p.user_id',$user->id);
+                 
+             })
+             ->select('p.id','p.proyek_id','project.user_id','project.judul')
             ->firstOrFail();
 
-            if ($request->hasFile('bukti_gambar')) {
+           $progress= PengerjaanProgress::where('pengerjaan_id',$pengerjaan->id)
+            ->get();
 
-                $thumbnail =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . $request->file('bukti_gambar')->getClientOriginalName();
-                $request->file('bukti_gambar')->storeAs('public/proyek/progress', $thumbnail);
-            } else {
-                $thumbnail = null;
-            }
+             foreach($progress as $i=>$dt){
+                 $dt->urutan=$i+1;
+                $dt = $this->imgCheck($dt, 'bukti_gambar', 'proyek/progress/');
+                 
+             }
 
-            PengerjaanProgress::create([
-                'bukti_gambar'=>$thumbnail,
-                'deskripsi'=>$request->deskripsi,
-            ]);
+             $progress=collect($progress)->reverse()->all();
+
+             $res=[];
+
+             foreach($progress as $dt){
+                 $kond=$search?(is_numeric(strpos($dt['created_at'],$search)) 
+                 || is_numeric(strpos($dt['deskripsi'],$search))):true;
+                 if($kond){
+                    $res[]=$dt;
+                 }
+             }
 
             return response()->json([
                 'error' => false,
-                'data'=>[
-
-                    'message' => 'Berhasil ditambahkan!',
+                'data' => [
+                    'proses'=>$res,
                 ]
-            ], 201);
-
+            ], 200);
+          
+           
 
         } catch (\Exception $exception) {
+                        
             return response()->json([
                 'error' => true,
+                'data' => [
+                    'message' => $exception->getMessage()
+                ]
+            ], 400);
+        }
+    }
 
-                'message' => $exception->getMessage()
+    public function tambahProgress(Request $request)
+    {
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;
+        
 
+        $validator = Validator::make($request->all(), [
+            'bukti_gambar' => 'image|mimes:jpg,jpeg,gif,png|max:2048',
+            'deskripsi' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        DB::beginTransaction();
+
+        try {
+           $pengerjaan=Project::query()
+           ->where('project.id',$proyek_id)
+            
+            ->join('pengerjaan as p',function($query)use($user){
+                $query->on('project.id','=','p.proyek_id');
+                $query->where('p.user_id',$user->id);
+            })
+            ->select('p.id','p.proyek_id','project.user_id','project.judul')
+           ->firstOrFail();
+
+           if ($request->hasFile('bukti_gambar')) {
+                // Storage::delete('public/proyek/progress/' . $before->thumbnail);
+
+                $bukti_gambar = sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . 
+                $request->file('bukti_gambar')->getClientOriginalName();
+                $request->file('bukti_gambar')->storeAs('public/proyek/progress', $bukti_gambar);
+            }
+
+           \App\Model\PengerjaanProgress::create([
+                'pengerjaan_id'=>$pengerjaan->id,
+                'proyek_id'=>$pengerjaan->proyek_id,
+                'user_id'=>$user->id,
+               'bukti_gambar'=>isset($bukti_gambar)?$bukti_gambar:null,
+               'deskripsi'=>$request->deskripsi,
+           ]);
+
+         
+            DB::commit();
+            return response()->json([
+                'error'=>false,
+                'data'=>[
+                'message' => 'Progress untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
+                ]
+            ], 201);
+           
+
+        } catch (\Exception $exception) {
+                        DB::rollback();
+            return response()->json([
+                'error' => true,
+                
+                    'message' => $exception->getMessage()
+                
+            ], 400);
+        }
+    }
+
+    public function fileFinal(Request $request)
+    {
+        $user = auth('api')->user();
+        $proyek_id = $request->proyek_id;
+        
+
+        $validator = Validator::make($request->all(), [
+            'tautan' => 'required|string',
+            'file_hasil' => 'required|array',
+            'file_hasil.*' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+           $pengerjaan=Project::query()
+           ->where('project.id',$proyek_id)
+            
+            ->join('pengerjaan as p',function($query)use($user){
+                $query->on('project.id','=','p.proyek_id');
+                $query->where('p.user_id',$user->id);
+            })
+            ->select('p.id','p.proyek_id','project.user_id','project.judul')
+
+           ->firstOrFail();
+
+           if ($request->hasFile('file_hasil')) {
+
+                $file_hasil = [];
+                $i = 0;
+                foreach ($request->file('file_hasil') as $file) {
+                    $file_hasil[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . 
+                    $file->getClientOriginalName();
+
+                    $file->storeAs('public/proyek/hasil',  $file_hasil[$i]);
+                    $i = 1 + $i;
+                }
+            } else {
+                $file_hasil = null;
+            }
+
+           Pengerjaan::find($pengerjaan->id)->update([
+               'tautan'=>$request->tautan,
+               'file_hasil'=>$file_hasil,
+           ]);
+
+         
+            DB::commit();
+            return response()->json([
+                'error'=>false,
+                'data'=>[
+                'message' => 'file hasil untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
+                ]
+            ], 201);
+           
+
+        } catch (\Exception $exception) {
+                        DB::rollback();
+            return response()->json([
+                'error' => true,
+                
+                    'message' => $exception->getMessage()
+                
             ], 400);
         }
     }

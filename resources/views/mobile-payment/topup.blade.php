@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+        <link rel="stylesheet" href="{{asset('vendor/sweetalert/sweetalert2.css')}}">
+
 </head>
 <body>
 <form  method="POST" id="form-topup">
@@ -14,13 +16,14 @@
                             <input type="hidden" name="cek" value="topup">
                             <input type="hidden" value="{{$jumlah}}"
                                            name="jumlah" >
-                                           <input type="submit">
+                                           
                             
 
                         </form>
 
 </body>
 <script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('vendor/sweetalert/sweetalert.min.js')}}"></script>
 
 <script src="{{asset('vendor/masonry/masonry.pkgd.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/lib/picturefill.min.js')}}"></script>
@@ -61,13 +64,17 @@
                                     responseMidtrans('unfinish', result);
                                 },
                                 onError: function (result) {
-                                    swal('Oops..', result.status_message, 'error');
+                                    location.href = '{{url("?status=")}}'+result.status_message;
+                                    
+                                },
+                                 onClose: function (result) {
+                                    location.href = '{{url("?status=gagal")}}';
                                 }
                             });
                         }
                     },
                     error: function () {
-                        swal('Oops..', 'Terjadi kesalahan! Silahkan, segarkan browser Anda.', 'error');
+                         location.href = '{{url("?status=")}}'+'Terjadi kesalahan! Silahkan, segarkan browser Anda.';
                     }
                 });
             }.bind(this), 800);
@@ -85,21 +92,11 @@
                     timer: 2000
                 });
                 setTimeout(function () {
-                    swal({
-                        title: "SUKSES!",
-                        text: 'Transaksi berhasil! Semoga Anda dan keluarga sehat selalu :) #dirumahaja',
-                        icon: 'success',
-                        buttons: false,
-                        closeOnEsc: false,
-                        closeOnClickOutside: false,
-                        timer: 3000
-                    });
-                    setTimeout(function () {
-                        location.href = '{{url()->current()}}'
-                    }, 3000);
+                   location.href = '{{url("?status=")}}'+'berhasil';
                 }, 2000);
             } else {
-                swal('Oops..', 'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.', 'error');
+                location.href = '{{url("?status=")}}'+'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.';
+                
             }
         }
 

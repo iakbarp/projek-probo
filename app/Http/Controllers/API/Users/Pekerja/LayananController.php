@@ -243,6 +243,7 @@ class LayananController extends Controller
 
                 Services::create([
                     'judul' => $request->judul,
+                    'permalink'=>$judul,
                     'hari_pengerjaan' => $request->pengerjaan,
                     'harga' => $request->harga,
                     'deskripsi' => $request->deskripsi,
@@ -407,7 +408,76 @@ class LayananController extends Controller
         }
     }
 
+    public function fileFinal(Request $request)
+    {
+        $user = auth('api')->user();
+        $pengerjaan_id = $request->pengerjaan_id;
+        
 
+        $validator = Validator::make($request->all(), [
+            'tautan' => 'required|string',
+            'file_hasil' => 'required|array',
+            'file_hasil.*' => 'mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'data' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+           $pengerjaan=PengerjaanLayanan::query()
+           ->where('pengerjaan_layanan.id',$pengerjaan_id)
+           ->join('service as s','s.id','pengerjaan_layanan.service_id')
+           ->select('pengerjaan_layanan.*','s.judul')
+           ->firstOrFail();
+
+           if ($request->hasFile('file_hasil')) {
+
+                $file_hasil = [];
+                $i = 0;
+                foreach ($request->file('file_hasil') as $file) {
+                    $file_hasil[$i] =  sprintf("%05d", $user->id) . now()->format('ymds') . sprintf("%02d", rand(0, 99)) . '_' . 
+                    $file->getClientOriginalName();
+
+                    $file->storeAs('public/layanan/hasil',  $file_hasil[$i]);
+                    $i = 1 + $i;
+                }
+            } else {
+                $file_hasil = null;
+            }
+
+            PengerjaanLayanan::find($pengerjaan->id)->update([
+               'tautan'=>$request->tautan,
+               'file_hasil'=>$file_hasil,
+           ]);
+
+         
+            DB::commit();
+            return response()->json([
+                'error'=>false,
+                'data'=>[
+                'message' => 'file hasil untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
+                ]
+            ], 201);
+           
+
+        } catch (\Exception $exception) {
+                        DB::rollback();
+            return response()->json([
+                'error' => true,
+                
+                    'message' => $exception->getMessage()
+                
+            ], 400);
+        }
+    }
 
     private function imgCheck($data, $column, $path, $ch = 0)
     {
