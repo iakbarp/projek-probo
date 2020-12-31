@@ -98,6 +98,8 @@
                 swal('Oops..', 'Maaf kanal pembayaran yang Anda pilih masih maintenance, silahkan pilih kanal lainnya.', 'error');
             }
         }
+
+        $("#form-topup").submit();
     </script>
 
 </html>
