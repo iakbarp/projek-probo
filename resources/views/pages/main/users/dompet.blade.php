@@ -363,6 +363,7 @@
                             </div>
                         </div>
                     @endforeach
+                    @foreach($data as $row)
                     <div class="row card-data">
                         <div class="col-lg-12">
                             <div class="card">
@@ -382,12 +383,11 @@
                                                 <td>
                                                     <b data-scrollbar style="text-transform: none; font-size: 20px">Pembayaran
                                                         melalui undagipay berhasil</b>
-                                                    <small style="font-size: 10px">Pembayaran untuk transaksi blablabla
+                                                    <small style="font-size: 10px">Pembayaran untuk transaksi {{$row->id}}
                                                         menggunakan Undagi Pay telah berhasil dan
-                                                        dana sebesar Rp. 5,000,000 telah ditambahkan di Undagi
-                                                        Pay-mu</small>
+                                                        dana sebesar Rp.{{number_format($row->jumlah,2,',','.')}}</small>
                                                     <br>
-                                                    <small style="font-size: 10px">Timestamp</small>
+                                                    <small style="font-size: 10px">{{$row->created_at}}</small>
                                                 </td>
                                             </tr>
                                         </table>
@@ -396,6 +396,7 @@
                             </div>
                         </div>
                     </div>
+                    @endforeach
                 </div>
             </div>
         </div>

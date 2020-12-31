@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages\Admins;
 
 use App\Http\Controllers\Controller;
+use App\Model\DompetHistory;
 use App\Model\Negara;
 use App\Model\Pembayaran;
 use App\Model\PembayaranLayanan;
@@ -13,6 +14,7 @@ use App\Model\Topup;
 use App\Model\Withdraw;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Whoops\Exception\ErrorException;
 
@@ -123,6 +125,11 @@ class PembayaranController extends Controller
             $data = Withdraw::find($request->id);
             $data->update([
                 'konfirmasi' => true
+            ]);
+            DompetHistory::firstOrCreate([
+                'user_id' => $data->user_id,
+                'jumlah' => str_replace('.', '',$data->jumlah),
+                'withdraw_id' => $data->id,
             ]);
             return response()->json([
                 'status' => 200,

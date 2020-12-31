@@ -62,10 +62,11 @@ class DompetController extends Controller
         $dompet = Dompet::where('user_id', $user->id)->orderByDesc('id')->get();
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
         $topup = Topup::where('id', $user->id)->orderByDesc('id')->get();
+        $data = DompetHistory::where('user_id', $user->id)->orderByDesc('created_at')->get();
 
         return view('pages.main.users.dompet', compact('user', 'total_user', 'bahasa', 'skill',
             'proyek', 'layanan', 'portofolio', 'ulasan_klien', 'rating_klien', 'ulasan_pekerja', 'rating_pekerja',
-            'kategori', 'auth_proyek','dompet','saldo','topup'));
+            'kategori', 'auth_proyek','dompet','saldo','topup', 'data'));
     }
 
     public function updatePengaturan(Request $request)
@@ -91,15 +92,10 @@ class DompetController extends Controller
             $user = User::findOrFail(Auth::id());
             $dompet = Dompet::where('user_id', $user->id);
 
-            $withdraw = Withdraw::create([
+            Withdraw::create([
                 'user_id' => Auth::id(),
                 'jumlah' => str_replace('.', '',$request->jumlah),
                 'konfirmasi' => false,
-            ]);
-            DompetHistory::firstOrCreate([
-                'user_id' => Auth::id(),
-                'jumlah' => str_replace('.', '',$request->jumlah),
-                'withdraw_id' => $withdraw->id,
             ]);
 
             return back()->with('withdraw', 'Withdraw sebesar [' . $request->jumlah . '] berhasil diajukan!');
