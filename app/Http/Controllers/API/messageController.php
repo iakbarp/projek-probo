@@ -188,7 +188,7 @@ class messageController extends Controller
                     ->first())->toArray();
 
                 if ($r) {
-                    $resNew[] = collect($this->imgCheck((object)$r, 'foto', 'storage/users/foto/', 1))->toArray();
+                    $resNew[] = collect($this->imgCheck((object)$r, 'foto', 'users/foto/', 1))->toArray();
                 }
                 if (count($resNew) == ($limit ? $limit : 12)) {
                     break;
@@ -242,7 +242,7 @@ class messageController extends Controller
 
         $to_read->update(['read' => '1']);
 
-        $chat = $chat ? $this->imgCheck($chat->toArray(), 'foto', 'storage/users/foto/', 1) : [];
+        $chat = $chat ? $this->imgCheck($chat->toArray(), 'foto', 'users/foto/', 1) : [];
 
         foreach ($chat as $result) {
             if ($result->id_reply) {
@@ -259,7 +259,7 @@ class messageController extends Controller
             if ($result->image) {
                 unset($result->message);
 
-                $result = $result ? $this->imgCheck($result, 'image', 'storage/chat/' . $user->id . '/', 2) : [];
+                $result = $result ? $this->imgCheck($result, 'image', 'chat/' . $user->id . '/', 2) : [];
             } else {
                 unset($result->image);
             }
@@ -291,14 +291,14 @@ class messageController extends Controller
 
                 $res[$i] = $row;
 
-                $res[$i]->{$column} = $res[$i]->{$column} && File::exists($path . $res[$i]->{$column}) ?
+                $res[$i]->{$column} = $res[$i]->{$column} && Storage::disk('public')->exists($path . $res[$i]->{$column}) ?
                     asset($path . $res[$i]->{$column}) :
                     $dummy_photo[$ch];
             }
         } elseif ($data) {
 
 
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
                 asset($path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {

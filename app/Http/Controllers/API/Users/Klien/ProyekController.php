@@ -64,7 +64,7 @@ class ProyekController extends Controller
                 $lamp = [];
                 if (is_array($dt->lampiran)) {
                     foreach ($dt->lampiran as $row) {
-                        $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
+                        $lamp[] = $this->imgCheck($row, null, 'proyek/lampiran/', 2);
                     }
                 }
                 $dt->lampiran = $lamp;
@@ -86,13 +86,13 @@ class ProyekController extends Controller
             }
 
 
-            $proyek = $proyek ? $this->imgCheck($proyek->toArray(), 'thumbnail', 'storage/proyek/thumbnail/', 1) : [];
+            $proyek = $proyek ? $this->imgCheck($proyek->toArray(), 'thumbnail', 'proyek/thumbnail/', 1) : [];
 
 
             // return response()->json($proyek);
             $bio = Bio::where('user_id', $user->id)->select(['status', 'foto'])->first();
             $bio->nama = $user->name;
-            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
+            $bio = $this->imgCheck($bio, 'foto', 'users/foto/');
 
 
             $Pengerjaan =
@@ -149,7 +149,7 @@ class ProyekController extends Controller
                         ->select('users.id', 'users.name as nama', 'bio.foto', 'bio.status')
                         ->first();
                     $pekerjas->bintang = $d->bintang;
-                    $pekerjas = $this->imgCheck($pekerjas, 'foto', 'storage/users/foto/');
+                    $pekerjas = $this->imgCheck($pekerjas, 'foto', 'users/foto/');
 
                     $ulasan_pekerja = DB::table('ulasan_pekerja')
                         ->where('user_id', $user->id)
@@ -570,20 +570,20 @@ class ProyekController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
                     asset($path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
 
 
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
                 asset($path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
 
-            $res = File::exists($path . $res) ?
+            $res = Storage::disk('public')->exists($path . $res) ?
                 asset($path . $res) : $dummy_photo[$ch];
         }
 

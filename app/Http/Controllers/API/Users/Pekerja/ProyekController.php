@@ -21,7 +21,7 @@ use App\Model\Pengerjaan;
 use App\Model\PengerjaanProgress;
 use App\Model\Pembayaran;
 use App\User;
-
+use Illuminate\Support\Facades\Storage;
 
 class ProyekController extends Controller
 {
@@ -32,7 +32,7 @@ class ProyekController extends Controller
             $user=auth('api')->user();
             $id=$user->id;
             $user=Bio::find($user->id,['status','foto']);
-            $user =  $this->imgCheck($user, 'foto', 'storage/users/foto/', 0) ;
+            $user =  $this->imgCheck($user, 'foto', 'users/foto/', 0) ;
 
 
 
@@ -99,7 +99,7 @@ class ProyekController extends Controller
 
             foreach($bid as $dt){
                 $dt->status=is_numeric($dt->tolak)?($dt->tolak?'DITOLAK':'DITERIMA'):'MENUNGGU';
-                $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 2) ;
+                $dt =  $this->imgCheck($dt, 'thumbnail', 'proyek/thumbnail/', 2) ;
 
                 $sub=SubKategori::where('id',$dt->subkategori_id)->first(['id','nama','kategori_id']);
                 $kat=null;
@@ -120,7 +120,7 @@ class ProyekController extends Controller
 
                 if ($dt->file_hasil) {
                     foreach ($dt->file_hasil as $d) {
-                        $file[] = $d ? $this->imgCheck($d, null, 'storage/proyek/hasil/', 2) : [];
+                        $file[] = $d ? $this->imgCheck($d, null, 'proyek/hasil/', 2) : [];
                     }
 
 
@@ -173,7 +173,7 @@ class ProyekController extends Controller
                         ->leftJoin('bio', 'bio.user_id', '=', 'users.id')
                         ->select('users.id', 'users.name as nama', 'bio.foto', 'bio.status')
                         ->first();
-                $owner =  $this->imgCheck($owner, 'foto', 'storage/users/foto/', 0) ;
+                $owner =  $this->imgCheck($owner, 'foto', 'users/foto/', 0) ;
 
                 if($pekerja){
                     $pekerja->id=$id;
@@ -223,7 +223,7 @@ class ProyekController extends Controller
 
             foreach($undangan as $dt){
                 $dt->status=is_numeric($dt->terima)?($dt->terima?'DITERIMA':'DITOLAK'):'MENUNGGU';
-                $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 2) ;
+                $dt =  $this->imgCheck($dt, 'thumbnail', 'proyek/thumbnail/', 2) ;
 
                 $sub=SubKategori::where('id',$dt->subkategori_id)->first(['id','nama','kategori_id']);
                 $kat=null;
@@ -467,17 +467,17 @@ class ProyekController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
                     asset($path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
                 asset($path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
-            $res = File::exists($path . $res) ?
+            $res = Storage::disk('public')->exists($path . $res) ?
                 asset($path . $res) : $dummy_photo[$ch];
         }
 

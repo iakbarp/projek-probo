@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use JWTAuth;
 
 class tabDataController extends Controller
@@ -123,7 +124,7 @@ class tabDataController extends Controller
 
                 // return $proyek;
 
-            $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
+            $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'proyek/thumbnail/', 0) : [];
             if($kat){
             $kat=Kategori::whereIn('id',json_decode($kat))->select('nama')->orderBy('nama')->get();
             }else{
@@ -181,7 +182,7 @@ class tabDataController extends Controller
                 ->get();;
 
 
-            $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'storage/layanan/thumbnail/', 0) : [];
+            $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'layanan/thumbnail/', 0) : [];
 
             if($kat){
                 $kat=Kategori::whereIn('id',json_decode($kat))->select('nama')->orderBy('nama')->get();
@@ -274,7 +275,7 @@ class tabDataController extends Controller
                 ->get();
 
 
-            $frelance = $frelance ? $this->imgCheck($frelance, 'foto', 'storage/users/foto/', 1) : [];
+            $frelance = $frelance ? $this->imgCheck($frelance, 'foto', 'users/foto/', 1) : [];
 
             $frelance=collect($frelance)->chunk(2);
             return response()->json([
@@ -392,7 +393,7 @@ class tabDataController extends Controller
         foreach ($data as $i => $row) {
             $res[$i] = $row;
 
-            $res[$i]->{$column} = $res[$i]->{$column} && File::exists($path . $res[$i]->{$column}) ?
+            $res[$i]->{$column} = $res[$i]->{$column} && Storage::disk('public')->exists($path . $res[$i]->{$column}) ?
                 asset($path . $res[$i]->{$column}) :
                 $dummy_photo[$ch];
 

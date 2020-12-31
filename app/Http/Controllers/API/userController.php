@@ -39,9 +39,9 @@ class userController extends Controller
 
             $user->makeHidden(['id', 'created_at', 'deleted_at', 'updated_at', 'role']);
 
-            $user->bio = $this->imgCheck($user->bio, 'foto', 'storage/users/foto/');
-            
-            $user->portofolio = $this->imgCheck($user->portofolio->toArray(), 'foto', 'storage/users/portofolio/', 1);
+            $user->bio = $this->imgCheck($user->bio, 'foto', 'users/foto/');
+
+            $user->portofolio = $this->imgCheck($user->portofolio->toArray(), 'foto', 'users/portofolio/', 1);
 
             $user->bio->bank = Bank::find($user->bio->bank);
             $user->bio->bank = $user->bio->bank ? $user->bio->bank->nama : null;
@@ -240,7 +240,7 @@ class userController extends Controller
                 $bio->kota_provinsi->nama_provinsi = Provinsi::find($bio->kota_provinsi->provinsi_id)->nama;
             }
             $bio->makeHidden(['id', 'user_id', 'latar_belakang', 'created_at', 'updated_at', 'summary', 'kota_id']);
-            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
+            $bio = $this->imgCheck($bio, 'foto', 'users/foto/');
             $bio->kewarganegaraan = Negara::where('nama', $bio->kewarganegaraan)->first()
                 // ->makeHidden(['created_at', 'updated_at'])
             ;
@@ -345,7 +345,7 @@ class userController extends Controller
 
 
                 Storage::disk('public')->put('users/foto/' . $imageName, $picture);
-                $new = 'storage/users/foto/' . $imageName;
+                $new = 'users/foto/' . $imageName;
 
                 $bio->update([
                     'foto' => $imageName
@@ -654,14 +654,14 @@ class userController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
                     asset($path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif ($data) {
 
 
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
                 asset($path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {

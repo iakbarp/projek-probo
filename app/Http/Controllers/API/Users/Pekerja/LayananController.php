@@ -85,7 +85,7 @@ class LayananController extends Controller
                     $dt->kategori = $kat;
                     $dt->subkategori = $sub;
                 }
-                $dt = $dt ? $this->imgCheck($dt, 'thumbnail', 'storage/layanan/thumbnail/', 2) : [];
+                $dt = $dt ? $this->imgCheck($dt, 'thumbnail', 'layanan/thumbnail/', 2) : [];
 
                 unset($dt->subkategori_id);
             }
@@ -95,7 +95,7 @@ class LayananController extends Controller
 
                 if ($dt->file_hasil) {
                     foreach ($dt->file_hasil as $d) {
-                        $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 2) : [];
+                        $file[] = $d ? $this->imgCheck($d, null, 'layanan/hasil/', 2) : [];
                     }
                 }
 
@@ -128,7 +128,7 @@ class LayananController extends Controller
                         )
                         ->first();
                 }
-                $ulasan = $this->imgCheck($ulasan, 'foto', 'storage/users/foto/');
+                $ulasan = $this->imgCheck($ulasan, 'foto', 'users/foto/');
 
                 $dt->ulasan = $ulasan;
 
@@ -175,7 +175,7 @@ class LayananController extends Controller
                 )
                 ->first();
             $bio->nama = $user->name;
-            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/');
+            $bio = $this->imgCheck($bio, 'foto', 'users/foto/');
 
             return response()->json([
                 'error' => false,
@@ -427,20 +427,20 @@ class LayananController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
                     asset($path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
 
 
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
                 asset($path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
 
-            $res = File::exists($path . $res) ?
+            $res = Storage::disk('public')->exists($path . $res) ?
                 asset($path . $res) : $dummy_photo[$ch];
         }
 
