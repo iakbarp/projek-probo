@@ -97,6 +97,22 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('/invite_private', 'publicPreviewController@invitePrivate');
         });
 
+        Route::group(['prefix' => 'dompet', ], function () {
+            Route::get('/', 'dompetController@dashboard');
+            Route::post('/check', 'dompetController@pinCheck');
+            Route::post('/pin', 'dompetController@pinChange');
+            Route::post('/withdraw', 'dompetController@widthdraw');
+            Route::get('/midtrans', [
+                'uses' => 'dompetController@viewMidtrans',
+                // 'as' => 'midtrans.get'
+            ]);
+            Route::get('midtrans', [
+                'uses' => 'dompetController@midtransView',
+                'as' => 'midtrans.api'
+            ]);
+
+
+        });
         Route::group(['prefix' => 'klien'], function () {
 
             Route::group(['prefix' => 'proyek', 'namespace' => 'Users\Klien'], function () {

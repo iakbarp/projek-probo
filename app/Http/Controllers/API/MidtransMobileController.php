@@ -19,8 +19,7 @@ use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
 use Midtrans\Transaction;
-
-class MidtransController extends Controller
+class MidtransMobileController extends Controller
 {
     public $channels;
 
@@ -157,13 +156,13 @@ class MidtransController extends Controller
                             $pembayaran = Pembayaran::firstOrCreate([
                                 'proyek_id' => $pengerjaan->proyek_id,
                                 'dp' => $data_tr['custom_field2'],
-//                                'jumlah_pembayaran' => $data_tr['gross_amount'],
+        //                                'jumlah_pembayaran' => $data_tr['gross_amount'],
                             ]);
                         } else {
                             $pembayaran = PembayaranLayanan::firstOrCreate([
                                 'pengerjaan_layanan_id' => $pengerjaan->id,
                                 'dp' => $data_tr['custom_field2'],
-//                                'jumlah_pembayaran' => $data_tr['gross_amount'],
+        //                                'jumlah_pembayaran' => $data_tr['gross_amount'],
                             ]);
                         }
                     } else {
@@ -171,13 +170,13 @@ class MidtransController extends Controller
                         if (strpos($notif->order_id, 'PRO') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-//                                'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+        //                                'jumlah_pembayaran' => $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => null,
                             ]);
                         } elseif (strpos($notif->order_id, 'SER') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
-//                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
+            //                                'jumlah_pembayaran' => $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => null,
                             ]);
                         } else {
@@ -203,7 +202,7 @@ class MidtransController extends Controller
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true,
+            //                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true,
                                 'selesai' => false,
                             ]);
                         } else {
@@ -214,7 +213,7 @@ class MidtransController extends Controller
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+            //                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                                 'selesai' => false,
                             ]);
                         }
@@ -224,26 +223,26 @@ class MidtransController extends Controller
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
-//                                    $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran :
+            //                                    $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran :
                                     $data_tr['gross_amount'] :
                                     $pengerjaan->get_project->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+            //                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                                 'selesai' => false,
                             ]);
                         } elseif (strpos($notif->order_id, 'SER') !== false) {
                             $pembayaran->update([
                                 'dp' => $data_tr['custom_field2'],
                                 'jumlah_pembayaran' => $data_tr['custom_field2'] == 1 ?
-//                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
+            //                                    $pengerjaan->get_pembayaran->jumlah_pembayaran :
                                     $data_tr['gross_amount'] :
                                     $pengerjaan->get_pembayaran->jumlah_pembayaran + $sisa_pembayaran,
                                 'bukti_pembayaran' => $data_tr['custom_field2'] == 1 ?
                                     'DP Rp'.number_format($data_tr['gross_amount'],2,',','.').' - '.now()->format('j F Y') :
                                     'FP - '.now()->format('j F Y'),
-//                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
+            //                                'selesai' => $data_tr['custom_field2'] == 1 ? false : true
                                 'selesai' => false,
                             ]);
                         } else {

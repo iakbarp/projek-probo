@@ -28,7 +28,7 @@ class messageController extends Controller
             return response()->json([
                 'error' => false,
                 'data' => [
-                    'test' => Cache::has('12_to_1'),
+                    // 'test' => Cache::has('12_to_1'),
                     'user' => $this->getUser($user, $r),
                     'chat' => ($r->chat_id ? $this->getChat($user, $r) : []),
                     'typing' => Cache::has('chat_' . $r->chat_id . '_to_' . $user->id),
