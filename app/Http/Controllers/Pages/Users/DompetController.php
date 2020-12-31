@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages\Users;
 use App\Http\Controllers\Controller;
 use App\Model\Bahasa;
 use App\Model\Dompet;
+use App\Model\DompetHistory;
 use App\Model\Kategori;
 use App\Model\Portofolio;
 use App\Model\Project;
@@ -90,10 +91,15 @@ class DompetController extends Controller
             $user = User::findOrFail(Auth::id());
             $dompet = Dompet::where('user_id', $user->id);
 
-            Withdraw::create([
+            $withdraw = Withdraw::create([
                 'user_id' => Auth::id(),
                 'jumlah' => str_replace('.', '',$request->jumlah),
                 'konfirmasi' => false,
+            ]);
+            DompetHistory::firstOrCreate([
+                'user_id' => Auth::id(),
+                'jumlah' => str_replace('.', '',$request->jumlah),
+                'withdraw_id' => $withdraw->id,
             ]);
 
             return back()->with('withdraw', 'Withdraw sebesar [' . $request->jumlah . '] berhasil diajukan!');

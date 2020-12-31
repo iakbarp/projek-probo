@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\Users\AcceptBidMail;
 use App\Mail\Users\PembayaranProyekMail;
 use App\Model\Bid;
+use App\Model\DompetHistory;
 use App\Model\Kategori;
 use App\Model\Pembayaran;
 use App\Model\Pengerjaan;
@@ -287,6 +288,11 @@ class ProyekController extends Controller
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
+                DompetHistory::firstOrCreate([
+                    'user_id' => Auth::id(),
+                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'pembayaran_id' => $pembayaran->id,
+                ]);
             } else {
                 $pembayaran = Pembayaran::where('proyek_id', $pengerjaan->proyek_id)->first();
                 $sisa_pembayaran = str_replace('.', '', $request->jumlah_pembayaran);
@@ -296,6 +302,11 @@ class ProyekController extends Controller
                     'bukti_pembayaran' => 'bukti.jpg',
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
+                ]);
+                DompetHistory::firstOrCreate([
+                    'user_id' => Auth::id(),
+                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'pembayaran_id' => $pembayaran->id,
                 ]);
             }
 

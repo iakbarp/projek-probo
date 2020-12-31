@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\Users\PembayaranProyekMail;
+use App\Model\DompetHistory;
 use App\Model\Pembayaran;
 use App\Model\PembayaranLayanan;
 use App\Model\Pengerjaan;
@@ -55,6 +56,12 @@ class MidtransController extends Controller
             $topup = Topup::firstOrCreate([
                 'user_id' => $request->user_id,
                 'jumlah' => ceil(str_replace('.','',$amount)),
+            ]);
+
+            DompetHistory::firstOrCreate([
+                'user_id' => $request->user_id,
+                'jumlah' => ceil(str_replace('.','',$amount)),
+                'topup_id' => $topup->id,
             ]);
             $name = 'TOPUP UNDAGI: Rp'.number_format($topup->jumlah,2,',','.');
         }

@@ -260,7 +260,7 @@
                                             <tr>
                                                 <td style="vertical-align: middle" align="center"><a href="{{route('detail.layanan', ['username' =>
                                                     $row->get_user->username, 'judul' => $row->permalink])}}">
-                                                        <img class="img-responsive float-left mr-2" width="450"
+                                                        <img class="img-responsive float-left mr-2" width="160"
                                                              alt="Thumbnail" src="{{$row->thumbnail != "" ?
                                                              asset('storage/layanan/thumbnail/'.$row->thumbnail)
                                                              : asset('images/slider/hello.jpg')}}"></a>
@@ -419,7 +419,7 @@
                                                                 style="border: 1px solid #ccc">BATAL
                                                         </button>
                                                         <button class="btn2 btn-link btn-sm pull-right"
-                                                                style="margin-right: .5em">
+                                                                style="margin-right: .5em; background-color: #247bff">
                                                             <b style="color: white">SIMPAN</b>
                                                         </button>
                                                     </div>
