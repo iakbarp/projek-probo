@@ -341,7 +341,7 @@ class publicPreviewController extends Controller
                     unset($dt->subkategori_id,
                     $dt->subkategori_nama,
                     $dt->kategori_id,
-                    $dt->kategori_nama,);
+                    $dt->kategori_nama);
                 }
             }
 
@@ -452,7 +452,7 @@ class publicPreviewController extends Controller
                 unset($proyek->subkategori_id,
                 $proyek->subkategori_nama,
                 $proyek->kategori_id,
-                $proyek->kategori_nama,);
+                $proyek->kategori_nama);
             }
 
 

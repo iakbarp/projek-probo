@@ -254,7 +254,7 @@ class messageController extends Controller
             }
             unset($result->id_reply,
             $result->name_reply,
-            $result->message_reply,);
+            $result->message_reply);
 
             if ($result->image) {
                 unset($result->message);

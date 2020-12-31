@@ -82,7 +82,7 @@ class ProyekController extends Controller
                 unset($dt->subkategori_id,
                 $dt->subkategori_nama,
                 $dt->kategori_id,
-                $dt->kategori_nama,);
+                $dt->kategori_nama);
             }
 
 
