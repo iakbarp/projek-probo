@@ -428,20 +428,20 @@ class LayananController extends Controller
                 $res[$i] = $row;
 
                 $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
-                    asset($path . $res[$i][$column]) :
+                    asset('storage/'.$path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
 
 
             $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
-                asset($path . $res->{$column}) :
+                asset('storage/'.$path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
 
             $res = Storage::disk('public')->exists($path . $res) ?
-                asset($path . $res) : $dummy_photo[$ch];
+                asset('storage/'.$path . $res) : $dummy_photo[$ch];
         }
 
         return $res;

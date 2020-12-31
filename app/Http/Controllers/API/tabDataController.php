@@ -394,7 +394,7 @@ class tabDataController extends Controller
             $res[$i] = $row;
 
             $res[$i]->{$column} = $res[$i]->{$column} && Storage::disk('public')->exists($path . $res[$i]->{$column}) ?
-                asset($path . $res[$i]->{$column}) :
+                asset('storage/'.$path . $res[$i]->{$column}) :
                 $dummy_photo[$ch];
 
             if ($desk) {
