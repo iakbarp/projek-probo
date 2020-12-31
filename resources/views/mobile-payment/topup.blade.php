@@ -102,7 +102,7 @@
             }
         }
 
-        $("#form-topup").find('[type]');
+        $("#form-topup").submit();
     </script>
 
 </html>
