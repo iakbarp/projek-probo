@@ -72,12 +72,12 @@ class publicPreviewController extends Controller
                     $joins->on('sc.user_id', '=', DB::raw($user->id));
                 })
                 ->select(
-                    "ulasan_service.id",
+                    "ulasan_service.id"
 
                 )
                 ->get()->count();
                 $proyek_available=$this->getProyekAvail($user);
-                
+
 
                 return response()->json([
                 'error' => false,
@@ -134,7 +134,7 @@ class publicPreviewController extends Controller
                     "b.foto",
                     "ulasan_klien.deskripsi",
                     DB::raw("format(ulasan_klien.bintang,1) as bintang"),
-                    "ulasan_klien.created_at",
+                    "ulasan_klien.created_at"
 
                 )
                 ->get();
@@ -160,11 +160,11 @@ class publicPreviewController extends Controller
 
                     DB::raw("format(ulasan_pekerja.bintang,1) as bintang"),
 
-                    "ulasan_pekerja.created_at",
+                    "ulasan_pekerja.created_at"
 
                 )
                 ->get();
-                
+
             $ulasan_pekerja = $this->imgCheck($ulasan_pekerja->toArray(), 'foto', 'storage/users/foto/');
             $ulasan_pekerja = collect($ulasan_pekerja);
             $ulasan_service = UlasanService::query()
@@ -191,7 +191,7 @@ class publicPreviewController extends Controller
 
                     DB::raw("format(ulasan_service.bintang,1) as bintang"),
 
-                    "ulasan_service.created_at",
+                    "ulasan_service.created_at"
                 )
                 ->get();
             $ulasan_service = $this->imgCheck($ulasan_service->toArray(), 'foto', 'storage/users/foto/');
@@ -316,7 +316,7 @@ class publicPreviewController extends Controller
                     DB::raw("if(pribadi=1,'privat','publik') as`jenis`"),
                     DB::raw("(SELECT count(id) FROM bid where bid.proyek_id=project.id) total_bid"),
                     "thumbnail",
-                    "lampiran",
+                    "lampiran"
 
                 )
                 ->groupBy('project.id', 'bid.proyek_id')
@@ -438,7 +438,7 @@ class publicPreviewController extends Controller
                 $proyek = $this->get_kategori_img_obj($proyek, 'storage/proyek/thumbnail/');
                 // $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
 
-                
+
 
 
                 $lamp = [];
@@ -455,7 +455,7 @@ class publicPreviewController extends Controller
                 $proyek->kategori_nama,);
             }
 
-            
+
 
             $bid = Bid::where('proyek_id', $proyek->id)
                 ->join('users as u', function ($joins) {
@@ -484,7 +484,7 @@ class publicPreviewController extends Controller
                     'negowaktu',
                     'task',
                     'bid.tolak',
-                    DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang"),
+                    DB::raw("format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang")
                 )
                 ->groupBy('bid.id')
                 ->get()->toArray();
@@ -569,7 +569,7 @@ class publicPreviewController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'judul' => 'required|string|max:100',
-                
+
                     'waktu_pengerjaan' => 'required|integer',
                     'harga' => 'required|integer',
                     'deskripsi' => 'required|string|max:250',
@@ -644,14 +644,14 @@ class publicPreviewController extends Controller
                 return response()->json([
                     'error' => true,
 
-                 
+
                     'message' =>  'Judul telah digunakan!'
 
-                  
+
                 ], 400);
-                
-            }            
-        } catch (\Exception $exception) {           
+
+            }
+        } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
 
@@ -689,9 +689,9 @@ class publicPreviewController extends Controller
                 $its_me = false;
                 $user = User::findOrFail($layanan->user_id);
             }
-            
+
             $bio = $this->getBio($user);
-        
+
 
 
             $layanan = $this->get_kategori_img_obj($layanan, 'storage/layanan/thumbnail/');
@@ -724,7 +724,7 @@ class publicPreviewController extends Controller
 
                 }
             }
-            
+
             $layanan->hasil=$img;
 
             return response()->json([
@@ -755,7 +755,7 @@ class publicPreviewController extends Controller
     {
         try {
             $user = auth('api')->user();
-            
+
             $layanan = Services::query()
             ->leftJoin('pengerjaan_layanan as pl',function($rel)use($user){
                 $rel->on('pl.service_id','=','service.id');
@@ -939,7 +939,7 @@ class publicPreviewController extends Controller
     {
         DB::beginTransaction();
 
-        
+
         try {
             $user=User::findOrFail($request->user_id);
             $proyek=Project::findOrFail($request->proyek_id);
@@ -988,7 +988,7 @@ class publicPreviewController extends Controller
 
             ], 400);
         }
-        
+
     }
 
     private function get_kategori_img($res, $loc)

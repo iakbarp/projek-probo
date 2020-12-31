@@ -103,7 +103,7 @@ class ProyekController extends Controller
                 $d = DB::table('pengerjaan as a')
                     ->select(
                         'a.*',
-                        DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where a.user_id=b.user_id) as bintang'),
+                        DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where a.user_id=b.user_id) as bintang')
 
                     )
                     ->where('proyek_id', $dt['id'])

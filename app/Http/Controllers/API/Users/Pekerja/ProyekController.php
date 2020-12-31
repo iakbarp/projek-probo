@@ -33,8 +33,8 @@ class ProyekController extends Controller
             $id=$user->id;
             $user=Bio::find($user->id,['status','foto']);
             $user =  $this->imgCheck($user, 'foto', 'storage/users/foto/', 0) ;
-            
-            
+
+
 
             $bid=Bid::query()
             ->join('project as p','bid.proyek_id','=','p.id')
@@ -49,7 +49,7 @@ class ProyekController extends Controller
                 DB::raw("(select ifnull(count(b.id),0) from bid as b where b.proyek_id=bid.proyek_id) as jumlah_bid"),
                 'p.waktu_pengerjaan',
                 'bid.tolak',
-                DB::raw('if(bid.tolak =0,false,true) as deleteable'),
+                DB::raw('if(bid.tolak =0,false,true) as deleteable')
 
 
             )
@@ -60,7 +60,7 @@ class ProyekController extends Controller
             })
             ->get();
 
-         
+
 
             $undangan=Undangan::query()
             ->join('project as p','undangan.proyek_id','=','p.id')
@@ -75,7 +75,7 @@ class ProyekController extends Controller
                 DB::raw("(select ifnull(count(b.id),0) from bid as b where b.proyek_id=undangan.proyek_id) as jumlah_bid"),
                 'p.waktu_pengerjaan',
                 'undangan.terima',
-                DB::raw('if(undangan.terima = 1,false,true) as approveable'),
+                DB::raw('if(undangan.terima = 1,false,true) as approveable')
 
             )
             ->when($search,function($q)use($search){
@@ -96,7 +96,7 @@ class ProyekController extends Controller
             })
             ->get([DB::raw('p.user_id as user_proyek'),'pengerjaan.id','proyek_id','selesai','file_hasil','tautan','pengerjaan.created_at','pengerjaan.updated_at']);
 
-           
+
             foreach($bid as $dt){
                 $dt->status=is_numeric($dt->tolak)?($dt->tolak?'DITOLAK':'DITERIMA'):'MENUNGGU';
                 $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 2) ;
@@ -174,7 +174,7 @@ class ProyekController extends Controller
                         ->select('users.id', 'users.name as nama', 'bio.foto', 'bio.status')
                         ->first();
                 $owner =  $this->imgCheck($owner, 'foto', 'storage/users/foto/', 0) ;
-                
+
                 if($pekerja){
                     $pekerja->id=$id;
                     $pekerja->nama=$u->name;
@@ -193,21 +193,21 @@ class ProyekController extends Controller
                     $ulasan_pekerja->foto=$owner->foto;
                     $ulasan_pekerja->nama=$owner->nama;
                     $ulasan_pekerja->id=$owner->id;
-                
+
 
                 $kliens = DB::table('ulasan_klien')
                     ->where('user_id', $id)
                     ->where('proyek_id', $dt->proyek->id)
                     ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                     ->orderBy('id', 'desc')->first();
-             
+
                 if(!$kliens){
                     $kliens=(object)[];
                 }
                     $kliens->foto=$pekerja->foto;
                     $kliens->nama=$pekerja->nama;
                     $kliens->id=$pekerja->id;
-                
+
 
 
                 $ulasan=(Object)[];
@@ -224,7 +224,7 @@ class ProyekController extends Controller
             foreach($undangan as $dt){
                 $dt->status=is_numeric($dt->terima)?($dt->terima?'DITERIMA':'DITOLAK'):'MENUNGGU';
                 $dt =  $this->imgCheck($dt, 'thumbnail', 'storage/proyek/thumbnail/', 2) ;
-    
+
                 $sub=SubKategori::where('id',$dt->subkategori_id)->first(['id','nama','kategori_id']);
                 $kat=null;
                 if($sub){
@@ -235,7 +235,7 @@ class ProyekController extends Controller
                 // unset($dt->terima);
                 unset($dt->subkategori_id);
                 unset($dt->subkategori->kategori_id);
-    
+
                 }
 
 
@@ -247,11 +247,11 @@ class ProyekController extends Controller
                     'bid'=>$bid,
                     'undangan'=>$undangan,
                     'pengerjaan'=>$pengerjaan,
-                    
+
                     'bid_count'=>collect($bid)->count(),
                     'undangan_count'=>collect($undangan)->count(),
                     'pengerjaan_count'=>collect($pengerjaan)->count(),
-                    
+
                 ]
 
             ]);
@@ -297,12 +297,12 @@ class ProyekController extends Controller
             return response()->json([
                 'error' => false,
                 'data'=>[
-                    
+
                     'message' => 'Berhasil dihapus!',
                 ]
             ], 201);
 
-            
+
         } catch (\Exception $exception) {
             DB::rollback();
             return response()->json([
@@ -348,12 +348,12 @@ class ProyekController extends Controller
             return response()->json([
                 'error' => false,
                 'data'=>[
-                    
+
                     'message' => 'Berhasil dikonfirmasi!',
                 ]
             ], 201);
 
-            
+
         } catch (\Exception $exception) {
             DB::rollback();
             return response()->json([
@@ -369,7 +369,7 @@ class ProyekController extends Controller
     {
         $id=$request->id;
         $q=$request->q;
-      
+
         $user=auth('api')->user();
         try{
             $cek=pengerjaan::query()
@@ -381,18 +381,18 @@ class ProyekController extends Controller
             ->where('pengerjaan_id',$id)
             ->get();
 
-        
+
 
             return response()->json([
                 'error' => false,
                 'data'=>[
-                    
+
                     'list'=>$progress,
                     'count'=>collect($progress)->count()
                 ]
             ], 201);
 
-            
+
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
@@ -431,12 +431,12 @@ class ProyekController extends Controller
             return response()->json([
                 'error' => false,
                 'data'=>[
-                    
+
                     'message' => 'Berhasil ditambahkan!',
                 ]
             ], 201);
 
-            
+
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,

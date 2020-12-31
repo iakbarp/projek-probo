@@ -124,7 +124,7 @@ class LayananController extends Controller
                             DB::raw('name as nama'),
                             'foto',
                             DB::raw('null as bintang'),
-                            DB::raw('null as deskripsi'),
+                            DB::raw('null as deskripsi')
                         )
                         ->first();
                 }

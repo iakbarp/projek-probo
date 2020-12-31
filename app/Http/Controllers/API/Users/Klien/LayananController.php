@@ -46,7 +46,7 @@ class LayananController extends Controller
                     DB::raw('(pengerjaan_layanan.file_hasil is not null or pengerjaan_layanan.tautan is not null) and pengerjaan_layanan.selesai=0 as ratingable'),
                     's.harga',
                     DB::raw("((pengerjaan_layanan.selesai=1 and pl.bukti_pembayaran is not null) or pl.id is null or pl.bukti_pembayaran is null) deleteable"),
-                    DB::raw("ifnull(pl.bukti_pembayaran LIKE '%FP%',false) as isPaidOff"),
+                    DB::raw("ifnull(pl.bukti_pembayaran LIKE '%FP%',false) as isPaidOff")
 
                 )
                 ->orderBy('pengerjaan_layanan.id', 'desc')
@@ -238,7 +238,7 @@ class LayananController extends Controller
                 $q->whereNotNull('pengerjaan_layanan.file_hasil');
                 $q->orWhereNotNull('pengerjaan_layanan.tautan');
             })
-            ->select('pengerjaan_layanan.*',)
+            ->select('pengerjaan_layanan.*')
             ->first();
 
         $validator = Validator::make($request->all(), [
