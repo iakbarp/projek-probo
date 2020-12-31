@@ -230,7 +230,7 @@ class dompetController extends Controller
         }
     }
 
-    public function viewMidtrans(Request $request)
+    public function viewDompet(Request $request)
     {
         $id=auth('api')->user()->id;
 

@@ -102,14 +102,11 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('/check', 'dompetController@pinCheck');
             Route::post('/pin', 'dompetController@pinChange');
             Route::post('/withdraw', 'dompetController@widthdraw');
-            Route::get('/midtrans', [
-                'uses' => 'dompetController@viewMidtrans',
+            Route::get('/midtrans', 
+            'dompetController@viewDompet',
                 // 'as' => 'midtrans.get'
-            ]);
-            Route::get('midtrans', [
-                'uses' => 'dompetController@midtransView',
-                'as' => 'midtrans.api'
-            ]);
+            );
+     
 
 
         });
