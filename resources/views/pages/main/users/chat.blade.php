@@ -225,6 +225,20 @@
             width: 33px;
         }
 
+        .upload_file_btn {
+            background: white none repeat scroll 0 0;
+            border:none;
+            border-radius: 50%;
+            color: black;
+            cursor: pointer;
+            font-size: 15px;
+            height: 33px;
+
+            right: 0;
+            top: 11px;
+            width: 33px;
+        }
+
         .messaging {
             padding: 0 0 50px 0;
         }
@@ -313,12 +327,14 @@
                         <div class="sent_msg">
                             <p>Test which is a new approach to have all
                                 solutions</p>
-                            <span class="time_date"> 11:01 AM    |    June 9</span> </div>
+                            <span class="time_date"> 11:01 AM    |    June 9</span>
+                        </div>
                     </div>
                 </div>
                 <div class="type_msg">
                     <div class="input_msg_write">
                         <input type="text" class="write_msg" placeholder="Type a message" />
+                        <button class="upload_file_btn"><input type="file"></button>
                         <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                     </div>
                 </div>

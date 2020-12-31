@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pages\Users\Klien;
 
 use App\Http\Controllers\Controller;
 use App\Mail\Users\PembayaranLayananMail;
+use App\Model\DompetHistory;
 use App\Model\PembayaranLayanan;
 use App\Model\PengerjaanLayanan;
 use App\Model\Saldo;
@@ -74,6 +75,11 @@ class LayananController extends Controller
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
+                DompetHistory::firstOrCreate([
+                    'user_id' => Auth::id(),
+                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'pembayaran_layanan_id' => $pembayaran->id,
+                ]);
             } else {
                 $pembayaran = PembayaranLayanan::where('pengerjaan_layanan_id', $pesanan->id)->first();
                 $sisa_pembayaran = str_replace('.', '', $request->jumlah_pembayaran);
@@ -83,6 +89,11 @@ class LayananController extends Controller
                     'bukti_pembayaran' => 'bukti.jpg',
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
+                ]);
+                DompetHistory::firstOrCreate([
+                    'user_id' => Auth::id(),
+                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'pembayaran_layanan_id' => $pembayaran->id,
                 ]);
             }
 

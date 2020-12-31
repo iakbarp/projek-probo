@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages\Users;
 use App\Http\Controllers\Controller;
 use App\Model\Bahasa;
 use App\Model\Dompet;
+use App\Model\DompetHistory;
 use App\Model\Kategori;
 use App\Model\Portofolio;
 use App\Model\Project;
@@ -61,10 +62,11 @@ class DompetController extends Controller
         $dompet = Dompet::where('user_id', $user->id)->orderByDesc('id')->get();
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
         $topup = Topup::where('id', $user->id)->orderByDesc('id')->get();
+        $data = DompetHistory::where('user_id', $user->id)->orderByDesc('created_at')->get();
 
         return view('pages.main.users.dompet', compact('user', 'total_user', 'bahasa', 'skill',
             'proyek', 'layanan', 'portofolio', 'ulasan_klien', 'rating_klien', 'ulasan_pekerja', 'rating_pekerja',
-            'kategori', 'auth_proyek','dompet','saldo','topup'));
+            'kategori', 'auth_proyek','dompet','saldo','topup', 'data'));
     }
 
     public function updatePengaturan(Request $request)
