@@ -496,6 +496,14 @@
                                                                 <span style="color: white">{{$bid}}&nbsp;<i
                                                                         class="fa fa-paper-plane"></i> </span>
                                                             </a>
+                                                            @else
+                                                            <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                               title="Lihat Bidder"
+                                                               style="text-transform: none;align-content: center;background: #2879fe"
+                                                               href="javascript:void(0)" disabled>
+                                                            <span style="color: white">0 bid<i
+                                                                    class="fa fa-paper-plane"></i> </span>
+                                                            </a>
                                                         @endif
                                                     @endif
                                                 </td>
@@ -972,7 +980,7 @@
                                                         <i class="fa fa-edit" style="margin-right: 0"></i>
                                                     </button>
                                                     <hr style="margin: .5em 0">
-                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip"
+                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip" href="{{route('download.contract',['id'=> $row->get_project->id])}}"
                                                             title="Surat Kontrak" onclick="">
                                                         <i class="fa fa-file" style="margin-right: 0"></i>
                                                     </button>

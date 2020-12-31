@@ -45,7 +45,7 @@ class ProyekController extends Controller
         $undangan->update(['terima' => true]);
 
         if ($undangan->get_project->pribadi == true) {
-            Pengerjaan::create([
+            Bid::create([
                 'user_id' => $undangan->user_id,
                 'proyek_id' => $undangan->proyek_id,
                 'negoharga' => $undangan->get_project->harga,
