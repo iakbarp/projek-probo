@@ -229,6 +229,11 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'klien.data-ulasan.proyek'
                 ]);
 
+                Route::get('download/contract/{id}',[
+                    'uses' => 'ProyekController@download_contract',
+                    'as' => 'download.contract'
+                ]);
+
             });
 
             Route::group(['prefix' => 'layanan'], function () {

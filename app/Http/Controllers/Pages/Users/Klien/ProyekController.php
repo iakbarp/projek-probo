@@ -16,6 +16,7 @@ use App\Model\ReviewWorker;
 use App\Model\Saldo;
 use App\Support\Role;
 use App\User;
+use Barryvdh\DomPDF\Facade as PDFDOM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -43,7 +44,7 @@ class ProyekController extends Controller
         $req_judul = $request->judul;
         $saldo = Saldo::where('id', $user->id)->orderByDesc('id')->get();
 //        $progress = PengerjaanProgress::where('user_id', $pengerjaan->pluck ('id'))->get();
-        $progress = PengerjaanProgress::where('user_id', $user->id)->get();
+        $progress = PengerjaanProgress::whereIn('proyek_id', $proyek->pluck('id'))->orderByDesc('id')->get();
 
         return view('pages.main.users.klien.proyek', compact('user', 'kategori', 'proyek', 'pengerjaan',
             'req_id', 'req_invoice', 'req_url', 'req_data_url', 'req_harga', 'req_judul', 'saldo', 'progress'));
@@ -60,7 +61,8 @@ class ProyekController extends Controller
             if ($request->hasFile('thumbnail')) {
                 $this->validate($request, ['thumbnail' => 'image|mimes:jpg,jpeg,gif,png|max:2048']);
                 $thumbnail = $request->file('thumbnail')->getClientOriginalName();
-                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
+//                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
+                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', $thumbnail);
             } else {
                 $thumbnail = null;
             }
@@ -133,7 +135,7 @@ class ProyekController extends Controller
                 'waktu_pengerjaan' => $request->waktu_pengerjaan,
                 'harga' => str_replace('.', '', $request->harga),
                 'thumbnail' => $thumbnail,
-                'pribadi' => false,
+                'pribadi' => $request->pribadi,
             ]);
 
         } else {
@@ -345,5 +347,15 @@ class ProyekController extends Controller
     public function dataUlasanProyek(Request $request)
     {
         return ReviewWorker::where('pengerjaan_id', $request->id)->where('user_id', Auth::id())->first();
+    }
+    public function download_contract($id)
+    {
+        $data = Pengerjaan::query()->find($id);
+        $pdf = PDFDOM::loadView('export.surat-kontrak',[
+            'data' => $data
+        ])
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('Surat Perjanjian.pdf');
     }
 }
