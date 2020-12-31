@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
@@ -59,7 +60,7 @@ class LayananController extends Controller
 
                 if ($dt->file_hasil) {
                     foreach ($dt->file_hasil as $d) {
-                        $file[] = $d ? $this->imgCheck($d, null, 'storage/layanan/hasil/', 0) : null;
+                        $file[] = $d ? $this->imgCheck($d, null, 'layanan/hasil/', 0) : null;
                     }
                 }
                 $dt->file_hasil = $file;
@@ -115,7 +116,7 @@ class LayananController extends Controller
                         $layanan->kategori = $kat;
                         $layanan->subkategori = $sub;
                     }
-                    $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'storage/layanan/thumbnail/', 2) : null;
+                    $layanan = $layanan ? $this->imgCheck($layanan, 'thumbnail', 'layanan/thumbnail/', 2) : null;
 
                     unset($layanan->subkategori_id);
                 }
@@ -128,7 +129,7 @@ class LayananController extends Controller
                     ->first(['u.id', DB::raw('u.name as nama'), 'foto', 'summary',
                     DB::raw('format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1) as bintang')]);
                 if ($dt->pekerja) {
-                    $dt->pekerja = $this->imgCheck($dt->pekerja, 'foto', 'storage/users/foto');
+                    $dt->pekerja = $this->imgCheck($dt->pekerja, 'foto', 'users/foto');
                 }
 
                 $dt->ulasan = User::query()
@@ -149,7 +150,7 @@ class LayananController extends Controller
                     ->first();
 
                 if ($dt->ulasan) {
-                    $dt->ulasan = $this->imgCheck($dt->ulasan, 'foto', 'storage/users/foto');
+                    $dt->ulasan = $this->imgCheck($dt->ulasan, 'foto', 'users/foto');
                 }
 
                 unset($dt->user_id, $dt->user_pekerja, $dt->selesai,$dt->harga);
@@ -158,7 +159,7 @@ class LayananController extends Controller
             $bio = Bio::where('user_id', $user->id)->first(['status', 'foto']);
             $bio->id = $user->id;
             $bio->nama = $user->name;
-            $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto');
+            $bio = $this->imgCheck($bio, 'foto', 'users/foto');
 
             return response()->json([
                 'error' => false,
@@ -326,21 +327,21 @@ class LayananController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
-                    asset($path . $res[$i][$column]) :
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
+                    asset('storage/'.$path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
 
 
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
-                asset($path . $res->{$column}) :
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
+                asset('storage/'.$path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
 
-            $res = File::exists($path . $res) ?
-                asset($path . $res) : $dummy_photo[$ch];
+            $res = Storage::disk('public')->exists($path . $res) ?
+                asset('storage/'.$path . $res) : $dummy_photo[$ch];
         }
 
         return $res;

@@ -12,6 +12,7 @@ use App\Model\Project;
 use App\Model\Pengerjaan;
 use App\User;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -28,9 +29,9 @@ class ProyekPaymentController extends Controller
 
             return response()->json([
                 'error' => true,
-           
+
                     'message' =>'Harap memasukkan [proyek_id] dengan benar...'
-                
+
             ], 400);
         }
 
@@ -49,20 +50,20 @@ class ProyekPaymentController extends Controller
             if(is_numeric(strpos($pembayaran->bukti_pembayaran,'FP'))){
                 return response()->json([
                     'error' => true,
-            
+
                         'message' =>'Proyek ['.$proyek->judul.'] sudah lunas!',
-                    
+
                 ], 400);
             }
         }
-        
-        
+
+
         $user->nama=$u->name;
         $user->id=$u->id;
 
         $bill=$proyek->harga-($is_dp?$pembayaran->jumlah_pembayaran:0);
 
-        $user = $this->imgCheck($user, 'foto', 'storage/users/foto/');
+        $user = $this->imgCheck($user, 'foto', 'users/foto/');
 
         $saldo=Saldo::where('id',$user->id)->firstOrFail();
             return response()->json([
@@ -77,7 +78,7 @@ class ProyekPaymentController extends Controller
             ]);
 
         } catch (\Exception $exception) {
-        
+
             return response()->json([
                 'error' => true,
 
@@ -100,9 +101,9 @@ class ProyekPaymentController extends Controller
 
             return response()->json([
                 'error' => true,
-           
+
                     'message' =>'Harap memasukkan [proyek_id] dengan benar...'
-                
+
             ], 400);
         }
 
@@ -140,13 +141,13 @@ class ProyekPaymentController extends Controller
                 'error' => false,
                 'data' => [
                    'message'=>($proyek->harga<=$bayar?'Pelunasan':'Pembayaran').' proyek ['.$proyek->judul.'] berhasil',
-                 
-          
+
+
                    ]
             ]);
 
         } catch (\Exception $exception) {
-        
+
             return response()->json([
                 'error' => true,
 
@@ -176,18 +177,18 @@ class ProyekPaymentController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
-                    asset($path . $res[$i][$column]) :
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
+                    asset('storage/'.$path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
-                asset($path . $res->{$column}) :
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
+                asset('storage/'.$path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
-            $res = File::exists($path . $res) ?
-                asset($path . $res) : $dummy_photo[$ch];
+            $res = Storage::disk('public')->exists($path . $res) ?
+                asset('storage/'.$path . $res) : $dummy_photo[$ch];
         }
 
         return $res ? $res : [];

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Cache;
-
+use Illuminate\Support\Facades\Storage;
 
 class dompetController extends Controller
 {
@@ -23,7 +23,7 @@ class dompetController extends Controller
         try {
             $u = auth('api')->user();
             $user = Bio::where('user_id', $u->id)->first(['foto', 'status', 'summary','bank','an','rekening']);
-            $user = $this->imgCheck($user, 'foto', 'storage/users/foto/');
+            $user = $this->imgCheck($user, 'foto', 'users/foto/');
             $user->nama = $u->name;
             $user->bank=Bank::find($user->bank,['id','nama']);
 
@@ -159,7 +159,7 @@ class dompetController extends Controller
 
             $u = auth('api')->user();
             $user = Bio::where('user_id', $u->id)->first(['foto', 'status', 'summary','bank','an','rekening']);
-            $user = $this->imgCheck($user, 'foto', 'storage/users/foto/');
+            $user = $this->imgCheck($user, 'foto', 'users/foto/');
             $user->nama = $u->name;
             $user->bank=Bank::find($user->bank,['id','nama']);
 
@@ -257,21 +257,21 @@ class dompetController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
-                    asset($path . $res[$i][$column]) :
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
+                    asset('storage/'.$path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
 
 
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
-                asset($path . $res->{$column}) :
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
+                asset('storage/'.$path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
 
-            $res = File::exists($path . $res) ?
-                asset($path . $res) : $dummy_photo[$ch];
+            $res = Storage::disk('public')->exists($path . $res) ?
+                asset('storage/'.$path . $res) : $dummy_photo[$ch];
         }
 
         return $res;

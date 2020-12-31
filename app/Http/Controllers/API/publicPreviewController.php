@@ -22,6 +22,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class publicPreviewController extends Controller
@@ -139,7 +140,7 @@ class publicPreviewController extends Controller
                 )
                 ->get();
 
-            $ulasan_klien = $this->imgCheck($ulasan_klien->toArray(), 'foto', 'storage/users/foto/');
+            $ulasan_klien = $this->imgCheck($ulasan_klien->toArray(), 'foto', 'users/foto/');
             $ulasan_klien = collect($ulasan_klien);
 
             $ulasan_pekerja = ReviewWorker::whereHas('get_pengerjaan', function ($q) use ($user) {
@@ -165,7 +166,7 @@ class publicPreviewController extends Controller
                 )
                 ->get();
 
-            $ulasan_pekerja = $this->imgCheck($ulasan_pekerja->toArray(), 'foto', 'storage/users/foto/');
+            $ulasan_pekerja = $this->imgCheck($ulasan_pekerja->toArray(), 'foto', 'users/foto/');
             $ulasan_pekerja = collect($ulasan_pekerja);
             $ulasan_service = UlasanService::query()
                 ->leftJoin('users as u', function ($joins) {
@@ -194,7 +195,7 @@ class publicPreviewController extends Controller
                     "ulasan_service.created_at"
                 )
                 ->get();
-            $ulasan_service = $this->imgCheck($ulasan_service->toArray(), 'foto', 'storage/users/foto/');
+            $ulasan_service = $this->imgCheck($ulasan_service->toArray(), 'foto', 'users/foto/');
             $ulasan_service = collect($ulasan_service);
             // dd($ulasan_service);
 
@@ -247,9 +248,9 @@ class publicPreviewController extends Controller
                 'tahun',
                 'desc'
             )->get()->makeHidden(['user_id']);
-            // $port=$this->imgCheck($port->toArray(), 'foto', 'storage/users/portfolio/', 1);
+            // $port=$this->imgCheck($port->toArray(), 'foto', 'users/portfolio/', 1);
 
-            $port = $this->imgCheck($port->toArray(), 'foto', 'storage/users/portofolio/');
+            $port = $this->imgCheck($port->toArray(), 'foto', 'users/portofolio/');
 
 
 
@@ -326,14 +327,14 @@ class publicPreviewController extends Controller
 
 
             if ($proyek) {
-                $proyek = $this->get_kategori_img($proyek, 'storage/proyek/thumbnail/');
+                $proyek = $this->get_kategori_img($proyek, 'proyek/thumbnail/');
 
                 foreach ($proyek as $dt) {
                     $lamp = [];
 
                     if ($dt->lampiran) {
                         foreach ($dt->lampiran as $row) {
-                            $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
+                            $lamp[] = $this->imgCheck($row, null, 'proyek/lampiran/', 2);
                         }
                     }
                     $dt->lampiran = $lamp;
@@ -435,8 +436,8 @@ class publicPreviewController extends Controller
 
 
             if ($proyek) {
-                $proyek = $this->get_kategori_img_obj($proyek, 'storage/proyek/thumbnail/');
-                // $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'storage/proyek/thumbnail/', 0) : [];
+                $proyek = $this->get_kategori_img_obj($proyek, 'proyek/thumbnail/');
+                // $proyek = $proyek ? $this->imgCheck($proyek, 'thumbnail', 'proyek/thumbnail/', 0) : [];
 
 
 
@@ -444,7 +445,7 @@ class publicPreviewController extends Controller
                 $lamp = [];
                 if ($proyek->lampiran) {
                     foreach ($proyek->lampiran as $row) {
-                        $lamp[] = $this->imgCheck($row, null, 'storage/proyek/lampiran/', 2);
+                        $lamp[] = $this->imgCheck($row, null, 'proyek/lampiran/', 2);
                     }
                 }
                 $proyek->lampiran = $lamp;
@@ -494,7 +495,7 @@ class publicPreviewController extends Controller
                 $bid = [];
             }
 
-            $bid = $this->imgCheck($bid, 'foto', 'storage/users/foto/', 0);
+            $bid = $this->imgCheck($bid, 'foto', 'users/foto/', 0);
 
             $proyek->bid = $bid;
 
@@ -694,7 +695,7 @@ class publicPreviewController extends Controller
 
 
 
-            $layanan = $this->get_kategori_img_obj($layanan, 'storage/layanan/thumbnail/');
+            $layanan = $this->get_kategori_img_obj($layanan, 'layanan/thumbnail/');
 
             $ulasan = PengerjaanLayanan::query()
                 ->where('service_id', $layanan->id)
@@ -712,7 +713,7 @@ class publicPreviewController extends Controller
                 ->groupBy('u.id')
                 ->orderBy('u.id', 'desc')
                 ->get();
-            $ulasan = $this->imgCheck($ulasan->toArray(), 'foto', 'storage/users/foto/', 0);
+            $ulasan = $this->imgCheck($ulasan->toArray(), 'foto', 'users/foto/', 0);
 
             $layanan->ulasan = $ulasan;
 
@@ -720,7 +721,7 @@ class publicPreviewController extends Controller
             $img=[];
             if($hasil){
                 foreach($hasil->file_hasil as $dt){
-                    $img[] = $this->imgCheck($dt, null, 'storage/layanan/hasil/', 3);
+                    $img[] = $this->imgCheck($dt, null, 'layanan/hasil/', 3);
 
                 }
             }
@@ -825,7 +826,7 @@ class publicPreviewController extends Controller
                 ->get();
 
 
-            $layanan = $this->get_kategori_img($layanan, 'storage/layanan/thumbnail/');
+            $layanan = $this->get_kategori_img($layanan, 'layanan/thumbnail/');
 
 
             return response()->json([
@@ -873,7 +874,7 @@ class publicPreviewController extends Controller
             )
             ->groupBy('bio.user_id',  'kt.id')
             ->first();
-        $bio = $this->imgCheck($bio, 'foto', 'storage/users/foto/', 0);
+        $bio = $this->imgCheck($bio, 'foto', 'users/foto/', 0);
 
         $bio->nama = $user->name;
         $bio->id = $user->id;
@@ -1041,18 +1042,18 @@ class publicPreviewController extends Controller
             foreach ($data as $i => $row) {
                 $res[$i] = $row;
 
-                $res[$i][$column] = $res[$i][$column] && File::exists($path . $res[$i][$column]) ?
-                    asset($path . $res[$i][$column]) :
+                $res[$i][$column] = $res[$i][$column] && Storage::disk('public')->exists($path . $res[$i][$column]) ?
+                    asset('storage/'.$path . $res[$i][$column]) :
                     $dummy_photo[$ch];
             }
         } elseif (is_object($data)) {
-            $res->{$column} = $res->{$column} && File::exists($path . $res->{$column}) ?
-                asset($path . $res->{$column}) :
+            $res->{$column} = $res->{$column} && Storage::disk('public')->exists($path . $res->{$column}) ?
+                asset('storage/'.$path . $res->{$column}) :
                 $dummy_photo[$ch];
         } else {
 
-            $res = File::exists($path . $res) ?
-                asset($path . $res) : $dummy_photo[$ch];
+            $res = Storage::disk('public')->exists($path . $res) ?
+                asset('storage/'.$path . $res) : $dummy_photo[$ch];
         }
 
         return $res ? $res : [];
@@ -1081,7 +1082,7 @@ class publicPreviewController extends Controller
         ->get();
 
    if($proyek_available->count()){
-    $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'storage/proyek/thumbnail/', 2) : [];
+    $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'proyek/thumbnail/', 2) : [];
 
    }
    return $proyek_available;
