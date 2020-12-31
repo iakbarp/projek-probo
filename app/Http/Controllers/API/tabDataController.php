@@ -263,6 +263,7 @@ class tabDataController extends Controller
                     'bio.updated_at',
 
                 )
+                
                 ->when($q, function ($query) use ($q) {
                     $query->where('sub.name', 'like', "%$q%");
                 })
