@@ -65,7 +65,7 @@ class tabDataController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => false,
-                'message' => $e
+                'message' => $e->getMessage()
             ], 500);
         }
     }
@@ -137,7 +137,7 @@ class tabDataController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => false,
-                'message' => $e
+                'message' => $e->getMessage()
             ], 500);
         }
     }
@@ -196,7 +196,7 @@ class tabDataController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => false,
-                'message' => $e
+                'message' => $e->getMessage()
             ], 500);
         }
     }
@@ -236,7 +236,7 @@ class tabDataController extends Controller
 
                     DB::raw('ifnull((select count(pr.id) from `project` as `pr` join `bid` as `pe` on
                     `pe`.`proyek_id` = `pr`.`id` and `pe`.`tolak` is null
-                     where  `users`.`id` = `pr`.`user_id` group by `pr`.`user_id`),0) as jumlah_proyek'),
+                     where  `users`.`id` = `pr`.`user_id` group by `pr`.`user_id`),0) as jumlah_proyek')
                     // DB::raw('(select foto from bio where bio.user_id=users.id) as thumbnail'),
 
                 )
@@ -260,10 +260,10 @@ class tabDataController extends Controller
                     // DB::raw('(SELECT count(id)  FROM `bid` where user_id=sub.id and tolak=0) as proyek'),
                     DB::raw('sub.jumlah_proyek as proyek'),
                     'bio.created_at',
-                    'bio.updated_at',
+                    'bio.updated_at'
 
                 )
-                
+
                 ->when($q, function ($query) use ($q) {
                     $query->where('sub.name', 'like', "%$q%");
                 })
@@ -284,7 +284,7 @@ class tabDataController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => false,
-                'message' => $e
+                'message' => $e->getMessage()
             ], 500);
         }
     }
@@ -319,7 +319,7 @@ class tabDataController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => false,
-                'message' => $e
+                'message' => $e->getMessage()
             ], 500);
         }
     }
