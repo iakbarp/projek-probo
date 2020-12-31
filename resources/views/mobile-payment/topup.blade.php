@@ -14,10 +14,13 @@
                             <input type="hidden" name="cek" value="topup">
                             <input type="hidden" value="{{$jumlah}}"
                                            name="jumlah" >
+                            
 
                         </form>
 
 </body>
+<script src="{{asset('js/jquery.min.js')}}"></script>
+
 <script src="{{asset('vendor/masonry/masonry.pkgd.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/lib/picturefill.min.js')}}"></script>
     <script src="{{asset('vendor/lightgallery/dist/js/lightgallery-all.min.js')}}"></script>
@@ -99,7 +102,7 @@
             }
         }
 
-        $("#form-topup").submit();
+        $("#form-topup").find('[type]');
     </script>
 
 </html>
