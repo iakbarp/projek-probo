@@ -183,11 +183,14 @@ class ProyekController extends Controller
         return Review::where('proyek_id', $request->id)->first();
     }
 
-    public function dataProgressPengerjaan(Request $request)
+    public function dataProgressPengerjaan($id)
     {
 
-        $progress = PengerjaanProgress::whereIn('pengerjaan_id', $pengerjaan->pluck('id'))->get();
-        return PengerjaanProgress::where('proyek_id', $request->id)->get();
+        $progress = PengerjaanProgress::query()->where('pengerjaan_id',$id)->get();
+        return view('pages.main.users.progress',[
+            'progress' => $progress,
+            'user' => Auth::user()
+        ]);
     }
 
     public function download_contract($id)

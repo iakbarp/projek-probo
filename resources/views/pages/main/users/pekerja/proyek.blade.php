@@ -631,16 +631,17 @@
                                                 <td style="vertical-align: middle" align="center">
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-link btn-sm btn-block"
+                                                            <a class="btn btn-link btn-sm btn-block"
                                                                     data-toggle="tooltip"
                                                                     title="Lihat Progress"
-                                                                    onclick="lihatProgress('{{route('pekerja-data-progress.proyek', ['id' => $row->id])}}')"
+                                                               target="_blank"
+                                                                    href="{{route('pekerja-data-progress.proyek', ['id' => $row->id])}}"
                                                                 {{is_null($row->get_project->get_pembayaran) ||
                                                                 (!is_null($row->get_project->get_pembayaran) &&
                                                                 is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
                                                                 $row->selesai == true ? 'disabled' : ''}}>
                                                                 <i class="fa fa-chart-bar" style="margin-right: 0"></i>
-                                                            </button>
+                                                            </a>
                                                         </span>
                                                     </div>
                                                     <hr style="margin: .5em 0">

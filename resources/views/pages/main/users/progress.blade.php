@@ -245,106 +245,105 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9 col-md-6 col-sm-12">
-                    <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
-                            <div role="tabpanel" class="tab-pane fade"
-                                 style="border: none">
-                                <div id="lihat-progress" style="display: none">
-                                    @foreach($progress as $row)
-                                        {{--                                        TODO --}}
-                                        <div class="card">
-                                            <div class="card-content">
-                                                <div class="card-title">
-                                                    <div class="row form-group">
-                                                        <div class="col-md-12">
-                                                            <img style="width: 15%;height: auto"
-                                                                 class="img-responsive float-left mr-2"
-                                                                 alt="Thumbnail"
-                                                                 src="{{$row->get_pengerjaan->get_project->thumbnail != "" ?
+                <div class="col-lg-9 col-md-6 col-sm-12 text-center">
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>Progress Pengerjaan</h3>
+                            @if(count($progress) == 0)
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="card-title">
+                                            Belum Ada Progress
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                @foreach($progress as $row)
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div class="card-title">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12">
+                                                        <img style="width: 15%;height: auto"
+                                                             class="img-responsive float-left mr-2"
+                                                             alt="Thumbnail"
+                                                             src="{{$row->get_pengerjaan->get_project->thumbnail != "" ?
                                                                      asset('storage/proyek/progress/'.$row->get_pengerjaan->get_project->thumbnail)
                                                                      : asset('images/slider/beranda-1.jpg')}}">
-                                                            <b style="color: #2878ff;font-size: 25px">{{$row->get_pengerjaan->get_project->judul}}</b>
-                                                            <b style="color: black;font-size: 25px">({{$row->get_pengerjaan->get_project->waktu_pengerjaan}}
-                                                                &nbsp;HARI)</b>
-                                                            <br>
-                                                            <b>Rp{{number_format($row->get_pengerjaan->get_project->harga,2,',','.')}}
-                                                            </b>
-                                                            <br>
-                                                            @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran))
-                                                                @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran->bukti_pembayaran))
-                                                                    @if($row->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
-                                                                        <span
-                                                                            class="label label-success">LUNAS</span>
-                                                                    @else
-                                                                        <span class="label label-default">DP {{round($row
+                                                        <b style="color: #2878ff;font-size: 25px">{{$row->get_pengerjaan->get_project->judul}}</b>
+                                                        <b style="color: black;font-size: 25px">({{$row->get_pengerjaan->get_project->waktu_pengerjaan}}
+                                                            &nbsp;HARI)</b>
+                                                        <br>
+                                                        <b>Rp{{number_format($row->get_pengerjaan->get_project->harga,2,',','.')}}
+                                                        </b>
+                                                        <br>
+                                                        @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran))
+                                                            @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran->bukti_pembayaran))
+                                                                @if($row->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
+                                                                    <span
+                                                                        class="label label-success">LUNAS</span>
+                                                                @else
+                                                                    <span class="label label-default">DP {{round($row
                                                                             ->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran / $row
                                                                             ->get_pengerjaan->get_project->harga * 100,1)}}%</span>
-                                                                    @endif |
-                                                                    <span class="label label-{{$row->get_pengerjaan->get_project->selesai == false ?
+                                                                @endif |
+                                                                <span class="label label-{{$row->get_pengerjaan->get_project->selesai == false ?
                                                                         'warning' : 'success'}}">{{$row->get_pengerjaan->get_project->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
-                                                                @else
-                                                                    <span class="label label-info"
-                                                                          style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
-                                                                @endif
                                                             @else
-                                                                <span
-                                                                    class="label label-danger">MENUNGGU PEMBAYARAN</span>
+                                                                <span class="label label-info"
+                                                                      style="border-radius: 12px">MENUNGGU KONFIRMASI</span>
                                                             @endif
-                                                        </div>
+                                                        @else
+                                                            <span
+                                                                class="label label-danger">MENUNGGU PEMBAYARAN</span>
+                                                        @endif
                                                     </div>
+                                                </div>
 
-                                                    <table class="table" id="dt-progress">
-                                                        <thead>
-                                                        <tr>
-                                                            <th class="text-center">Bukti Pengerjaan</th>
-                                                            <th class="text-center">Progress</th>
-                                                            <th class="text-center">Tanggal Pengerjaan</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        @php $no = 1; @endphp
-                                                        <tr>
-                                                            <td style="vertical-align: middle"><a
-                                                                    href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}"
-                                                                    target="_blank"><img
-                                                                        class="img-responsive text-center" width="160"
-                                                                        alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
+                                                <table class="table" id="dt-progress">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center">Bukti Pengerjaan</th>
+                                                        <th class="text-center">Progress</th>
+                                                        <th class="text-center">Tanggal Pengerjaan</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @php $no = 1; @endphp
+                                                    <tr>
+                                                        <td style="vertical-align: middle"><a
+                                                                href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}"
+                                                                target="_blank"><img
+                                                                    class="img-responsive text-center" width="160"
+                                                                    alt="Thumbnail" src="{{$row->bukti_gambar != "" ?
                                                          asset('storage/proyek/progress/'.$row->bukti_gambar)
                                                          : asset('images/undangan-1.jpg')}}"></a></td>
-                                                            <td style="vertical-align: middle"><span
-                                                                    class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
-                                                                <br>
-                                                                <p>{{$row->deskripsi}}</p>
-                                                            </td>
-                                                            <td style="vertical-align: middle" align="center">
-                                                                {{$row->created_at->formatLocalized('%d %B %Y')}}
-                                                                <br>
-                                                                {{$row->created_at->format('H : i : s')}}
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <div class="col-lg-12">
-                                                        <button type="reset" class="btn btn-link btn-sm"
-                                                                style="border: 1px solid #ccc">
-                                                            <i class="fa fa-undo mr-2"></i>KEMBALI
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                        <td style="vertical-align: middle"><span
+                                                                class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
+                                                            <br>
+                                                            <p>{{$row->deskripsi}}</p>
+                                                        </td>
+                                                        <td style="vertical-align: middle" align="center">
+                                                            {{$row->created_at->formatLocalized('%d %B %Y')}}
+                                                            <br>
+                                                            {{$row->created_at->format('H : i : s')}}
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                            {{--                                            </div>--}}
+
                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
+                                        {{--                                            </div>--}}
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
     </section>
 @endsection
 @push('scripts')
@@ -358,43 +357,43 @@
     <script src="{{asset('vendor/lightgallery/modules/lg-video.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
     <script>
-            $('#dt-progress').DataTable({
-                columnDefs: [{"sortable": false, "targets": 2}],
-                language: {
-                    "emptyTable": "Anda belum menambahkan progress apapun",
-                    "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",
-                    "infoEmpty": "Menampilkan 0 entri",
-                    "infoFiltered": "(difilter dari _MAX_ total entri)",
-                    "lengthMenu": "Tampilkan _MENU_ entri",
-                    "loadingRecords": "Memuat...",
-                    "processing": "Mengolah...",
-                    "search": "Cari:",
-                    "zeroRecords": "Data yang Anda cari tidak ditemukan.",
-                    "paginate": {
-                        "first": "Pertama",
-                        "last": "Terakhir",
-                        "next": "Selanjutnya",
-                        "previous": "Sebelumnya"
-                    },
-                    "aria": {
-                        "sortAscending": ": aktifkan untuk mengurutkan kolom dari kecil ke besar (asc)",
-                        "sortDescending": ": aktifkan untuk mengurutkan kolom dari besar ke kecil (desc)"
-                    }
+        $('#dt-progress').DataTable({
+            columnDefs: [{"sortable": false, "targets": 2}],
+            language: {
+                "emptyTable": "Anda belum menambahkan progress apapun",
+                "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",
+                "infoEmpty": "Menampilkan 0 entri",
+                "infoFiltered": "(difilter dari _MAX_ total entri)",
+                "lengthMenu": "Tampilkan _MENU_ entri",
+                "loadingRecords": "Memuat...",
+                "processing": "Mengolah...",
+                "search": "Cari:",
+                "zeroRecords": "Data yang Anda cari tidak ditemukan.",
+                "paginate": {
+                    "first": "Pertama",
+                    "last": "Terakhir",
+                    "next": "Selanjutnya",
+                    "previous": "Sebelumnya"
                 },
-                fnDrawCallback: function (oSettings) {
-                    $('.use-nicescroll').getNiceScroll().resize();
-                    $('[data-toggle="tooltip"]').tooltip();
+                "aria": {
+                    "sortAscending": ": aktifkan untuk mengurutkan kolom dari kecil ke besar (asc)",
+                    "sortDescending": ": aktifkan untuk mengurutkan kolom dari besar ke kecil (desc)"
+                }
+            },
+            fnDrawCallback: function (oSettings) {
+                $('.use-nicescroll').getNiceScroll().resize();
+                $('[data-toggle="tooltip"]').tooltip();
 
-                    var file_hasil = $(".use-lightgallery");
-                    file_hasil.masonry({
-                        itemSelector: '.item'
-                    });
-                    file_hasil.lightGallery({
-                        selector: '.item',
-                        loadYoutubeThumbnail: true,
-                        youtubeThumbSize: 'default',
-                    });
-                },
-            });
+                var file_hasil = $(".use-lightgallery");
+                file_hasil.masonry({
+                    itemSelector: '.item'
+                });
+                file_hasil.lightGallery({
+                    selector: '.item',
+                    loadYoutubeThumbnail: true,
+                    youtubeThumbSize: 'default',
+                });
+            },
+        });
     </script>
 @endpush

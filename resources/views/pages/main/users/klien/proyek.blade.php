@@ -911,16 +911,27 @@
                                                     </div>
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
-                                                    <button class="btn btn-link btn-sm btn-block"
-                                                            title="Lihat Progress Pengerjaan"
-                                                            data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',
-                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',
-                                                        '{{$row->get_project->judul}}')" {{is_null($row->get_project->get_pembayaran) ||
-                                                                (!is_null($row->get_project->get_pembayaran) &&
-                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
-                                                                $row->selesai == true ? 'disabled' : ''}}>
-                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i>
-                                                    </button>
+                                                    <a class="btn btn-link btn-sm btn-block"
+                                                       data-toggle="tooltip"
+                                                       title="Lihat Progress"
+                                                       target="_blank"
+                                                       href="{{route('pekerja-data-progress.proyek', ['id' => $row->id])}}"
+                                                        {{is_null($row->get_project->get_pembayaran) ||
+                                                        (!is_null($row->get_project->get_pembayaran) &&
+                                                        is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
+                                                        $row->selesai == true ? 'disabled' : ''}}>
+                                                        <i class="fa fa-chart-bar" style="margin-right: 0"></i>
+                                                    </a>
+{{--                                                    <a class="btn btn-link btn-sm btn-block"--}}
+{{--                                                            title="Lihat Progress Pengerjaan"--}}
+{{--                                                            data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',--}}
+{{--                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',--}}
+{{--                                                        '{{$row->get_project->judul}}')" {{is_null($row->get_project->get_pembayaran) ||--}}
+{{--                                                                (!is_null($row->get_project->get_pembayaran) &&--}}
+{{--                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||--}}
+{{--                                                                $row->selesai == true ? 'disabled' : ''}}>--}}
+{{--                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i>--}}
+{{--                                                    </a>--}}
                                                     <hr style="margin: .5em 0">
                                                     <a class="btn btn-link btn-sm btn-block" title="Lihat Proyek"
                                                        data-toggle="tooltip" href="{{route('detail.proyek',
