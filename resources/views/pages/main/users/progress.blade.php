@@ -279,7 +279,7 @@
                                                         <br>
                                                         @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran))
                                                             @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran->bukti_pembayaran))
-                                                                @if($row->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
+                                                                @if($row->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $row->get_pengerjaan->get_project->harga)
                                                                     <span
                                                                         class="label label-success">LUNAS</span>
                                                                 @else
