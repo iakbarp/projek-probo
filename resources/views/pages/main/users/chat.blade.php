@@ -286,7 +286,7 @@
                         <div class="input_msg_write">
                             <input type="hidden"  name="chat_id" id="chat_id" >
                             <input type="text" class="write_msg" placeholder="Type a message" id="chat_message"/>
-                            <button class="upload_file_btn"><input type="file"></button>
+{{--                            <button class="upload_file_btn"><input type="file"></button>--}}
                             <button class="msg_send_btn" type="button" onclick="send_message()"><i class="fa fa-paper-plane"
                                                                           aria-hidden="true"></i></button>
                         </div>
