@@ -314,7 +314,7 @@
                 success: function (data) {
                     var user_data = data.data.user;
                     $.each(user_data, function (i, item) {
-                        $('#chat_list').prepend(
+                        $('#chat_list').append(
                             '<div class="chat_list" >\n' +
                             '                            <div class="chat_people img-card image-upload menu-item-has-children avatar" onclick="load_msg(' + item.id + ',\'' + item.name + '\')">\n' +
                             '                                <div class="chat_img"><img class="img-thumbnail" style="width: 100%"\n' +
