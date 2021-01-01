@@ -26,7 +26,7 @@ class ProyekController extends Controller
         $bid = Bid::where('user_id', $user->id)->get();
         $undangan = Undangan::where('user_id', $user->id)->get();
         $pengerjaan = Pengerjaan::where('user_id', $user->id)->get();
-        $progress = PengerjaanProgress::whereIn('proyek_id', $pengerjaan->pluck('proyek_id'))->get();
+        $progress = PengerjaanProgress::whereIn('pengerjaan_id', $pengerjaan->pluck('id'))->get();
 
         return view('pages.main.users.pekerja.proyek', compact('user', 'bid', 'undangan', 'pengerjaan', 'progress'));
     }
@@ -183,9 +183,14 @@ class ProyekController extends Controller
         return Review::where('proyek_id', $request->id)->first();
     }
 
-    public function dataProgressPengerjaan(Request $request)
+    public function dataProgressPengerjaan($id)
     {
-//        return PengerjaanProgress::where('proyek_id', $request->id)->first();
+
+        $progress = PengerjaanProgress::query()->where('pengerjaan_id',$id)->get();
+        return view('pages.main.users.progress',[
+            'progress' => $progress,
+            'user' => Auth::user()
+        ]);
     }
 
     public function download_contract($id)

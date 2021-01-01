@@ -72,12 +72,13 @@ class LayananController extends Controller
                     'pengerjaan_layanan_id' => $pesanan->id,
                     'dp' => $request->dp,
                     'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
+                    'bukti_pembayaran' => 'bukti.jpg',
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
-                DompetHistory::firstOrCreate([
+                DompetHistory::create([
                     'user_id' => Auth::id(),
-                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'jumlah' => str_replace('.', '',$request->jumlah_pembayaran),
                     'pembayaran_layanan_id' => $pembayaran->id,
                 ]);
             } else {
@@ -90,15 +91,15 @@ class LayananController extends Controller
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
-                DompetHistory::firstOrCreate([
+                DompetHistory::create([
                     'user_id' => Auth::id(),
-                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'jumlah' => str_replace('.', '',$request->jumlah_pembayaran),
                     'pembayaran_layanan_id' => $pembayaran->id,
                 ]);
             }
 
-            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
-                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
+//            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
+//                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
 
             return back()->with('update', 'Silahkan cek email Anda dan selesaikan pembayaran Anda sebelum batas waktu yang ditentukan! Terimakasih :)');
         }

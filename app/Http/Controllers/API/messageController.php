@@ -163,37 +163,59 @@ class messageController extends Controller
 
             ->get();
 
-        foreach ($res as $i => $dt) {
-            $id = $dt->user_to == $user->id ? $dt->user_from : $dt->user_to;
-            $key = array_search($id, $checker);
+        if($q){
+            $resNew=User::query()
+                ->when($q, function ($query) use ($q) {
+                    $query->where('users.name', 'like', "%$q%");
+                })
+                ->join('bio', 'bio.user_id', '=', 'users.id')
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'bio.foto',
+                    DB::raw('ifnull((select count(ms.id) from message ms where users.id=ms.user_from and ms.`read`=0),0) as `jumlah_unread`')
+                )
+                ->limit($limit ? $limit : 12)
+                ->get()
+                ;
+            foreach ($resNew as $dt){
+                $dt = $this->imgCheck($dt, 'foto', 'users/foto/', 1);
 
-            if (!is_numeric($key)) {
-                $checker[] = $id;
+            }
+        }else{
+            foreach ($res as $i => $dt) {
+                $id = $dt->user_to == $user->id ? $dt->user_from : $dt->user_to;
+                $key = array_search($id, $checker);
 
-                $r = collect(DB::table('users')
-                    ->where('users.id', $id)
+                if (!is_numeric($key)) {
+                    $checker[] = $id;
 
-                    ->when($q, function ($query) use ($q) {
-                        $query->where('users.name', 'like', "%$q%");
-                    })
-                    ->join('bio', 'bio.user_id', '=', 'users.id')
+                    $r = collect(DB::table('users')
+                        ->where('users.id', $id)
 
-                    ->select(
-                        'users.id',
-                        'users.name',
-                        'bio.foto',
-                        DB::raw('ifnull((select count(ms.id) from message ms where users.id=ms.user_from and ms.`read`=0),0) as `jumlah_unread`')
-                    )
+                        ->when($q, function ($query) use ($q) {
+                            $query->where('users.name', 'like', "%$q%");
+                        })
+                        ->join('bio', 'bio.user_id', '=', 'users.id')
 
-                    ->first())->toArray();
+                        ->select(
+                            'users.id',
+                            'users.name',
+                            'bio.foto',
+                            DB::raw('ifnull((select count(ms.id) from message ms where users.id=ms.user_from and ms.`read`=0),0) as `jumlah_unread`')
+                        )
 
-                if ($r) {
-                    $resNew[] = collect($this->imgCheck((object)$r, 'foto', 'users/foto/', 1))->toArray();
-                }
-                if (count($resNew) == ($limit ? $limit : 12)) {
-                    break;
+                        ->first())->toArray();
+
+                    if ($r) {
+                        $resNew[] = collect($this->imgCheck((object)$r, 'foto', 'users/foto/', 1))->toArray();
+                    }
+                    if (count($resNew) == ($limit ? $limit : 12)) {
+                        break;
+                    }
                 }
             }
+
         }
 
         return $resNew;
