@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Users\AcceptBidMail;
+use App\Mail\Users\PembayaranProyekMail;
+use App\Mail\Users\ProyekMail;
 use App\Model\Bid;
 use App\Model\Bio;
 use App\Model\Kategori;
@@ -24,6 +27,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+
 
 class publicPreviewController extends Controller
 {
@@ -531,6 +536,11 @@ class publicPreviewController extends Controller
 
             $proyek=Project::findOrFail($proyek_id);
             $user=Project::findOrFail($user_id);
+            $u=User::where('id',$user_id)->first();
+
+            Mail::to($u->email)
+            ->send(new ProyekMail($user->name, $proyek->judul, $proyek->deskripsi, $proyek->waktu_pengerjaan, $proyek->harga));
+
 
             Undangan::create([
                 'user_id'=>$user_id,
@@ -945,6 +955,10 @@ class publicPreviewController extends Controller
             $user=User::findOrFail($request->user_id);
             $proyek=Project::findOrFail($request->proyek_id);
 
+            Mail::to($user->email)
+            ->send(new AcceptBidMail($user->name, $proyek->judul, $proyek->deskripsi, $proyek->waktu_pengerjaan, $proyek->harga));
+
+
             $bid=Bid::query()
             ->where('user_id',$request->user_id)
             ->where('proyek_id',$request->proyek_id)
@@ -1081,10 +1095,10 @@ class publicPreviewController extends Controller
         ->groupBy('project.id','bid.proyek_id')
         ->get();
 
-   if($proyek_available->count()){
-    $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'proyek/thumbnail/', 2) : [];
+        if($proyek_available->count()){
+            $proyek_available = $proyek_available ? $this->imgCheck($proyek_available->toArray(), 'thumbnail', 'proyek/thumbnail/', 2) : [];
 
-   }
-   return $proyek_available;
+        }
+        return $proyek_available;
     }
 }

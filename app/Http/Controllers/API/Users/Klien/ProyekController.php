@@ -102,10 +102,10 @@ class ProyekController extends Controller
             $i = 0;
             //TODO:: GANTI KE ELOQUENT UNTUK DEETECT CAST
             foreach ($proyek as $dt) {
-                $d = DB::table('pengerjaan as a')
+                $d = Pengerjaan::query()
                     ->select(
-                        'a.*',
-                        DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where a.user_id=b.user_id) as bintang')
+                        'pengerjaan.*',
+                        DB::raw('(select ifnull(format(AVG((total_bintang_pekerja+total_bintang_klien)/2),1),0.0) from bio as b where pengerjaan.user_id=b.user_id) as bintang')
 
                     )
                     ->where('proyek_id', $dt['id'])
@@ -114,14 +114,30 @@ class ProyekController extends Controller
                     // ->groupBy('a.id')
                     // ->groupBy('b.pengerjaan_id')
                     ->orderBy('id', 'desc')
-                    ->groupBy('a.id')
+                    ->groupBy('pengerjaan.id')
                     ->first();
 
+            
+                
+                    
+
                 if ($d) {
+
+                    if($d->file_hasil){
+                        $lamp=[];
+                        foreach($d->file_hasil as $r){
+                            $lamp[] = $this->imgCheck($r, null, 'proyek/hasil/', 2);
+                            
+                        }
+                        $d->file_hasil=$lamp;
+                    }else{
+                        $d->file_hasil=[];
+                    }
 
                     $pembayaran = Pembayaran::where('proyek_id', $dt['id'])->first();
 
                     $gabung = true;
+                    $lunas=0;
 
                     if ($pembayaran) {
                         if (is_numeric(strpos($pembayaran->bukti_pembayaran, 'DP'))) {
@@ -139,6 +155,8 @@ class ProyekController extends Controller
                     if ($gabung) {
                         if ($d->selesai) {
                             $d->status = 'Selesai' . $d->status;
+                    $lunas=1;
+
                         } else {
                             $d->status = 'Pengerjaan' . $d->status;
                         }
@@ -181,6 +199,8 @@ class ProyekController extends Controller
                     $pekerja->deskripsi = $ulasan_pekerja ? $ulasan_pekerja->deskripsi : null;
 
                     $Pengerjaan[$i] = $dt;
+                    $Pengerjaan[$i]['ratingable']=count($d->file_hasil)?1:0;
+                    $Pengerjaan[$i]['isLunas']=$lunas;
                     $Pengerjaan[$i]['pengerjaan'] = $d;
                     $Pengerjaan[$i]['pengerjaan']->pekerja = $pekerjas;
                     $ulasan = $Pengerjaan[$i]['pengerjaan']->ulasan = [];
@@ -648,7 +668,7 @@ class ProyekController extends Controller
 
              foreach($progress as $i=>$dt){
                  $dt->urutan=$i+1;
-                $dt = $this->imgCheck($dt, 'bukti_gambar', 'proyek/progress/');
+                $dt = $this->imgCheck($dt, 'bukti_gambar', 'proyek/progress/',3);
                  
              }
 
@@ -691,6 +711,8 @@ class ProyekController extends Controller
             asset('admins/img/avatar/avatar-1' . '.png'),
             asset('images/porto.jpg'),
             asset('images/undangan-2' . '.jpg'),
+            asset('images/noimage' . '.jpg'),
+
 
         ];
         $res = $data;

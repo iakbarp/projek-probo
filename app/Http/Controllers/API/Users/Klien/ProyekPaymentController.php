@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API\Users\Klien;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Topup;
+use App\Model\DompetHistory;
+
 use App\Model\Saldo;
 use App\Model\Bio;
 use App\Model\Pembayaran;
@@ -119,7 +121,7 @@ class ProyekPaymentController extends Controller
             $harus_bayar=$proyek->harga-$pembayaran->jumlah_pembayaran;
             $harus_bayar=$harus_bayar?$harus_bayar:0;
 
-            $pembayaran->update([
+           $pemb= $pembayaran->update([
                 'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
                 'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
                 'isDompet'=>1,
@@ -127,7 +129,7 @@ class ProyekPaymentController extends Controller
             ]);
         }else{
             $bayar_=$proyek->harga<$bayar?$proyek->harga:(($proyek->harga*30/100)>$bayar?($proyek->harga*30/100):$bayar);
-            Pembayaran::create([
+            $pemb= Pembayaran::create([
                 'proyek_id'=>$proyek_id,
                 'jumlah_pembayaran'=>$bayar_,
                 'bayar_pakai_dompet'=>$bayar_,
@@ -136,6 +138,11 @@ class ProyekPaymentController extends Controller
 
             ]);
         }
+
+        DompetHistory::create([
+            'jumlah'=>$bayar,
+            'pembayaran_id'=>$pemb->id,
+        ]);
 
             return response()->json([
                 'error' => false,
