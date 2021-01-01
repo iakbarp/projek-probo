@@ -38,7 +38,7 @@
             display: inline-block;
             text-align: right;
             width: 100%;
-            padding:0;
+            padding: 0;
         }
 
         .headind_srch {
@@ -170,14 +170,14 @@
             width: 57%;
         }
 
-        .mesgs{
+        .mesgs {
             float: left;
             padding: 30px 15px 0 25px;
-            width:69%;
+            width: 69%;
         }
 
         .sent_msg p {
-            background:#0465ac;
+            background: #0465ac;
             border-radius: 12px 15px 15px 0;
             font-size: 14px;
             margin: 0;
@@ -203,7 +203,7 @@
             font-size: 15px;
             min-height: 48px;
             width: 100%;
-            outline:none;
+            outline: none;
         }
 
         .type_msg {
@@ -213,7 +213,7 @@
 
         .msg_send_btn {
             background: #2677ff none repeat scroll 0 0;
-            border:none;
+            border: none;
             border-radius: 50%;
             color: #fff;
             cursor: pointer;
@@ -227,7 +227,7 @@
 
         .upload_file_btn {
             background: white none repeat scroll 0 0;
-            border:none;
+            border: none;
             border-radius: 50%;
             color: black;
             cursor: pointer;
@@ -250,96 +250,197 @@
     </style>
 @endpush
 @section('content')
-<div class="container">
-    <div class="messaging">
-        <div class="inbox_msg">
-            <div class="inbox_people">
+    <div class="container">
+        <div class="messaging">
+            <div class="inbox_msg">
+                <div class="inbox_people">
+                    <div class="headind_srch">
+                        <div class="recent_heading">
+                            <h4 style="color: white"><i class="far fa-comments"></i>&nbsp;CHAT </h4>
+                        </div>
+                    </div>
+                    <div class="inbox_chat scroll" id="chat_list">
+                        <div style="align-content: center;display: none" id="loading_chat_list">
+                            <img src="{{asset('images/loading.gif')}}" alt="">
+                        </div>
+                    </div>
+                    <div class="type_msg">
+                        <div class="input_msg_write">
+                            <input type="text" class="search-bar"  placeholder="Search" onkeyup="search_user(this.value)">
+                        </div>
+                    </div>
+                </div>
                 <div class="headind_srch">
                     <div class="recent_heading">
-                         <h4 style="color: white"><i class="far fa-comments"></i>&nbsp;CHAT</h4>
+                        <h4 style="color: white" id="chat_target"><i class="far fa-comments"></i>&nbsp;</h4>
                     </div>
                 </div>
-                <div class="inbox_chat scroll">
-                    <div class="chat_list">
-                        <div class="chat_people img-card image-upload menu-item-has-children avatar">
-                            <div class="chat_img"> <img class="img-thumbnail" style="width: 100%" src="{{asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg')}}" alt="avatar"> </div>
-                            <div class="chat_ib">
-                                <h5>Nilasanti Puspita</h5>
-                            </div>
+                <div class="mesgs">
+                    <div style="align-content: center;display: none" id="loading_chat">
+                        <img src="{{asset('images/loading.gif')}}" alt="">
+                    </div>
+                    <div class="msg_history" id="msg_history">
+
+                    </div>
+                    <div class="type_msg" style="display: none">
+                        <div class="input_msg_write">
+                            <input type="hidden"  name="chat_id" id="chat_id" >
+                            <input type="text" class="write_msg" placeholder="Type a message" id="chat_message"/>
+{{--                            <button class="upload_file_btn"><input type="file"></button>--}}
+                            <button class="msg_send_btn" type="button" onclick="send_message()"><i class="fa fa-paper-plane"
+                                                                          aria-hidden="true"></i></button>
                         </div>
-                    </div>
-                    <div class="chat_list">
-                        <div class="chat_people img-card image-upload menu-item-has-children avatar">
-                            <div class="chat_img"> <img class="img-thumbnail" style="width: 100%" src="{{asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg')}}" alt="avatar"> </div>
-                            <div class="chat_ib">
-                                <h5>Nilasanti Puspita</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat_list">
-                        <div class="chat_people img-card image-upload menu-item-has-children avatar">
-                            <div class="chat_img"> <img class="img-thumbnail" style="width: 100%" src="{{asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg')}}" alt="avatar"> </div>
-                            <div class="chat_ib">
-                                <h5>Nilasanti Puspita</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat_list">
-                        <div class="chat_people img-card image-upload menu-item-has-children avatar">
-                            <div class="chat_img"> <img class="img-thumbnail" style="width: 100%" src="{{asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg')}}" alt="avatar"> </div>
-                            <div class="chat_ib">
-                                <h5>Nilasanti Puspita</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat_list">
-                        <div class="chat_people img-card image-upload menu-item-has-children avatar">
-                            <div class="chat_img"> <img class="img-thumbnail" style="width: 100%" src="{{asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg')}}" alt="avatar"> </div>
-                            <div class="chat_ib">
-                                <h5>Nilasanti Puspita</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="type_msg">
-                    <div class="input_msg_write">
-                        <input type="text" class="search-bar"  placeholder="Search">
-                    </div>
-                </div>
-            </div>
-            <div class="headind_srch">
-                <div class="recent_heading">
-                    <h4 style="color: white"><i class="far fa-comments"></i>&nbsp;Nilasanti Puspita</h4>
-                </div>
-            </div>
-            <div class="mesgs">
-                <div class="msg_history">
-                    <div class="incoming_msg img-card image-upload menu-item-has-children avatar">
-                        <div class="incoming_msg_img"> <img src="{{asset('images/faces/thumbs50x50/'.rand(1,6).'.jpg')}}" alt="avatar"> </div>
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p style="color: white">Test which is a new approach to have all
-                                    solutions</p>
-                                <span class="time_date"> 11:01 AM    |    June 9</span></div>
-                        </div>
-                    </div>
-                    <div class="outgoing_msg">
-                        <div class="sent_msg">
-                            <p>Test which is a new approach to have all
-                                solutions</p>
-                            <span class="time_date"> 11:01 AM    |    June 9</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="type_msg">
-                    <div class="input_msg_write">
-                        <input type="text" class="write_msg" placeholder="Type a message" />
-                        <button class="upload_file_btn"><input type="file"></button>
-                        <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    @endsection
+@endsection
+@push('scripts')
+    <script>
+        var _token = '{{auth('api')->tokenById(Auth::id())}}';
+        $(document).ready(function () {
+            // $.get("message/", function(data, status){
+            //     alert("Data: " + data + "\nStatus: " + status);
+            // });
+            $('#msg_history');
+            $.ajax({
+                url: "/api/message/",
+                type: "GET",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'bearer ' + _token);
+                },
+                success: function (data) {
+                    var user_data = data.data.user;
+                    $.each(user_data, function (i, item) {
+                        $('#chat_list').append(
+                            '<div class="chat_list" >\n' +
+                            '                            <div class="chat_people img-card image-upload menu-item-has-children avatar" onclick="load_msg(' + item.id + ',\'' + item.name + '\')">\n' +
+                            '                                <div class="chat_img"><img class="img-thumbnail" style="width: 100%"\n' +
+                            '                                                           src="' + item.foto + '"' +
+                            '                                                           alt="avatar"></div>\n' +
+                            '                                <div class="chat_ib">\n' +
+                            '                                    <h5>' + item.name + '</h5>\n' +
+                            '                                </div>\n' +
+                            '                            </div>\n' +
+                            '                        </div>')
+                    });
+                }
+            });
+        });
+
+        function load_msg(chat_id, target) {
+            $('#chat_target').text(target);
+            $.ajax({
+                url: "/api/message?chat_id=" + chat_id,
+                type: "GET",
+                beforeSend: function (xhr) {
+                    $('#loading_chat').show();
+                    $('#msg_history').empty();
+
+                    xhr.setRequestHeader('Authorization', 'bearer ' + _token);
+
+                },
+                success: function (data) {
+                    var chat_data = data.data.chat;
+                    $('#loading_chat').hide();
+                    $('#chat_id').val(chat_id);
+                    $('.type_msg').show();
+                    $.each(chat_data, function (i, item) {
+                        if (item.is_me == 0) {
+                            $('#msg_history').prepend(' <div class="incoming_msg img-card image-upload menu-item-has-children avatar">\n' +
+                                '                            <div class="incoming_msg_img"><img\n' +
+                                '                                   src="' + item.foto + '" alt="avatar"></div>\n' +
+                                '                            <div class="received_msg">\n' +
+                                '                                <div class="received_withd_msg">\n' +
+                                '                                    <p style="color: white">' + item.message + '</p>\n' +
+                                '                                    <span class="time_date">'+item.created_at+'</span></div>\n' +
+                                '                            </div>\n' +
+                                '                        </div>\n'
+                            )
+                        } else {
+                            $('#msg_history').prepend(
+                                '                        <div class="outgoing_msg">\n' +
+                                '                            <div class="sent_msg">\n' +
+                                '                                <p>' + item.message + '</p>\n' +
+                                '                                <span class="time_date"> '+item.created_at+'</span>\n' +
+                                '                            </div>\n' +
+                                '                        </div>'
+                            )
+                        }
+
+                    });
+                }
+            });
+        }
+
+        function send_message() {
+            if($('#chat_message').val().length === 0){
+                swal('Perhatian', 'isikan pesan terlebih dahulu', 'warning');
+            }else{
+
+                $.ajax({
+                    url: "/api/message/send" ,
+                    type: "POST",
+                    data: {
+                        _token: '{{csrf_token()}}',
+                        chat_id :$('#chat_id').val(),
+                        message:  $('#chat_message').val()
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'bearer ' + _token);
+                    },
+                    success: function (data) {
+
+                        $('#msg_history').append(
+                            '                        <div class="outgoing_msg">\n' +
+                            '                            <div class="sent_msg">\n' +
+                            '                                <p>'+$('#chat_message').val()+'</p>\n' +
+                            '                                <span class="time_date"> sekarang </span>\n' +
+                            '                            </div>\n' +
+                            '                        </div>'
+                        )
+                        $('#chat_message').val('');
+                    },
+                    error: function (data) {
+                        swal('Perhatian', 'Terjadi error', 'error');
+                    }
+                });
+
+
+            }
+        }
+
+        function search_user(user) {
+            $.ajax({
+                url: "/api/message?q="+user,
+                type: "GET",
+                beforeSend: function (xhr) {
+                    $('#loading_chat_list').show();
+
+                    xhr.setRequestHeader('Authorization', 'bearer ' + _token);
+                },
+                success: function (data) {
+                    $('#chat_list').empty();
+                    $('#loading_chat_list').hide();
+                    var user_data = data.data.user;
+                    $.each(user_data, function (i, item) {
+                        $('#chat_list').prepend(
+                            '<div class="chat_list" >\n' +
+                            '                            <div class="chat_people img-card image-upload menu-item-has-children avatar" onclick="load_msg(' + item.id + ',\'' + item.name + '\')">\n' +
+                            '                                <div class="chat_img"><img class="img-thumbnail" style="width: 100%"\n' +
+                            '                                                           src="' + item.foto + '"' +
+                            '                                                           alt="avatar"></div>\n' +
+                            '                                <div class="chat_ib">\n' +
+                            '                                    <h5>' + item.name + '</h5>\n' +
+                            '                                </div>\n' +
+                            '                            </div>\n' +
+                            '                        </div>')
+                    });
+                }
+            });
+        }
+    </script>
+
+@endpush
