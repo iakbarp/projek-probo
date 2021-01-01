@@ -634,7 +634,7 @@
                                                             <button class="btn btn-link btn-sm btn-block"
                                                                     data-toggle="tooltip"
                                                                     title="Lihat Progress"
-                                                                    onclick="lihatProgress('{{route('pekerja-data-progress.proyek', ['id' => $row->proyek_id])}}')"
+                                                                    onclick="lihatProgress('{{route('pekerja-data-progress.proyek', ['id' => $row->id])}}')"
                                                                 {{is_null($row->get_project->get_pembayaran) ||
                                                                 (!is_null($row->get_project->get_pembayaran) &&
                                                                 is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||
@@ -740,38 +740,31 @@
                                                 <div class="card-title">
                                                     <div class="row form-group">
                                                         <div class="col-md-12">
-                                                            {{--                                                        <img style="width: 15%;height: auto" class="img-responsive float-left mr-2"--}}
-                                                            {{--                                                             alt="Thumbnail" id="thumbnail">--}}
-                                                            {{--                                                        <b style="color: #2878ff;font-size: 25px" id="judul"><span id="judul"></span> </b>--}}
-                                                            {{--                                                        <b style="color: black;font-size: 25px" id="waktu_pengerjaan"></b>--}}
-                                                            {{--                                                        <br>--}}
-                                                            {{--                                                        <b id="harga">--}}
-                                                            {{--                                                        </b>--}}
                                                             <img style="width: 15%;height: auto"
                                                                  class="img-responsive float-left mr-2"
                                                                  alt="Thumbnail"
-                                                                 src="{{$row->get_project->thumbnail != "" ?
-                                                                     asset('storage/proyek/thumbnail/'.$row->get_project->thumbnail)
+                                                                 src="{{$row->get_pengerjaan->get_project->thumbnail != "" ?
+                                                                     asset('storage/proyek/progress/'.$row->get_pengerjaan->get_project->thumbnail)
                                                                      : asset('images/slider/beranda-1.jpg')}}">
-                                                            <b style="color: #2878ff;font-size: 25px">{{$row->get_project->judul}}</b>
-                                                            <b style="color: black;font-size: 25px">({{$row->get_project->waktu_pengerjaan}}
+                                                            <b style="color: #2878ff;font-size: 25px">{{$row->get_pengerjaan->get_project->judul}}</b>
+                                                            <b style="color: black;font-size: 25px">({{$row->get_pengerjaan->get_project->waktu_pengerjaan}}
                                                                 &nbsp;HARI)</b>
                                                             <br>
-                                                            <b>Rp{{number_format($row->get_project->harga,2,',','.')}}
+                                                            <b>Rp{{number_format($row->get_pengerjaan->get_project->harga,2,',','.')}}
                                                             </b>
                                                             <br>
-                                                            @if(!is_null($row->get_project->get_pembayaran))
-                                                                @if(!is_null($row->get_project->get_pembayaran->bukti_pembayaran))
-                                                                    @if($row->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
+                                                            @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran))
+                                                                @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran->bukti_pembayaran))
+                                                                    @if($row->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $row->get_project->harga)
                                                                         <span
                                                                             class="label label-success">LUNAS</span>
                                                                     @else
                                                                         <span class="label label-default">DP {{round($row
-                                                                            ->get_project->get_pembayaran->jumlah_pembayaran / $row
-                                                                            ->get_project->harga * 100,1)}}%</span>
+                                                                            ->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran / $row
+                                                                            ->get_pengerjaan->get_project->harga * 100,1)}}%</span>
                                                                     @endif |
-                                                                    <span class="label label-{{$row->selesai == false ?
-                                                                        'warning' : 'success'}}">{{$row->selesai == false ?
+                                                                    <span class="label label-{{$row->get_pengerjaan->get_project->selesai == false ?
+                                                                        'warning' : 'success'}}">{{$row->get_pengerjaan->get_project->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
                                                                 @else
                                                                     <span class="label label-info"
@@ -1445,7 +1438,7 @@
         }
 
         function lihatProgress(id, action, judul) {
-            $("#judul").val(judul);
+            // $("#judul").text(judul);
             $("#dt-pengerjaan").toggle(300);
             $("#lihat-progress").toggle(300);
 

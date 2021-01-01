@@ -926,7 +926,7 @@
                                                        data-toggle="tooltip" href="{{route('detail.proyek',
                                                                ['username' => $user->username,
                                                                'judul' => $row->get_project->permalink])}}">
-                                                        <i class="far fa-file" style="margin-right: 0"></i></a>
+                                                        <i class="fa fa-info-circle" style="margin-right: 0"></i></a>
                                                     <hr style="margin: .5em 0">
                                                     @if(!is_null($row->get_project->get_pembayaran))
                                                         <div class="input-group">
@@ -980,10 +980,10 @@
                                                         <i class="fa fa-edit" style="margin-right: 0"></i>
                                                     </button>
                                                     <hr style="margin: .5em 0">
-                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip" href="{{route('download.contract',['id'=> $row->get_project->id])}}"
-                                                            title="Surat Kontrak" onclick="">
+                                                    <a class="btn btn-link btn-sm" data-toggle="tooltip" href="{{route('download.contract',['id'=> $row->id])}}"
+                                                            title="Surat Kontrak">
                                                         <i class="fa fa-file" style="margin-right: 0"></i>
-                                                    </button>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -1064,8 +1064,8 @@
                                                         <div class="col-md-6">
                                                             @foreach($saldo as $row)
                                                                 <label class="card-label mb-0" for="pay_undagi">
-                                                                    @foreach($pengerjaan as $object)
-                                                                        @if($row -> saldo < $object->get_project->harga)
+                                                                    @foreach($proyek as $object)
+                                                                        @if($row->saldo < $object->harga)
                                                                             <input id="pay_undagi" class="card-rb"
                                                                                    type="radio"
                                                                                    name="payment_method" value="undagi"

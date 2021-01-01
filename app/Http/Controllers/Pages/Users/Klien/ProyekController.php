@@ -290,9 +290,9 @@ class ProyekController extends Controller
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
-                DompetHistory::firstOrCreate([
+                DompetHistory::create([
                     'user_id' => Auth::id(),
-                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'jumlah' => str_replace('.', '',$request->jumlah_pembayaran),
                     'pembayaran_id' => $pembayaran->id,
                 ]);
             } else {
@@ -305,9 +305,9 @@ class ProyekController extends Controller
                     'isDompet' => true,
                     'bayar_pakai_dompet' => str_replace('.', '', $request->jumlah_pembayaran),
                 ]);
-                DompetHistory::firstOrCreate([
+                DompetHistory::create([
                     'user_id' => Auth::id(),
-                    'jumlah_pembayaran' => str_replace('.', '',$request->jumlah_pembayaran),
+                    'jumlah' => str_replace('.', '',$request->jumlah_pembayaran),
                     'pembayaran_id' => $pembayaran->id,
                 ]);
             }
