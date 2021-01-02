@@ -484,7 +484,7 @@ class ProyekController extends Controller
 
             if ($cek) {
                 $lampiran = $cek->lampiran;
-                $lampiran_length = is_array($lampiran) ? count($lampiran) : [];
+                $lampiran_length = is_array($lampiran) ? count($lampiran) : 0;
 
                 if ($request->hasFile('lampiran')) {
 
