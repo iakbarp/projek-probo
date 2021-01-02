@@ -144,6 +144,8 @@ class ProyekController extends Controller
                             $d->status = ' (DP ' . round($pembayaran->jumlah_pembayaran * 100 / $dt['harga']) . '%)';
                         } elseif ((is_numeric(strpos($pembayaran->bukti_pembayaran, 'FP')))) {
                             $d->status = ' (Lunas)';
+                            $lunas=1;
+
                         } else {
                         $gabung = false;
                             $d->status = 'Menunggu Pembayaran';
@@ -155,7 +157,6 @@ class ProyekController extends Controller
                     if ($gabung) {
                         if ($d->selesai) {
                             $d->status = 'Selesai' . $d->status;
-                    $lunas=1;
 
                         } else {
                             $d->status = 'Pengerjaan' . $d->status;
