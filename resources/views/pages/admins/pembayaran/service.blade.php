@@ -79,8 +79,8 @@
                                                     <button class="btn btn-primary btn-icon" data-toggle="tooltip"
                                                             title="Konfimasi Pengelesaian Layanan"
                                                             onclick="action_modal('{{$item->get_pengerjaan_layanan->get_service->get_user->get_bio->rekening}}',
-                                                                '{{$item->get_pengerjaan_layanan->get_user->get_bio->bank}}',
-                                                                '{{$item->get_pengerjaan_layanan->get_user->get_bio->an}}',
+                                                                '{{$item->get_pengerjaan_layanan->get_service->get_user->get_bio->bank}}',
+                                                                '{{$item->get_pengerjaan_layanan->get_service->get_user->get_bio->an}}',
                                                                 '{{number_format($item->get_pengerjaan_layanan->get_service->harga)}}',
                                                                 '{{$item->id}}')">
                                                         <i
