@@ -158,7 +158,7 @@ class ProyekController extends Controller
                 }
 
                 $dt->file_hasil = $file;
-                $dt->proyek = collect($bid)->where('id', $dt->proyek_id)->first();
+                $dt->proyek = collect($bid)->where('proyek_id', $dt->proyek_id)->first();
                 $u=auth('api')->user();
                 $pekerja=Bio::query()
                 ->where('user_id',$id)
@@ -199,7 +199,6 @@ class ProyekController extends Controller
                     $ulasan_pekerja->foto=$owner->foto;
                     $ulasan_pekerja->nama=$owner->nama;
                     $ulasan_pekerja->id=$owner->id;
-
 
                 $kliens = DB::table('ulasan_klien')
                     ->where('user_id', $id)
