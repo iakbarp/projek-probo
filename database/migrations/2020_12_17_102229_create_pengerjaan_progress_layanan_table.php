@@ -15,10 +15,10 @@ class CreatePengerjaanProgressLayananTable extends Migration
     {
         Schema::create('pengerjaan_progress_layanan', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id'); //id klien
+            $table->unsignedBigInteger('user_id'); //id klien
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreignId('pengerjaan_layanan_id');
+            $table->unsignedBigInteger('pengerjaan_layanan_id');
             $table->foreign('pengerjaan_layanan_id')->references('id')->on('pengerjaan_layanan')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('bukti_gambar', 255)->nullable();

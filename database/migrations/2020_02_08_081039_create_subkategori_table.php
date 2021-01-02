@@ -15,7 +15,7 @@ class CreateSubkategoriTable extends Migration
     {
         Schema::create('subkategori', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('kategori_id');
+            $table->unsignedBigInteger('kategori_id');
             $table->foreign('kategori_id')->references('id')->on('kategori')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('nama');

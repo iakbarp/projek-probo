@@ -17,23 +17,23 @@ class CreateDompetHistoryTable extends Migration
             $table->string('id', 16);
             $table->primary('id');
 
-            $table->foreignId('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
 
-            $table->foreignId('topup_id')->nullable();
+            $table->unsignedBigInteger('topup_id')->nullable();
             $table->foreign('topup_id')->references('id')->on('topup')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
 
-            $table->foreignId('withdraw_id')->nullable();
+            $table->unsignedBigInteger('withdraw_id')->nullable();
             $table->foreign('withdraw_id')->references('id')->on('withdraw')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
 
-            $table->foreignId('pembayaran_layanan_id')->nullable();
+            $table->unsignedBigInteger('pembayaran_layanan_id')->nullable();
             $table->foreign('pembayaran_layanan_id')->references('id')->on('pembayaran_layanan')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
 
-            $table->foreignId('pembayaran_id')->nullable();
+            $table->unsignedBigInteger('pembayaran_id')->nullable();
             $table->foreign('pembayaran_id')->references('id')->on('pembayaran')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
 

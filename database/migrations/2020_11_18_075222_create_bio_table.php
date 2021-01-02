@@ -15,7 +15,7 @@ class CreateBioTable extends Migration
     {
         Schema::create('bio', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('foto')->nullable();
@@ -23,7 +23,7 @@ class CreateBioTable extends Migration
             $table->date('tgl_lahir')->nullable();
             $table->string('jenis_kelamin')->nullable();
             $table->string('kewarganegaraan')->nullable();
-            $table->foreignId('kota_id')->nullable();
+            $table->unsignedBigInteger('kota_id')->nullable();
             $table->foreign('kota_id')->references('id')->on('kota')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('alamat')->nullable();
@@ -32,7 +32,7 @@ class CreateBioTable extends Migration
             $table->string('status')->nullable();
             $table->text('summary')->nullable();
             $table->string('website')->nullable();
-            $table->foreignId('bank')->nullable();
+            $table->unsignedBigInteger('bank')->nullable();
             $table->foreign('bank')->references('id')->on('bank')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('an')->nullable();

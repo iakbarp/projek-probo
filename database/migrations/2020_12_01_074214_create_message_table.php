@@ -17,10 +17,10 @@ class CreateMessageTable extends Migration
             $table->bigIncrements('id');
 
 
-            $table->foreignId('user_from');
+            $table->unsignedBigInteger('user_from');
             $table->foreign('user_from')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreignId('user_to');
+            $table->unsignedBigInteger('user_to');
             $table->foreign('user_to')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->index('user_from');

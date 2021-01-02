@@ -15,7 +15,7 @@ class CreateSkillsTable extends Migration
     {
         Schema::create('skill', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('nama');
