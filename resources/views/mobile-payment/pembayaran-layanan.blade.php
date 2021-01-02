@@ -16,6 +16,8 @@
                             <input type="hidden" name="cek" value="service">
                             <input type="hidden" value="{{$jumlah_pembayaran}}"
                                            name="jumlah_pembayaran" >
+                                           <input type="hidden" name="dp" value="{{$dp}}">
+                            
                                            
                             
 

@@ -174,10 +174,11 @@ class ProyekPaymentController extends Controller
             $proyek_id=$proyek->id;
             
             $id=auth('api')->user()->id;
+            $dp=$request->dp;
 
             $jumlah_pembayaran=is_numeric($request->jumlah_pembayaran)?$request->jumlah_pembayaran:10000;
 
-            return view('mobile-payment.pembayaran',compact('id','jumlah_pembayaran','proyek_id'));
+            return view('mobile-payment.pembayaran',compact('id','jumlah_pembayaran','proyek_id','dp'));
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,

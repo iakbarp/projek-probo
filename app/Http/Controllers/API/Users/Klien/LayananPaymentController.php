@@ -104,12 +104,14 @@ class LayananPaymentController extends Controller
         try{
             $pengerjaan_layanan=PengerjaanLayanan::findOrFail($request->pengerjaan_layanan_id);
             $pengerjaan_layanan_id=$pengerjaan_layanan->id;
+            $dp=$request->dp;
+
             
             $id=auth('api')->user()->id;
 
             $jumlah_pembayaran=is_numeric($request->jumlah_pembayaran)?$request->jumlah_pembayaran:10000;
 
-            return view('mobile-payment.pembayaran-layanan',compact('id','jumlah_pembayaran','pengerjaan_layanan_id'));
+            return view('mobile-payment.pembayaran-layanan',compact('id','jumlah_pembayaran','pengerjaan_layanan_id','dp'));
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
