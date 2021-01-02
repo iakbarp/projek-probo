@@ -750,13 +750,13 @@
                                 </li>
                             </ul>
                             <div class="social-media">
-                                <a href="https://fb.com/ramadhanwahyu.gonzales" target="_blank">
+                                <a href="https://fb.com/akbar.talun" target="_blank">
                                     <i class="fab fa-facebook-f"></i></a>
-                                <a href="https://twitter.com/ramadhanwahyuu5" target="_blank">
+                                <a href="https://twitter.com/" target="_blank">
                                     <i class="fab fa-twitter"></i></a>
-                                <a href="https://github.com/Ramadhan1101" target="_blank">
+                                <a href="https://github.com/iakbarp" target="_blank">
                                     <i class="fab fa-github"></i></a>
-                                <a href="https://instagram.com/Ramadhan_Wahyu_11" target="_blank">
+                                <a href="https://instagram.com/akbarpriambodo_" target="_blank">
                                     <i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
