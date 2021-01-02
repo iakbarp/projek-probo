@@ -32,14 +32,14 @@ class PembayaranController extends Controller
     {
         try {
             $data = Pembayaran::find($request->id);
-            $get_user = Project::query()->whereHas('get_pengerjaan')->first();
+//            $get_user = Project::query()->whereHas('get_pengerjaan')->first();
             $topup=$data->jumlah_pembayaran;
 
             $data->update([
                 'selesai' => true
             ]);
             Topup::create([
-                'user_id'=>$get_user->user_id,
+                'user_id'=>$data->get_project->get_pengerjaan->get_user->id,
                 'jumlah'=>$topup,
                 'konfirmasi' => true,
             ]);
@@ -90,7 +90,7 @@ class PembayaranController extends Controller
             ]);
 
             Topup::create([
-               'user_id'=>$get_user->user_id,
+                'user_id'=>$data->get_pengerjaan_layanan->get_service->get_user->id,
                 'jumlah'=>$topup,
                 'konfirmasi' => true,
             ]);
