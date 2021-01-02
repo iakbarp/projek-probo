@@ -102,7 +102,7 @@ class LayananPaymentController extends Controller
     {
 
         try{
-            $pengerjaan_layanan=Project::findOrFail($request->pengerjaan_layanan_id);
+            $pengerjaan_layanan=PengerjaanLayanan::findOrFail($request->pengerjaan_layanan_id);
             $pengerjaan_layanan_id=$pengerjaan_layanan->id;
             
             $id=auth('api')->user()->id;
