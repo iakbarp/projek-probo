@@ -584,6 +584,7 @@ class ProyekController extends Controller
         $validator = Validator::make($request->all(), [
             'bintang' => 'required|numeric|max:5|min:0',
             'deskripsi' => 'required|string',
+            'puas'=>'in:0,1'
         ]);
 
         if ($validator->fails()) {
@@ -626,13 +627,20 @@ class ProyekController extends Controller
            $bio->update([
             'total_bintang_pekerja'=>$bintang_avg
            ]);
-                       DB::commit();
-                       return response()->json([
-                           'error'=>false,
-                           'data'=>[
-                            'message' => 'Komen untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
-                           ]
-                       ], 201);
+                       
+            if($request->puas){
+                Pengerjaan::find($pengerjaan->id)->update([
+                    'selesai'=>$request->puas,
+                ]);
+            }
+            DB::commit();
+
+            return response()->json([
+                'error'=>false,
+                'data'=>[
+                'message' => 'Komen untuk Proyek ['.$pengerjaan->judul.'] berhasil ditambahkan!'
+                ]
+            ], 201);
            
 
         } catch (\Exception $exception) {
