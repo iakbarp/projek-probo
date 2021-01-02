@@ -15,7 +15,7 @@ class CreatePortofolioTable extends Migration
     {
         Schema::create('portofolio', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->text('foto');

@@ -15,7 +15,7 @@ class CreatePembayaranLayananTable extends Migration
     {
         Schema::create('pembayaran_layanan', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('pengerjaan_layanan_id');
+            $table->foreignId('pengerjaan_layanan_id');
             $table->foreign('pengerjaan_layanan_id')->references('id')->on('pengerjaan_layanan')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->boolean('dp')->default(false);

@@ -15,10 +15,10 @@ class CreateUlasanPekerjaTable extends Migration
     {
         Schema::create('ulasan_pekerja', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id'); //id klien
+            $table->foreignId('user_id'); //id klien
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->unsignedBigInteger('pengerjaan_id');
+            $table->foreignId('pengerjaan_id');
             $table->foreign('pengerjaan_id')->references('id')->on('pengerjaan')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->text('deskripsi');

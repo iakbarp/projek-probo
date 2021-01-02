@@ -15,7 +15,7 @@ class CreateBahasaTable extends Migration
     {
         Schema::create('bahasa', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('nama');

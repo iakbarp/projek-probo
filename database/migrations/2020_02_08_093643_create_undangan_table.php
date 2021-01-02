@@ -15,10 +15,10 @@ class CreateUndanganTable extends Migration
     {
         Schema::create('undangan', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->unsignedBigInteger('proyek_id');
+            $table->foreignId('proyek_id');
             $table->foreign('proyek_id')->references('id')->on('project')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->boolean('terima')->nullable();

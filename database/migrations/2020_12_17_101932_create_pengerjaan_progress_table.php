@@ -15,13 +15,13 @@ class CreatePengerjaanProgressTable extends Migration
     {
         Schema::create('pengerjaan_progress', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id'); //id klien
+            $table->foreignId('user_id'); //id klien
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->unsignedBigInteger('proyek_id');
+            $table->foreignId('proyek_id');
             $table->foreign('proyek_id')->references('id')->on('project')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->unsignedBigInteger('pengerjaan_id');
+            $table->foreignId('pengerjaan_id');
             $table->foreign('pengerjaan_id')->references('id')->on('pengerjaan')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('bukti_gambar',255)->nullable();

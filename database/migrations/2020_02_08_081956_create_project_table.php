@@ -15,10 +15,10 @@ class CreateProjectTable extends Migration
     {
         Schema::create('project', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->unsignedBigInteger('subkategori_id');
+            $table->foreignId('subkategori_id');
             $table->foreign('subkategori_id')->references('id')->on('subkategori')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('judul');
