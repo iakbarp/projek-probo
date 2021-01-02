@@ -200,7 +200,7 @@ class ProyekController extends Controller
                     $pekerja->deskripsi = $ulasan_pekerja ? $ulasan_pekerja->deskripsi : null;
 
                     $Pengerjaan[$i] = $dt;
-                    $Pengerjaan[$i]['ratingable']=count($d->file_hasil)?1:0;
+                    $Pengerjaan[$i]['ratingable']=$d->selesai==0&&count($d->file_hasil)?1:0;
                     $Pengerjaan[$i]['isLunas']=$lunas;
                     $Pengerjaan[$i]['pengerjaan'] = $d;
                     $Pengerjaan[$i]['pengerjaan']->pekerja = $pekerjas;
