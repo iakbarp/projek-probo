@@ -109,7 +109,7 @@ class LayananPaymentController extends Controller
 
             $jumlah_pembayaran=is_numeric($request->jumlah_pembayaran)?$request->jumlah_pembayaran:10000;
 
-            return view('mobile-payment.pembayaran',compact('id','jumlah_pembayaran','pengerjaan_layanan_id'));
+            return view('mobile-payment.pembayaran-layanan',compact('id','jumlah_pembayaran','pengerjaan_layanan_id'));
         } catch (\Exception $exception) {
             return response()->json([
                 'error' => true,
