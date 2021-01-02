@@ -8,6 +8,7 @@ use App\Model\PembayaranLayanan;
 use App\Model\PengerjaanLayanan;
 use App\Model\Services;
 use App\Model\Bio;
+use App\Model\DompetHistory;
 use App\Model\Saldo;
 
 
@@ -97,6 +98,30 @@ class LayananPaymentController extends Controller
         }
     }
 
+    public function viewMidtrans(Request $request)
+    {
+
+        try{
+            $pengerjaan_layanan=PengerjaanLayanan::findOrFail($request->pengerjaan_layanan_id);
+            $pengerjaan_layanan_id=$pengerjaan_layanan->id;
+            $dp=$request->dp;
+
+            
+            $id=auth('api')->user()->id;
+
+            $jumlah_pembayaran=is_numeric($request->jumlah_pembayaran)?$request->jumlah_pembayaran:10000;
+
+            return view('mobile-payment.pembayaran-layanan',compact('id','jumlah_pembayaran','pengerjaan_layanan_id','dp'));
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
     public function viaDompet(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -142,7 +167,7 @@ class LayananPaymentController extends Controller
                 ->select('pembayaran_layanan.*')
                 ->firstOrFail();
 
-                $pembayaran->update([
+                $pemb=$pembayaran->update([
                     'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
                     'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
                     'isDompet'=>1,
@@ -150,7 +175,7 @@ class LayananPaymentController extends Controller
                 ]);
             }else{
                 $bayar_=$service->harga<$bayar?$service->harga:(($service->harga*30/100)>$bayar?($service->harga*30/100):$bayar);
-                PembayaranLayanan::create([
+                $pemb=PembayaranLayanan::create([
                     'pengerjaan_layanan_id'=>$pengerjaan_id,
                     'jumlah_pembayaran'=>$bayar_,
                     'bayar_pakai_dompet'=>$bayar_,
@@ -159,6 +184,11 @@ class LayananPaymentController extends Controller
 
                 ]);
             }
+
+            DompetHistory::create([
+                'jumlah'=>$bayar,
+                'pembayaran_layanan_id'=>$pemb->id,
+            ]);
 
             return response()->json([
                 'error' => false,

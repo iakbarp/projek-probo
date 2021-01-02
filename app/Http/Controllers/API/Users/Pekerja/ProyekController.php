@@ -540,7 +540,7 @@ class ProyekController extends Controller
 
              foreach($progress as $i=>$dt){
                  $dt->urutan=$i+1;
-                $dt = $this->imgCheck($dt, 'bukti_gambar', 'proyek/progress/');
+                $dt = $this->imgCheck($dt, 'bukti_gambar', 'proyek/progress/',3);
                  
              }
 
@@ -732,6 +732,8 @@ class ProyekController extends Controller
             asset('admins/img/avatar/avatar-1' . '.png'),
             asset('images/porto.jpg'),
             asset('images/undangan-2'  . '.jpg'),
+            asset('images/noimage' . '.jpg'),
+
 
         ];
         $res = $data;

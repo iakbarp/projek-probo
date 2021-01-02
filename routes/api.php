@@ -116,12 +116,17 @@ Route::group(['namespace' => 'API'], function () {
                 Route::get('/', 'ProyekController@dashboard')->middleware('throttle:600,1');
                 Route::group(['middleware' => 'optimizeImages'], function () {
 
+                    
                     Route::post('/', 'ProyekController@tambahProyek');
+                    
                     Route::post('/lampiran', 'ProyekController@tambahLampiran');
                     Route::delete('/lampiran', 'ProyekController@deleteLampiran');
 
+
                     Route::group(['prefix' => 'payment'], function () {
                         Route::get('/', 'ProyekPaymentController@index')->middleware('throttle:600,1');
+                        Route::get('/midtrans', 'ProyekPaymentController@viewMidtrans');
+                        
                         Route::post('/dompet', 'ProyekPaymentController@viaDompet');
                     });
 
@@ -139,6 +144,8 @@ Route::group(['namespace' => 'API'], function () {
 
                 Route::group(['prefix' => 'payment'], function () {
                     Route::get('/','LayananPaymentController@index')->middleware('throttle:600,1');
+                    Route::get('/midtrans', 'LayananPaymentController@viewMidtrans');
+
                     Route::post('/dompet', 'LayananPaymentController@viaDompet');
                 });
 
