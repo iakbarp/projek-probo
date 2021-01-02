@@ -197,7 +197,7 @@ class ProyekController extends Controller
 
                 $kliens = DB::table('ulasan_klien')
                     ->where('user_id', $id)
-                    ->where('proyek_id', $dt->proyek->id)
+                    ->where('proyek_id', $dt->proyek_id)
                     ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                     ->orderBy('id', 'desc')->first();
 
