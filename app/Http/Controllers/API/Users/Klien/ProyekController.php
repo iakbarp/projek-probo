@@ -606,7 +606,7 @@ class ProyekController extends Controller
             ->join('pengerjaan as p',function($query){
                 $query->on('project.id','=','p.proyek_id');
                 $query->whereNotNull('file_hasil');
-                $query->where('selesai','!=',DB::raw('0'));
+                $query->where('selesai','=',DB::raw('0'));
             })
             ->select('p.id','p.proyek_id','p.user_id','project.judul')
            ->firstOrFail();
