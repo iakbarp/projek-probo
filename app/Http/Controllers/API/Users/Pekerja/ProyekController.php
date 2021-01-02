@@ -153,7 +153,7 @@ class ProyekController extends Controller
                     }else{
                         $dt->progressable=1;
 
-                        $dt->status='Pengerjaan';
+                        $dt->status='Pengerjaan'.$dt->status;
                     }
                 }
 
