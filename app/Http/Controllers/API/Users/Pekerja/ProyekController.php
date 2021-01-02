@@ -94,6 +94,7 @@ class ProyekController extends Controller
             ->when($search,function($q)use($search){
                 $q->where('p.judul','like',"%$search%");
             })
+            ->orderBy('id','desc')
             ->get([DB::raw('p.user_id as user_proyek'),'pengerjaan.id','proyek_id','selesai','file_hasil','tautan','pengerjaan.created_at','pengerjaan.updated_at']);
 
 
