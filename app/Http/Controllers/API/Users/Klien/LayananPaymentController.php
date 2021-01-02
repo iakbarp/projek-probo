@@ -98,6 +98,28 @@ class LayananPaymentController extends Controller
         }
     }
 
+    public function viewMidtrans(Request $request)
+    {
+
+        try{
+            $pengerjaan_layanan=Project::findOrFail($request->pengerjaan_layanan_id);
+            $pengerjaan_layanan_id=$pengerjaan_layanan->id;
+            
+            $id=auth('api')->user()->id;
+
+            $jumlah_pembayaran=is_numeric($request->jumlah)?$request->jumlah:10000;
+
+            return view('mobile-payment.pembayaran',compact('id','jumlah_pembayaran','pengerjaan_layanan_id'));
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
     public function viaDompet(Request $request)
     {
         $validator = Validator::make($request->all(), [

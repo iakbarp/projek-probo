@@ -166,6 +166,28 @@ class ProyekPaymentController extends Controller
         }
     }
 
+    public function viewMidtrans(Request $request)
+    {
+
+        try{
+            $proyek=Project::findOrFail($request->proyek_id);
+            $proyek_id=$proyek->id;
+            
+            $id=auth('api')->user()->id;
+
+            $jumlah_pembayaran=is_numeric($request->jumlah)?$request->jumlah:10000;
+
+            return view('mobile-payment.pembayaran',compact('id','jumlah_pembayaran','proyek_id'));
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => true,
+
+                'message' => $exception->getMessage()
+
+            ], 400);
+        }
+    }
+
     private function imgCheck($data, $column, $path, $ch = 0)
     {
         $dummy_photo = [
