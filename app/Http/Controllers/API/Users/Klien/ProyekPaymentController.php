@@ -14,6 +14,7 @@ use App\Model\Project;
 use App\Model\Pengerjaan;
 use App\User;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -108,53 +109,56 @@ class ProyekPaymentController extends Controller
 
             ], 400);
         }
+        DB::beginTransaction();
+
 
         try {
             $proyek_id=$request->proyek_id;
             $user=auth('api')->user();
-        $pembayaran=Pembayaran::where('proyek_id',$proyek_id)->first();
-        $proyek=Project::find($proyek_id);
-        $is_dp=false;
-        $bayar=$request->bayar;
+            $pembayaran=Pembayaran::where('proyek_id',$proyek_id)->first();
+            $proyek=Project::find($proyek_id);
+            $is_dp=false;
+            $bayar=$request->bayar;
 
-        if($pembayaran){
-            $harus_bayar=$proyek->harga-$pembayaran->jumlah_pembayaran;
-            $harus_bayar=$harus_bayar?$harus_bayar:0;
+            if($pembayaran){
+                $harus_bayar=$proyek->harga-$pembayaran->jumlah_pembayaran;
+                $harus_bayar=$harus_bayar?$harus_bayar:0;
 
-           $pemb= $pembayaran->update([
-                'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
-                'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
-                'isDompet'=>1,
-                'bukti_pembayaran'=>'FP - '.now()->format('j F Y'),
-            ]);
-        }else{
-            $bayar_=$proyek->harga<$bayar?$proyek->harga:(($proyek->harga*30/100)>$bayar?($proyek->harga*30/100):$bayar);
-            $pemb= Pembayaran::create([
-                'proyek_id'=>$proyek_id,
-                'jumlah_pembayaran'=>$bayar_,
-                'bayar_pakai_dompet'=>$bayar_,
-                'isDompet'=>1,
-                'bukti_pembayaran'=>($proyek->harga<=$bayar?'FP':'DP'). '- '.now()->format('j F Y'),
+            $pemb= $pembayaran->update([
+                    'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
+                    'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
+                    'isDompet'=>1,
+                    'bukti_pembayaran'=>'FP - '.now()->format('j F Y'),
+                ]);
+            }else{
+                $bayar_=$proyek->harga<$bayar?$proyek->harga:(($proyek->harga*30/100)>$bayar?($proyek->harga*30/100):$bayar);
+                $pemb= Pembayaran::create([
+                    'proyek_id'=>$proyek_id,
+                    'jumlah_pembayaran'=>$bayar_,
+                    'bayar_pakai_dompet'=>$bayar_,
+                    'isDompet'=>1,
+                    'bukti_pembayaran'=>($proyek->harga<=$bayar?'FP':'DP'). '- '.now()->format('j F Y'),
 
-            ]);
-        }
+                ]);
+            }
 
-        DompetHistory::create([
-            'jumlah'=>$bayar,
-            'pembayaran_id'=>$pemb->id,
-        ]);
+                DompetHistory::create([
+                    'jumlah'=>$bayar,
+                    'pembayaran_id'=>$pemb->id,
+                    'user_id'=>auth('api')->user()->id
+                ]);
+                DB::commit();
+                return response()->json([
+                    'error' => false,
+                    'data' => [
+                    'message'=>($proyek->harga<=$bayar?'Pelunasan':'Pembayaran').' proyek ['.$proyek->judul.'] berhasil',
 
-            return response()->json([
-                'error' => false,
-                'data' => [
-                   'message'=>($proyek->harga<=$bayar?'Pelunasan':'Pembayaran').' proyek ['.$proyek->judul.'] berhasil',
 
-
-                   ]
-            ]);
+                ]
+                ]);
 
         } catch (\Exception $exception) {
-
+            DB::rollback();
             return response()->json([
                 'error' => true,
 

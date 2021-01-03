@@ -138,6 +138,8 @@ class LayananPaymentController extends Controller
                 
             ], 400);
         }
+        DB::beginTransaction();
+
 
         try {
             $pengerjaan_id=$request->pengerjaan_id;
@@ -188,8 +190,9 @@ class LayananPaymentController extends Controller
             DompetHistory::create([
                 'jumlah'=>$bayar,
                 'pembayaran_layanan_id'=>$pemb->id,
+                'user_id'=>auth('api')->user()->id
             ]);
-
+            DB::commit();
             return response()->json([
                 'error' => false,
                 'data' => [
@@ -200,7 +203,7 @@ class LayananPaymentController extends Controller
             ]);
 
         } catch (\Exception $exception) {
-        
+            DB::rollback();
             return response()->json([
                 'error' => true,
 

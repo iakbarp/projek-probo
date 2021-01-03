@@ -453,10 +453,10 @@ class ProyekController extends Controller
     //     }
     // }
 
-    public function ratingKlien(Request $request)
+    public function ratingKlien($proyek_id,Request $request)
     {
         $user = auth('api')->user();
-        $proyek_id = $request->proyek_id;
+        
         
 
         $validator = Validator::make($request->all(), [
