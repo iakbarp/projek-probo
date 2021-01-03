@@ -408,10 +408,10 @@ class LayananController extends Controller
         }
     }
 
-    public function fileFinal(Request $request)
+    public function fileFinal($pengerjaan_id,Request $request)
     {
         $user = auth('api')->user();
-        $pengerjaan_id = $request->pengerjaan_id;
+        // $pengerjaan_id = $request->pengerjaan_id;
         
 
         $validator = Validator::make($request->all(), [

@@ -94,6 +94,7 @@ class ProyekController extends Controller
             ->when($search,function($q)use($search){
                 $q->where('p.judul','like',"%$search%");
             })
+            ->orderBy('id','desc')
             ->get([DB::raw('p.user_id as user_proyek'),'pengerjaan.id','proyek_id','selesai','file_hasil','tautan','pengerjaan.created_at','pengerjaan.updated_at']);
 
 
@@ -125,13 +126,18 @@ class ProyekController extends Controller
 
 
                   }
+                  
+                 $pr=collect($bid)->where('proyek_id', $dt->proyek_id)->first();
 
-                $pembayaran=Pembayaran::where('proyek_id',$dt->proyek_id)->first();
+               
+                  $pembayaran=Pembayaran::where('proyek_id',$dt->proyek_id)->first();
                   $gabung=true;
                   $dt->progressable=0;
+                  
+                  
                 if($pembayaran){
                     if(is_numeric(strpos($pembayaran->bukti_pembayaran,'DP'))){
-                       $dt->status= ' (DP'.round($pembayaran->jumlah_pembayaran*100/$dt['harga']).'%)';
+                       $dt->status= ' (DP'.round($pembayaran->jumlah_pembayaran*100/$pr['harga']).'%)';
                     }elseif((is_numeric(strpos($pembayaran->bukti_pembayaran,'FP')))){
                         $dt->status=' (Lunas)';
                     }else{
@@ -139,6 +145,7 @@ class ProyekController extends Controller
 
                         $dt->status='Menunggu Pembayaran';
                     }
+                    
                 }else{
                     $gabung = false;
 
@@ -152,12 +159,14 @@ class ProyekController extends Controller
                     }else{
                         $dt->progressable=1;
 
-                        $dt->status='Pengerjaan';
+                        $dt->status='Pengerjaan'.$dt->status;
                     }
                 }
+                
+                
 
                 $dt->file_hasil = $file;
-                $dt->proyek = collect($bid)->where('id', $dt->proyek_id)->first();
+                $dt->proyek = $pr;
                 $u=auth('api')->user();
                 $pekerja=Bio::query()
                 ->where('user_id',$id)
@@ -182,22 +191,26 @@ class ProyekController extends Controller
                     $pekerja->foto=$user->foto;
                 }
 
+                $ratingable=1;
+
                 $ulasan_pekerja = DB::table('ulasan_pekerja')
                         ->where('user_id', $dt->user_proyek)
                         ->where('pengerjaan_id', $dt->id)
                         ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                         ->orderBy('id', 'desc')->first();
                 if(!$ulasan_pekerja){
+                    $ratingable=0;
+                    
                     $ulasan_pekerja=(object)[];
                 }
+                    $dt->ratingable=$ratingable;
                     $ulasan_pekerja->foto=$owner->foto;
                     $ulasan_pekerja->nama=$owner->nama;
                     $ulasan_pekerja->id=$owner->id;
 
-
                 $kliens = DB::table('ulasan_klien')
                     ->where('user_id', $id)
-                    ->where('proyek_id', $dt->proyek->id)
+                    ->where('proyek_id', $dt->proyek_id)
                     ->select(DB::raw("format(bintang,1) as bintang,	deskripsi"))
                     ->orderBy('id', 'desc')->first();
 
@@ -447,10 +460,10 @@ class ProyekController extends Controller
     //     }
     // }
 
-    public function ratingKlien(Request $request)
+    public function ratingKlien($proyek_id,Request $request)
     {
         $user = auth('api')->user();
-        $proyek_id = $request->proyek_id;
+        
         
 
         $validator = Validator::make($request->all(), [

@@ -311,7 +311,11 @@ class tabDataController extends Controller
                 ->get();
 
 
-            $kategori = $kategori ? $this->imgCheck($kategori, 'img', 'images/category-icons/', 2, false) : [];
+            // $kategori = $kategori ? $this->imgCheck($kategori, 'img', 'images/category-icons/', 2, false) : [];
+
+            foreach($kategori as $dt){
+                $dt->img=asset('images/category-icons/'.$dt->img);
+            }
 
             return response()->json([
                 'error' => false,
