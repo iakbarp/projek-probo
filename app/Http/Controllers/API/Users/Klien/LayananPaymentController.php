@@ -161,6 +161,7 @@ class LayananPaymentController extends Controller
                 $harus_bayar=$service->harga-$pembayaran->jumlah_pembayaran;
                 $harus_bayar=$harus_bayar?$harus_bayar:0;
 
+                
                 $pembayaran=PembayaranLayanan::where('pengerjaan_layanan_id',$pengerjaan_id)
                 ->join('pengerjaan_layanan as pl',function($rel)use($user){
                     $rel->on('pl.id','=','pembayaran_layanan.pengerjaan_layanan_id');
@@ -169,12 +170,15 @@ class LayananPaymentController extends Controller
                 ->select('pembayaran_layanan.*')
                 ->firstOrFail();
 
+                $pemb_id=$pembayaran;
+
                 $pemb=$pembayaran->update([
                     'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
                     'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
                     'isDompet'=>1,
                     'bukti_pembayaran'=>'FP - '.now()->format('j F Y'),
                 ]);
+                $pemb=$pemb_id;
             }else{
                 $bayar_=$service->harga<$bayar?$service->harga:(($service->harga*30/100)>$bayar?($service->harga*30/100):$bayar);
                 $pemb=PembayaranLayanan::create([
