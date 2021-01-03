@@ -41,10 +41,11 @@ class ProyekPaymentController extends Controller
         try {
             $proyek_id=$request->proyek_id;
             $u=auth('api')->user();
-        $user=Bio::where('user_id',$u->id)->firstOrFail(['foto']);
-        $pembayaran=Pembayaran::where('proyek_id',$proyek_id)->first();
-        $proyek=Project::find($proyek_id);
-        $is_dp=false;
+            $user=Bio::where('user_id',$u->id)->firstOrFail(['foto']);
+            $pembayaran=Pembayaran::where('proyek_id',$proyek_id)->first();
+            $proyek=Project::find($proyek_id);
+            $pengerjaan=Pengerjaan::where('proyek_id',$proyek_id)->first();
+            $is_dp=false;
 
         if($pembayaran){
             $is_dp=is_numeric(strpos($pembayaran->bukti_pembayaran,'DP'));
@@ -76,7 +77,8 @@ class ProyekPaymentController extends Controller
                    'saldo'=>$saldo->saldo,
                    'gross_bill'=>$proyek->harga,
                    'bill'=>$bill,
-                   'is_dp'=>$is_dp
+                   'is_dp'=>$is_dp,
+                   'pengerjaan_id'=>$pengerjaan->id
                    ]
             ]);
 
