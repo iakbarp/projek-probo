@@ -176,7 +176,7 @@ class LayananPaymentController extends Controller
                     'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
                     'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
                     'isDompet'=>1,
-                    'bukti_pembayaran'=>'FP - '.now()->format('j F Y'),
+                    'bukti_pembayaran'=>(($pembayaran->bayar_pakai_dompet+$harus_bayar<$service->harga)?'DP':'FP').' - '.now()->format('j F Y'),
                 ]);
                 $pemb=$pemb_id;
             }else{
