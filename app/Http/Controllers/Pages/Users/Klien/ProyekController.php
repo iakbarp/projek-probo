@@ -315,7 +315,7 @@ class ProyekController extends Controller
 //            Mail::to($pembayaran->get_project->get_user->email)
 //                ->send(new PembayaranProyekMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
 
-            return back()->with('pengerjaan', 'Silahkan cek email Anda dan selesaikan pembayaran Anda sebelum batas waktu yang ditentukan! Terimakasih :)');
+            return back()->with('pengerjaan', 'Pembayaran anda berhasil diproses! Terimakasih :)');
         }
     }
 

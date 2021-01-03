@@ -470,14 +470,14 @@
                                                     <hr>
                                                     @if($row->pribadi == false)
                                                         @if(count($row->get_bid) > 0)
-                                                        <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
-                                                           title="Lihat Bidder"
-                                                           style="text-transform: none;align-content: center;background: #2879fe"
-                                                           href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
+                                                            <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
+                                                               title="Lihat Bidder"
+                                                               style="text-transform: none;align-content: center;background: #2879fe"
+                                                               href="{{route('klien.bid.proyek',['judul' => $row->permalink])}}">
                                                             <span style="color: white">{{$bid}}&nbsp;<i
                                                                     class="fa fa-paper-plane"></i> </span>
-                                                        </a>
-                                                            @else
+                                                            </a>
+                                                        @else
                                                             <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
                                                                title="Lihat Bidder"
                                                                style="text-transform: none;align-content: center;background: #2879fe"
@@ -485,7 +485,7 @@
                                                             <span style="color: white">0 bid<i
                                                                     class="fa fa-paper-plane"></i> </span>
                                                             </a>
-                                                            @endif
+                                                        @endif
                                                     @else
                                                         @if(count($row->get_bid) > 0)
                                                             <a class="btn btn-link btn-sm btn-block"
@@ -496,7 +496,7 @@
                                                                 <span style="color: white">{{$bid}}&nbsp;<i
                                                                         class="fa fa-paper-plane"></i> </span>
                                                             </a>
-                                                            @else
+                                                        @else
                                                             <a class="btn btn-link btn-sm btn-block" data-toggle="tooltip"
                                                                title="Lihat Bidder"
                                                                style="text-transform: none;align-content: center;background: #2879fe"
@@ -922,16 +922,16 @@
                                                         $row->selesai == true ? 'disabled' : ''}}>
                                                         <i class="fa fa-chart-bar" style="margin-right: 0"></i>
                                                     </a>
-{{--                                                    <a class="btn btn-link btn-sm btn-block"--}}
-{{--                                                            title="Lihat Progress Pengerjaan"--}}
-{{--                                                            data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',--}}
-{{--                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',--}}
-{{--                                                        '{{$row->get_project->judul}}')" {{is_null($row->get_project->get_pembayaran) ||--}}
-{{--                                                                (!is_null($row->get_project->get_pembayaran) &&--}}
-{{--                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||--}}
-{{--                                                                $row->selesai == true ? 'disabled' : ''}}>--}}
-{{--                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i>--}}
-{{--                                                    </a>--}}
+                                                    {{--                                                    <a class="btn btn-link btn-sm btn-block"--}}
+                                                    {{--                                                            title="Lihat Progress Pengerjaan"--}}
+                                                    {{--                                                            data-toggle="tooltip" onclick="lihatProgress('{{$row->id}}',--}}
+                                                    {{--                                                        '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.proyek', ['id' => $row->id])}}',--}}
+                                                    {{--                                                        '{{$row->get_project->judul}}')" {{is_null($row->get_project->get_pembayaran) ||--}}
+                                                    {{--                                                                (!is_null($row->get_project->get_pembayaran) &&--}}
+                                                    {{--                                                                is_null($row->get_project->get_pembayaran->bukti_pembayaran)) ||--}}
+                                                    {{--                                                                $row->selesai == true ? 'disabled' : ''}}>--}}
+                                                    {{--                                                        <i class="far fa-chart-bar" style="margin-right: 0"></i>--}}
+                                                    {{--                                                    </a>--}}
                                                     <hr style="margin: .5em 0">
                                                     <a class="btn btn-link btn-sm btn-block" title="Lihat Proyek"
                                                        data-toggle="tooltip" href="{{route('detail.proyek',
@@ -992,7 +992,7 @@
                                                     </button>
                                                     <hr style="margin: .5em 0">
                                                     <a class="btn btn-link btn-sm" data-toggle="tooltip" href="{{route('download.contract',['id'=> $row->id])}}"
-                                                            title="Surat Kontrak">
+                                                       title="Surat Kontrak">
                                                         <i class="fa fa-file" style="margin-right: 0"></i>
                                                     </a>
                                                 </td>
@@ -1754,8 +1754,7 @@
                     // bayar undagi
                     swal({
                         title: 'Apakah anda yakin?',
-                        text: 'Kami akan mengirimkan rincian tagihan pembayaran melalui email ' +
-                            'sesaat setelah Anda menekan tombol "Ya" berikut!',
+                        text: 'Saldo Undagi pay anda akan terpotong setelah Anda menekan tombol "Ya" berikut!',
                         icon: '{{asset('images/red-icon.png')}}',
                         dangerMode: true,
                         closeOnEsc: false,

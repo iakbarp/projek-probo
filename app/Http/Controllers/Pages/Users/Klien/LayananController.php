@@ -101,7 +101,7 @@ class LayananController extends Controller
 //            Mail::to($pembayaran->get_pengerjaan_layanan->get_user->email)
 //                ->send(new PembayaranLayananMail($pembayaran, $sisa_pembayaran, $request->metode_pembayaran, $request->rekening));
 
-            return back()->with('update', 'Silahkan cek email Anda dan selesaikan pembayaran Anda sebelum batas waktu yang ditentukan! Terimakasih :)');
+            return back()->with('update', 'Pembayaran anda berhasil diproses! Terimakasih :)');
         }
     }
 

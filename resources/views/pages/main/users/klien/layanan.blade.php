@@ -1117,8 +1117,7 @@
                     // bayar undagi
                     swal({
                         title: 'Apakah anda yakin?',
-                        text: 'Kami akan mengirimkan rincian tagihan pembayaran melalui email ' +
-                            'sesaat setelah Anda menekan tombol "Ya" berikut!',
+                        text: 'Saldo Undagi pay anda akan terpotong setelah Anda menekan tombol "Ya" berikut!',
                         icon: '{{asset('images/red-icon.png')}}',
                         dangerMode: true,
                         closeOnEsc: false,
