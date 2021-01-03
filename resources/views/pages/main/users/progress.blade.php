@@ -1,5 +1,5 @@
 @extends('layouts.mst')
-@section('title', 'Dashboard Pekerja: Tugas/Proyek – '.$user->name.' | '.env('APP_TITLE'))
+@section('title', 'Progress Pengerjaan | '.env('APP_TITLE'))
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/card.css')}}">
     <link rel="stylesheet" href="{{asset('css/bootstrap-tabs-responsive.css')}}">
@@ -258,7 +258,6 @@
                                     </div>
                                 </div>
                             @else
-                                @foreach($progress as $row)
                                     <div class="card">
                                         <div class="card-content">
                                             <div class="card-title">
@@ -267,28 +266,28 @@
                                                         <img style="width: 15%;height: auto"
                                                              class="img-responsive float-left mr-2"
                                                              alt="Thumbnail"
-                                                             src="{{$row->get_pengerjaan->get_project->thumbnail != "" ?
-                                                                     asset('storage/proyek/progress/'.$row->get_pengerjaan->get_project->thumbnail)
+                                                             src="{{$detail->get_pengerjaan->get_project->thumbnail != "" ?
+                                                                     asset('storage/proyek/progress/'.$detail->get_pengerjaan->get_project->thumbnail)
                                                                      : asset('images/slider/beranda-1.jpg')}}">
-                                                        <b style="color: #2878ff;font-size: 25px">{{$row->get_pengerjaan->get_project->judul}}</b>
-                                                        <b style="color: black;font-size: 25px">({{$row->get_pengerjaan->get_project->waktu_pengerjaan}}
+                                                        <b style="color: #2878ff;font-size: 25px">{{$detail->get_pengerjaan->get_project->judul}}</b>
+                                                        <b style="color: black;font-size: 25px">({{$detail->get_pengerjaan->get_project->waktu_pengerjaan}}
                                                             &nbsp;HARI)</b>
                                                         <br>
-                                                        <b>Rp{{number_format($row->get_pengerjaan->get_project->harga,2,',','.')}}
+                                                        <b>Rp{{number_format($detail->get_pengerjaan->get_project->harga,2,',','.')}}
                                                         </b>
                                                         <br>
-                                                        @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran))
-                                                            @if(!is_null($row->get_pengerjaan->get_project->get_pembayaran->bukti_pembayaran))
-                                                                @if($row->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $row->get_pengerjaan->get_project->harga)
+                                                        @if(!is_null($detail->get_pengerjaan->get_project->get_pembayaran))
+                                                            @if(!is_null($detail->get_pengerjaan->get_project->get_pembayaran->bukti_pembayaran))
+                                                                @if($detail->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran == $detail->get_pengerjaan->get_project->harga)
                                                                     <span
                                                                         class="label label-success">LUNAS</span>
                                                                 @else
-                                                                    <span class="label label-default">DP {{round($row
-                                                                            ->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran / $row
+                                                                    <span class="label label-default">DP {{round($detail
+                                                                            ->get_pengerjaan->get_project->get_pembayaran->jumlah_pembayaran / $detail
                                                                             ->get_pengerjaan->get_project->harga * 100,1)}}%</span>
                                                                 @endif |
-                                                                <span class="label label-{{$row->get_pengerjaan->get_project->selesai == false ?
-                                                                        'warning' : 'success'}}">{{$row->get_pengerjaan->get_project->selesai == false ?
+                                                                <span class="label label-{{$detail->get_pengerjaan->get_project->selesai == false ?
+                                                                        'warning' : 'success'}}">{{$detail->get_pengerjaan->get_project->selesai == false ?
                                                                         'PROSES PENGERJAAN' : 'SELESAI'}}</span>
                                                             @else
                                                                 <span class="label label-info"
@@ -311,6 +310,8 @@
                                                     </thead>
                                                     <tbody>
                                                     @php $no = 1; @endphp
+                                                    @foreach($progress as $row)
+
                                                     <tr>
                                                         <td style="vertical-align: middle"><a
                                                                 href="{{asset('storage/proyek/progress/'.$row->bukti_gambar)}}"
@@ -320,9 +321,9 @@
                                                          asset('storage/proyek/progress/'.$row->bukti_gambar)
                                                          : asset('images/undangan-1.jpg')}}"></a></td>
                                                         <td style="vertical-align: middle"><span
-                                                                class="label label-info">PROGRESS PENGERJAAN #{{$no++}}</span>
+                                                                class="label label-info">PROGRESS PENGERJAAN #{{$no}}</span>
                                                             <br>
-                                                            <p>{{$row->deskripsi}}</p>
+                                                            <p>{!! $row->deskripsi !!}</p>
                                                         </td>
                                                         <td style="vertical-align: middle" align="center">
                                                             {{$row->created_at->formatLocalized('%d %B %Y')}}
@@ -330,14 +331,19 @@
                                                             {{$row->created_at->format('H : i : s')}}
                                                         </td>
                                                     </tr>
+                                                        <?php
+                                                        $no ++
+                                                        ?>
+                                                    @endforeach
                                                     </tbody>
+
                                                 </table>
                                             </div>
 
                                         </div>
                                         {{--                                            </div>--}}
                                     </div>
-                                @endforeach
+
                             @endif
                         </div>
                     </div>
@@ -358,7 +364,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>
     <script>
         $('#dt-progress').DataTable({
-            columnDefs: [{"sortable": false, "targets": 2}],
+            columnDefs: [{"sortable": false, "targets": 0}],
             language: {
                 "emptyTable": "Anda belum menambahkan progress apapun",
                 "info": "Menampilkan _START_ to _END_ of _TOTAL_ entri",

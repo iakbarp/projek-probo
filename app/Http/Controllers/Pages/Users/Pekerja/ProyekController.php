@@ -187,9 +187,13 @@ class ProyekController extends Controller
     {
 
         $progress = PengerjaanProgress::query()->where('pengerjaan_id',$id)->get();
+//        dd($progress);
+        $detail = PengerjaanProgress::query()->where('pengerjaan_id',$id)->first();
+
         return view('pages.main.users.progress',[
             'progress' => $progress,
-            'user' => Auth::user()
+            'user' =>Auth::user(),
+            'detail' => $detail
         ]);
     }
 
