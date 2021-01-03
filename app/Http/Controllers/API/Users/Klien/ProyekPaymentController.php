@@ -123,15 +123,17 @@ class ProyekPaymentController extends Controller
             $bayar=$request->bayar;
 
             if($pembayaran){
+                $pemb_id=$pembayaran;
                 $harus_bayar=$proyek->harga-$pembayaran->jumlah_pembayaran;
                 $harus_bayar=$harus_bayar?$harus_bayar:0;
 
-            $pemb= $pembayaran->update([
+                $pemb= $pembayaran->update([
                     'jumlah_pembayaran'=>$pembayaran->jumlah_pembayaran+$harus_bayar,
                     'bayar_pakai_dompet'=>$pembayaran->bayar_pakai_dompet+$harus_bayar,
                     'isDompet'=>1,
                     'bukti_pembayaran'=>'FP - '.now()->format('j F Y'),
                 ]);
+                $pemb=$pemb_id;
             }else{
                 $bayar_=$proyek->harga<$bayar?$proyek->harga:(($proyek->harga*30/100)>$bayar?($proyek->harga*30/100):$bayar);
                 $pemb= Pembayaran::create([
