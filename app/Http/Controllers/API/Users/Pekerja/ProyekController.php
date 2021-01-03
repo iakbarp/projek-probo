@@ -126,14 +126,18 @@ class ProyekController extends Controller
 
 
                   }
+                  
+                 $pr=collect($bid)->where('proyek_id', $dt->proyek_id)->first();
 
                
                   $pembayaran=Pembayaran::where('proyek_id',$dt->proyek_id)->first();
                   $gabung=true;
                   $dt->progressable=0;
+                  
+                  
                 if($pembayaran){
                     if(is_numeric(strpos($pembayaran->bukti_pembayaran,'DP'))){
-                       $dt->status= ' (DP'.round($pembayaran->jumlah_pembayaran*100/$dt['harga']).'%)';
+                       $dt->status= ' (DP'.round($pembayaran->jumlah_pembayaran*100/$pr['harga']).'%)';
                     }elseif((is_numeric(strpos($pembayaran->bukti_pembayaran,'FP')))){
                         $dt->status=' (Lunas)';
                     }else{
@@ -141,6 +145,7 @@ class ProyekController extends Controller
 
                         $dt->status='Menunggu Pembayaran';
                     }
+                    
                 }else{
                     $gabung = false;
 
@@ -157,9 +162,11 @@ class ProyekController extends Controller
                         $dt->status='Pengerjaan'.$dt->status;
                     }
                 }
+                
+                
 
                 $dt->file_hasil = $file;
-                $dt->proyek = collect($bid)->where('proyek_id', $dt->proyek_id)->first();
+                $dt->proyek = $pr;
                 $u=auth('api')->user();
                 $pekerja=Bio::query()
                 ->where('user_id',$id)
