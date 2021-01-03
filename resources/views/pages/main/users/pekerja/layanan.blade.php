@@ -634,16 +634,16 @@
                                                     </div>
                                                 </td>
                                                 <td style="vertical-align: middle" align="center">
-                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip"
-                                                            title="Update Progress"
-                                                            onclick="updateHasil('{{$row->id}}',
-                                                                '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.layanan', ['id' => $row->id])}}',
-                                                                '{{$row->get_service->judul}}')"
-                                                        {{is_null($row->get_pembayaran) || (!is_null($row->get_pembayaran) &&
-                                                        is_null($row->get_pembayaran->bukti_pembayaran)) ||
-                                                        $row->selesai == true ? 'disabled' : ''}}>
-                                                        <i class="fa fa-upload" style="margin-right: 0"></i>
-                                                    </button>
+{{--                                                    <button class="btn btn-link btn-sm" data-toggle="tooltip"--}}
+{{--                                                            title="Update Progress"--}}
+{{--                                                            onclick="updateHasil('{{$row->id}}',--}}
+{{--                                                                '{{$row->tautan}}','{{route('pekerja.update-pengerjaan.layanan', ['id' => $row->id])}}',--}}
+{{--                                                                '{{$row->get_service->judul}}')"--}}
+{{--                                                        {{is_null($row->get_pembayaran) || (!is_null($row->get_pembayaran) &&--}}
+{{--                                                        is_null($row->get_pembayaran->bukti_pembayaran)) ||--}}
+{{--                                                        $row->selesai == true ? 'disabled' : ''}}>--}}
+{{--                                                        <i class="fa fa-upload" style="margin-right: 0"></i>--}}
+{{--                                                    </button>--}}
                                                     <br>
                                                     <div class="input-group">
                                                         <span class="input-group-btn">
