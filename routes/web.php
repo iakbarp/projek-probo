@@ -1,5 +1,18 @@
 <?php
 
+use Illuminate\Support\Facades\Response;
+
+Route::get('/download-apk', function () {
+
+    $file= 'apk/app-release.apk';
+
+    $headers = array(
+              'Content-Type: application/vnd.android.package-archive',
+            );
+
+    return Response::download($file, 'undagi.apk', $headers);
+});
+
 Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
 
     Route::get('/', [
