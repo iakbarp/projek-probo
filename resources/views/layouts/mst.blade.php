@@ -756,8 +756,10 @@
                                     <i class="fab fa-twitter"></i></a>
                                 <a href="https://github.com/iakbarp" target="_blank">
                                     <i class="fab fa-github"></i></a>
-                                <a href="https://instagram.com/akbarpriambodo_" target="_blank">
+                                <a href="https://instagram.com/akbarrpriambodo" target="_blank">
                                     <i class="fab fa-instagram"></i></a>
+                                <a href="https://undagi.my.id/download-apk" target="_blank">
+                                    <i class="fab fa-android"></i></a>
                             </div>
                         </div>
                     </div>

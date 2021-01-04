@@ -268,7 +268,7 @@
         });
 
         var options = {
-            whatsapp: "+628118981975",
+            whatsapp: "+6281217423577",
             email: "{{env('MAIL_USERNAME')}}",
             call_to_action: "Hubungi Kami",
             button_color: "#122752",
