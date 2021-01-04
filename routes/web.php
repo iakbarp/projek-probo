@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Response;
 
 Route::get('/download-apk', function () {
 
-    $file= 'apk/app-release.apk';
+    $file = 'apk/app-release.apk';
 
     $headers = array(
-              'Content-Type: application/vnd.android.package-archive',
-            );
+        'Content-Type: application/vnd.android.package-archive',
+    );
 
-    return Response::download($file, 'undagi.apk', $headers);
+    return Response::download(public_path($file), 'undagi.apk', $headers);
 });
 
 Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
@@ -19,7 +19,7 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
         'uses' => 'MainController@index',
         'as' => 'beranda'
     ]);
-    Route::get('suratkontrak',[
+    Route::get('suratkontrak', [
         'uses' => 'MainController@suratKontrak',
         'as' => 'user.surat-kontrak'
     ]);
@@ -40,7 +40,6 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
             'uses' => 'CariController@getCariJudulData',
             'as' => 'get.cari-judul.data'
         ]);
-
     });
 
     Route::group(['namespace' => 'Users', 'prefix' => 'profil/{username}'], function () {
@@ -61,7 +60,6 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
             'uses' => 'UserController@userInviteToBid',
             'as' => 'user.invite-to-bid'
         ]);
-
     });
 
     Route::get('proyek/{username}/{judul}', [
@@ -116,7 +114,6 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
             'uses' => 'MainController@hapusTestimoni',
             'as' => 'hapus.testimoni'
         ]);
-
     });
 
     Route::group(['prefix' => 'kontak'], function () {
@@ -130,9 +127,7 @@ Route::group(['prefix' => '/', 'namespace' => 'Pages'], function () {
             'uses' => 'MainController@kirimKontak',
             'as' => 'kirim.kontak'
         ]);
-
     });
-
 });
 
 Route::post('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
@@ -209,7 +204,6 @@ Route::group(['prefix' => 'akun'], function () {
                         'uses' => 'ProyekController@hapusMassalLampiran',
                         'as' => 'klien.hapus-massal.lampiran'
                     ]);
-
                 });
 
                 Route::get('bid/{judul}', [
@@ -242,11 +236,10 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'klien.data-ulasan.proyek'
                 ]);
 
-                Route::get('download/contract/{id}',[
+                Route::get('download/contract/{id}', [
                     'uses' => 'ProyekController@download_contract',
                     'as' => 'download.contract'
                 ]);
-
             });
 
             Route::group(['prefix' => 'layanan'], function () {
@@ -280,9 +273,7 @@ Route::group(['prefix' => 'akun'], function () {
                     'uses' => 'LayananController@dataUlasanLayanan',
                     'as' => 'klien.data-ulasan.layanan'
                 ]);
-
             });
-
         });
 
         Route::group(['namespace' => 'Pekerja', 'prefix' => 'dashboard/pekerja'], function () {
@@ -319,15 +310,15 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'pekerja.update-pengerjaan.proyek'
                 ]);
 
-                Route::put('pengerjaan/{id}/updateprogress',[
-                   'uses' => 'ProyekController@updatePengerjaanProgressProyek',
+                Route::put('pengerjaan/{id}/updateprogress', [
+                    'uses' => 'ProyekController@updatePengerjaanProgressProyek',
                     'as' => 'pekerja-update-progress.proyek'
                 ]);
 
-                Route::get('pengerjaanprogress/{id}/data',[
+                Route::get('pengerjaanprogress/{id}/data', [
                     'uses' => 'ProyekController@dataProgressPengerjaan',
                     'as' => 'pekerja-data-progress.proyek'
-                    ]);
+                ]);
 
                 Route::post('pengerjaan/{id}/ulas', [
                     'uses' => 'ProyekController@ulasPengerjaanProyek',
@@ -339,11 +330,10 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'pekerja.data-ulasan.proyek'
                 ]);
 
-                Route::get('download/contract/{id}',[
+                Route::get('download/contract/{id}', [
                     'uses' => 'ProyekController@download_contract',
                     'as' => 'download.contract'
                 ]);
-
             });
 
             Route::group(['prefix' => 'layanan'], function () {
@@ -377,9 +367,7 @@ Route::group(['prefix' => 'akun'], function () {
                     'uses' => 'LayananController@updatePengerjaanLayanan',
                     'as' => 'pekerja.update-pengerjaan.layanan'
                 ]);
-
             });
-
         });
 
         Route::group(['prefix' => 'profil'], function () {
@@ -410,7 +398,6 @@ Route::group(['prefix' => 'akun'], function () {
                     'uses' => 'AkunController@hapusPortofolio',
                     'as' => 'hapus.portofolio'
                 ]);
-
             });
 
             Route::group(['prefix' => 'bahasa'], function () {
@@ -429,7 +416,6 @@ Route::group(['prefix' => 'akun'], function () {
                     'uses' => 'AkunController@hapusBahasa',
                     'as' => 'hapus.bahasa'
                 ]);
-
             });
 
             Route::group(['prefix' => 'skill'], function () {
@@ -448,9 +434,7 @@ Route::group(['prefix' => 'akun'], function () {
                     'uses' => 'AkunController@hapusSkill',
                     'as' => 'hapus.skill'
                 ]);
-
             });
-
         });
 
         Route::get('pengaturan', [
@@ -472,24 +456,23 @@ Route::group(['prefix' => 'akun'], function () {
             'uses' => 'DompetController@index',
             'as' => 'user.dompet'
         ]);
-//        Route::get('dompet/saldo', [
-//            'uses' => 'DompetController@dompetUser',
-//            'as' => 'user.saldo'
-//        ]);
+        //        Route::get('dompet/saldo', [
+        //            'uses' => 'DompetController@dompetUser',
+        //            'as' => 'user.saldo'
+        //        ]);
         Route::put('dompet/update', [
             'uses' => 'DompetController@updatePengaturan',
             'as' => 'user.dompet.update.pengaturan'
         ]);
 
-        Route::post('dompet/withdraw',[
+        Route::post('dompet/withdraw', [
             'uses' => 'DompetController@withdrawSaldo',
             'as' => 'user.withdraw.saldo'
         ]);
 
-        Route::post('check_pin',[
+        Route::post('check_pin', [
             'uses' => 'DompetController@check_pin',
             'as' => 'user.check_pin'
         ]);
     });
-
 });
