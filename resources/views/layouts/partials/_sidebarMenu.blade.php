@@ -6,24 +6,24 @@
         </a>
     </li>
 
-    <li class="menu-header">Data Pembayaran</li>
-    <li class="dropdown">
-        <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">
-            <i class="fas fa-credit-card"></i><span>Jenis Pembayaran</span></a>
-        <ul class="dropdown-menu">
-            <li class=""><a href="{{route('admin.project.show')}}" class="nav-link">Proyek</a></li>
-            <li class=""><a href="{{route('admin.service.show')}}" class="nav-link">Layanan</a></li>
-            <li class=""><a href="{{route('admin.withdraw.show')}}" class="nav-link">Withdraw</a></li>
-        </ul>
-    </li>
+{{--    <li class="menu-header">Data Pembayaran</li>--}}
+{{--    <li class="dropdown">--}}
+{{--        <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">--}}
+{{--            <i class="fas fa-credit-card"></i><span>Jenis Pembayaran</span></a>--}}
+{{--        <ul class="dropdown-menu">--}}
+{{--            <li class=""><a href="{{route('admin.project.show')}}" class="nav-link">Proyek</a></li>--}}
+{{--            <li class=""><a href="{{route('admin.service.show')}}" class="nav-link">Layanan</a></li>--}}
+{{--            <li class=""><a href="{{route('admin.withdraw.show')}}" class="nav-link">Withdraw</a></li>--}}
+{{--        </ul>--}}
+{{--    </li>--}}
 
     <li class="menu-header">Data Master</li>
 
     <li class="dropdown">
         <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">
-            <i class="fas fa-briefcase"></i><span>Proyek & Layanan</span></a>
+            <i class="fas fa-briefcase"></i><span>Data Master</span></a>
         <ul class="dropdown-menu">
-            <li class=""><a href="{{route('admin.show.project')}}" class="nav-link">Proyek</a></li>
+            <li class=""><a href="{{route('admin.show.kematian')}}" class="nav-link">Kematian</a></li>
             <li class=""><a href="{{route('admin.show.service')}}" class="nav-link">Layanan</a></li>
         </ul>
     </li>

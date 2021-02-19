@@ -251,21 +251,21 @@
                 </div>
             </div>
 
-            <div class="modal fade" tabindex="-1" role="dialog" id="updateKategori" style="z-index: 99999">
+            <div class="modal fade" tabindex="-1" role="dialog" id="updateKematian" style="z-index: 99999">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Sunting Data Kategori</h5>
+                            <h5 class="modal-title">Sunting Data Kematian</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="modal-edit-kategori" action="{{route('admin.show.kategori.update')}}"
+                            <form id="modal-edit-kematian" action="{{route('admin.show.kematian.update')}}"
                                   method="post">
                                 @CSRF
                                 <div class="form-group">
-                                    <label>ID</label>
+                                    <label>NIK</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
@@ -273,19 +273,31 @@
                                             </div>
                                         </div>
                                         <input type="text" class="form-control disabled" placeholder="indonesia "
-                                               name="id" id="key_kategori" required readonly>
+                                               name="nik" id="key_kematian" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Nama Kategori</label>
+                                    <label>Nama</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
                                                 <i class="fa fa-flag"></i>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="indonesia " name="name"
-                                               id="name_kategori" required>
+                                        <input type="text" class="form-control" placeholder="indonesia " name="nama"
+                                               id="name_kematian" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Lampiran</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control" placeholder="indonesia " name="lampiran"
+                                               id="lampiran_kematian" required>
                                     </div>
                                 </div>
                             </form>

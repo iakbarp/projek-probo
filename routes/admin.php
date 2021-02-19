@@ -86,8 +86,8 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
 
     Route::group(['prefix' => 'master'], function () {
         Route::get('project', [
-            'uses' => 'MasterProjectServiceController@project',
-            'as' => 'admin.show.project'
+            'uses' => 'KematianController@kematian',
+            'as' => 'admin.show.kematian'
         ]);
 
         Route::get('service', [
@@ -95,6 +95,28 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
             'as' => 'admin.show.service'
         ]);
 
+    });
+
+    Route::group(['prefix' => 'kematian'], function () {
+        Route::get('show', [
+            'uses' => 'KematianController@kematian',
+            'as' => 'admin.show.kematian'
+        ]);
+
+        Route::post('store',[
+            'uses' => 'KematianController@store_kematian',
+            'as' => 'admin.show.kematian.store'
+        ]);
+
+        Route::post('update',[
+            'uses' => 'KematianController@update_kematian',
+            'as' => 'admin.show.kematian.update'
+        ]);
+
+        Route::post('{id}/delete', [
+            'uses' => 'KematianController@delete_kematian',
+            'as' => 'admin.show.kematian.delete'
+        ]);
     });
 
     Route::group(['prefix' => 'kategori'], function () {
