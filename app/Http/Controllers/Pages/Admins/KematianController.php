@@ -17,7 +17,7 @@ class KematianController extends Controller
     {
         $data = Kematian::all();
 
-        return view('pages.admins.master.project',[
+        return view('pages.admins.master.kematian',[
             'kematian' => $data,
         ]);
     }
@@ -30,19 +30,33 @@ class KematianController extends Controller
      */
     public function store_kematian(Request $request)
     {
-        if ($request->hasFile('lampiran')) {
-            $this->validate($request, ['lampiran' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
-            $lampiran = $request->file('lampiran')->getClientOriginalName();
+        if ($request->hasFile('surat_kematian')) {
+            $this->validate($request, ['surat_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
+            $surat_kematian = $request->file('surat_kematian')->getClientOriginalName();
 //                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
-            $request->file('lampiran')->storeAs('public/proyek/thumbnail', $lampiran);
+            $request->file('surat_kematian')->storeAs('public/kematian/surat', $surat_kematian);
         } else {
-//            $lampiran = null;
+            $surat_kematian = null;
         }
+//        if ($request->hasFile('akte_kematian')) {
+//            $this->validate($request, ['akte_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
+//            $akte_kematian = $request->file('akte_kematian')->getClientOriginalName();
+////                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
+//            $request->file('akte_kematian')->storeAs('public/kematian/akte', $akte_kematian);
+//        } else {
+//            $akte_kematian = null;
+//        }
         try {
             Kematian::create([
                 'nik' => $request->nik,
-                'nama' => $request->nama,
-                'lampiran' => $lampiran
+                'name' => $request->name,
+                'meninggal' => $request->meninggal,
+                'status_meninggal' => $request->status_meninggal,
+                'dept' => $request->dept,
+                'group' => $request->group,
+                'surat_kematian' => $surat_kematian,
+                'uang_duka' => $request->uang_duka,
+//                'akte_kematian' => $akte_kematian,
             ]);
             return response()->json([
                 'status' => 201,
@@ -69,10 +83,27 @@ class KematianController extends Controller
      */
     public function update_kematian(Request $request)
     {
+        $data = Kematian::find($request->id);
+        if ($request->hasFile('surat_kematian')) {
+            $this->validate($request, ['surat_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
+            $surat_kematian = $request->file('surat_kematian')->getClientOriginalName();
+//                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
+            $request->file('surat_kematian')->storeAs('public/kematian/surat', $surat_kematian);
+        } else {
+            $surat_kematian = $data->surat_kematian;
+        }
         try {
-            $data = Kematian::find($request->id);
+//            $data = Kematian::find($request->id);
             $data->update([
-                'nama' => $request->nama
+                'nama' => $request->nama,
+                'nik' => $request->nik,
+                'meninggal' => $request->meninggal,
+                'status_meninggal' => $request->status_meninggal,
+                'dept' => $request->dept,
+                'group' => $request->group,
+                'surat_kematian' => $surat_kematian,
+                'uang_duka' => $request->uang_duka,
+
             ]);
             return response()->json([
                 'status' => 200,

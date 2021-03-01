@@ -16,8 +16,14 @@ class CreateKematianTable extends Migration
         Schema::create('kematian', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nik');
-            $table->text('nama');
-            $table->text('lampiran')->nullable();
+            $table->text('name');
+            $table->text('meninggal');
+            $table->text('status_meninggal');
+            $table->text('dept');
+            $table->text('group');
+            $table->text('surat_kematian')->nullable();
+            $table->string('uang_duka');
+//            $table->text('akte_kematian')->nullable();
             $table->boolean('validasi')->nullable();
             $table->timestamps();
         });

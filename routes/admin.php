@@ -85,7 +85,7 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
     });
 
     Route::group(['prefix' => 'master'], function () {
-        Route::get('project', [
+        Route::get('kematian', [
             'uses' => 'KematianController@kematian',
             'as' => 'admin.show.kematian'
         ]);

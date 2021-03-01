@@ -251,7 +251,7 @@
                 </div>
             </div>
 
-            <div class="modal fade" tabindex="-1" role="dialog" id="updateKematian" style="z-index: 99999">
+            <div class="modal fade" tabindex="-1" role="dialog" id="updateKematianModal" style="z-index: 99999">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -261,9 +261,13 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="modal-edit-kematian" action="{{route('admin.show.kematian.update')}}"
-                                  method="post">
+                            <form id="modal-edit-kematian" action="{{route('admin.show.kematian.update')}}" method="post">
                                 @CSRF
+                                <div class="form-group"></div>
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="id" id="keyid">
+                                </div>
                                 <div class="form-group">
                                     <label>NIK</label>
                                     <div class="input-group">
@@ -284,28 +288,216 @@
                                                 <i class="fa fa-flag"></i>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="indonesia " name="nama"
+                                        <input type="text" class="form-control" placeholder="indonesia " name="name"
                                                id="name_kematian" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Lampiran</label>
+                                    <label>Dept</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
                                                 <i class="fa fa-flag"></i>
                                             </div>
                                         </div>
-                                        <input type="file" class="form-control" placeholder="indonesia " name="lampiran"
-                                               id="lampiran_kematian" required>
+                                        <input type="text" class="form-control" placeholder="Department " name="dept"
+                                               id="dept_edit" required>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Group</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <select id="group_edit" name="group"
+                                                class="form-control use-select2" required>
+                                            <option disabled selected>Pilih Group</option>
+                                            <option value="PT. Ajinomoto">PT. Ajinomoto</option>
+                                            <option value="PT. Ajinex">PT. Ajinex</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Orang Meninggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nama Orang Meninggal" name="meninggal" id="meninggal_edit" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status Meninggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <select id="status_meninggal_edit" name="status_meninggal"
+                                                class="form-control use-select2" required>
+                                            <option disabled selected>Status Meninggal</option>
+                                            <option value="Ayah Kandung">Ayah Kandung</option>
+                                            <option value="Ayah Mertua">Ayah Mertua</option>
+                                            <option value="Ibu Kandung">Ibu Kandung</option>
+                                            <option value="Ibu Mertua">Ibu Mertua</option>
+                                            <option value="Suami">Suami</option>
+                                            <option value="Istri">Istri</option>
+                                            <option value="Anak">Anak</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Uang Santunan</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-money-bill-wave-alt"></i>
+                                            </div>
+                                        </div>
+                                        <input id="uang_duka_edit" class="form-control"
+                                               name="uang_duka"
+                                               type="text" placeholder="Rp. "
+                                               onkeypress="return numberOnly(event, false)"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Surat Kematian</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control" placeholder="indonesia " name="surat_kematian"
+                                               id="surat_kematian_edit" required>
+                                    </div>
+                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label>Akte Kematian</label>--}}
+{{--                                    <div class="input-group">--}}
+{{--                                        <div class="input-group-prepend">--}}
+{{--                                            <div class="input-group-text">--}}
+{{--                                                <i class="fa fa-flag"></i>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <input type="file" class="form-control" placeholder="indonesia " name="akte_kematian"--}}
+{{--                                               id="lampiran_kematian" required>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="update_kematian()">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="lihatKematian" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Detail Data Kematian</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-lihat-kematian">
+                                @CSRF
+                                <div class="form-group">
+                                    <label>NIK</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control disabled" placeholder="indonesia "
+                                               name="nik" id="key_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="indonesia " name="name"
+                                               id="name_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dept</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Department " name="dept"
+                                               id="dept_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Group</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Group" id="group_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Orang Meninggal</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-user-times"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Nama Orang Meninggal" name="meninggal" id="meninggal_lihat" disabled>
+                                </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status Meninggal</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Departement" name="status_meninggal" id="status_meninggal_lihat" disabled>
+                                </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Uang Santunan</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-money-bill-wave-alt"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Departement" name="uang_duka" id="uang_duka_lihat" disabled>
+                                </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="update_kategori()">Save changes
-                            </button>
                         </div>
                     </div>
                 </div>

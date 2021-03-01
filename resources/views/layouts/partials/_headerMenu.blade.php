@@ -1,6 +1,6 @@
 @php $kategori = \App\Model\Kategori::orderBy('nama')->get(); @endphp
 <ul class="main-menu">
-    <li><a class="{{\Illuminate\Support\Facades\Request::is('/*') ? 'active' : ''}}" href="{{route('beranda')}}">
+    <li><a class="{{\Illuminate\Support\Facades\Request::is('/*') ? 'active' : ''}}" href="{{route('admin.dashboard')}}">
             <i class="fa mr-2"></i>Beranda</a></li>
 {{--    <i class="fa fa-home mr-2"></i>Beranda</a></li>--}}
     @auth
