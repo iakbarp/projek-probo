@@ -24,7 +24,7 @@
             <i class="fas fa-briefcase"></i><span>Data Master</span></a>
         <ul class="dropdown-menu">
             <li class=""><a href="{{route('admin.show.kematian')}}" class="nav-link">Kematian</a></li>
-            <li class=""><a href="{{route('admin.show.service')}}" class="nav-link">Layanan</a></li>
+            <li class=""><a href="{{route('admin.show.status_kematian')}}" class="nav-link">Status</a></li>
         </ul>
     </li>
 

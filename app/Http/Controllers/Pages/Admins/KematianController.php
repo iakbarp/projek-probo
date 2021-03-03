@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages\Admins;
 use App\Http\Controllers\Controller;
 use App\Model\Kategori;
 use App\Model\Kematian;
+use App\Model\StatusKematian;
 use App\Model\SubKategori;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -94,8 +95,30 @@ class KematianController extends Controller
         }
         try {
 //            $data = Kematian::find($request->id);
+
+            StatusKematian::create([
+                'jenis_perubahan' => $request->jenis_perubahan,
+                'kematian_id' => $data->id,
+                'old_name' => $data->name,
+                'old_nik' => $data->nik,
+                'old_meninggal' => $data->meninggal,
+                'old_status_meninggal' => $data->status_meninggal,
+                'old_dept' => $data->dept,
+                'old_group' => $data->group,
+                'old_surat_kematian' => $data->surat_kematian,
+                'old_uang_duka' => $data->uang_duka,
+                'new_name' => $request->name,
+                'new_nik' => $request->nik,
+                'new_meninggal' => $request->meninggal,
+                'new_status_meninggal' => $request->status_meninggal,
+                'new_dept' => $request->dept,
+                'new_group' => $request->group,
+                'new_surat_kematian' => $surat_kematian,
+                'new_uang_duka' => $request->uang_duka,
+            ]);
+
             $data->update([
-                'nama' => $request->nama,
+                'name' => $request->name,
                 'nik' => $request->nik,
                 'meninggal' => $request->meninggal,
                 'status_meninggal' => $request->status_meninggal,

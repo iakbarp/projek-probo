@@ -19,6 +19,7 @@ class CreateKematianTable extends Migration
             $table->text('name');
             $table->text('meninggal');
             $table->text('status_meninggal');
+            $table->date('tanggal_kematian')->nullable();
             $table->text('dept');
             $table->text('group');
             $table->text('surat_kematian')->nullable();

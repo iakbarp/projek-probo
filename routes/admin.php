@@ -207,6 +207,44 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
         });
     });
 
+    Route::group(['prefix' => 'status_data'], function () {
+
+        Route::group(['prefix' => 'status_kematian'], function () {
+            Route::get('/', [
+                'uses' => 'StatusController@kematian',
+                'as' => 'admin.show.status_kematian'
+            ]);
+
+            Route::get('store',[
+                'uses' => 'LokasiController@store_negara',
+                'as' => 'admin.show.negara.store'
+            ]);
+
+        });
+
+        Route::group(['prefix' => 'provinsi'], function () {
+            Route::get('/', [
+                'uses' => 'LokasiController@provinsi',
+                'as' => 'admin.show.provinsi'
+            ]);
+
+            Route::post('store',[
+                'uses' => 'LokasiController@store_provinsi',
+                'as' => 'admin.show.provinsi.store'
+            ]);
+
+            Route::post('update',[
+                'uses' => 'LokasiController@update_provinsi',
+                'as' => 'admin.show.provinsi.update'
+            ]);
+
+            Route::post('{id}/delete', [
+                'uses' => 'LokasiController@provinsidelete',
+                'as' => 'admin.show.provinsi.delete'
+            ]);
+        });
+    });
+
     Route::group(['prefix' => 'api'], function () {
         Route::get('profile', [
             'uses' => 'AdminController@editProfile',

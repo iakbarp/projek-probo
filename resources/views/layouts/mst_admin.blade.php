@@ -269,6 +269,17 @@
                                            name="id" id="keyid">
                                 </div>
                                 <div class="form-group">
+                                    <label>Jenis Perubahan</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Jenis Perubahan" name="jenis_perubahan" id="" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label>NIK</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -276,7 +287,7 @@
                                                 <i class="fa fa-key"></i>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control disabled" placeholder="indonesia "
+                                        <input type="text" class="form-control disabled" placeholder="NIK"
                                                name="nik" id="key_kematian" required>
                                     </div>
                                 </div>
