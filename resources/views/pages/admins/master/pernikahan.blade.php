@@ -38,6 +38,7 @@
                                     <th>Kota Menikah</th>
                                     <th>Tgl Menikah</th>
                                     <th>Nama Istri</th>
+                                    <th>Foto</th>
                                     <th>Nominal</th>
                                     <th>Terbilang</th>
                                     <th>Action</th>
@@ -75,6 +76,15 @@
                                         </td>
                                         <td>{{\Carbon\Carbon::parse($item->tanggal_menikah)->formatLocalized('%d %B %Y')}}</td>
                                         <td>{{$item->nama_istri}}</td>
+                                        <td style="vertical-align: middle" align="center">
+                                            <a href="{{asset('storage/dokumen/foto/pernikahan/'. $item->foto)}}"
+                                               target="_blank">
+                                                <img class="img-responsive float-left mr-2" width="80"
+                                                     alt="Thumbnail" src="{{$item->foto != "" ?
+                                                                     asset('storage/dokumen/foto/pernikahan/'.$item->foto)
+                                                                     : asset('admins/img/avatar/avatar-1.png')}}">
+                                            </a>
+                                        </td>
                                         <td>Rp{{number_format($item->get_dokumen->nominal,2,',','.')}}</td>
                                         <td>{{$item->get_dokumen->terbilang}}</td>
                                         <td>
@@ -89,7 +99,7 @@
                                                     id="edit-pernikahan-{{$item->id}}"
                                                     onclick="edit_pernikahan('{{$item->id}}','{{$item->pt}}'
                                                         ,'{{$item->dept}}','{{$item->bank_id}}','{{$item->rekening}}','{{$item->kota_id}}'
-                                                        ,'{{$item->tanggal_menikah}}','{{$item->nama_istri}}')">
+                                                        ,'{{$item->tanggal_menikah}}','{{$item->nama_istri}}','{{$item->foto}}')">
                                                 <i
                                                     class="fa fa-edit"></i></button>
                                             {{--                                            <button class="btn btn-icon" style="color: white;background-color: grey"--}}
@@ -144,7 +154,7 @@
                     text: '<b class="text-uppercase"><i class="far fa-file-excel mr-2"></i>Excel</b>',
                     extend: 'excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                     },
                     className: 'btn btn-primary',
                     title: export_pesanan,
@@ -153,7 +163,7 @@
                     text: '<b class="text-uppercase"><i class="fa fa-file-pdf mr-2"></i>PDF</b>',
                     extend: 'pdf',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                     },
                     className: 'btn btn-primary',
                     title: export_pesanan,
@@ -162,7 +172,7 @@
                     text: '<b class="text-uppercase"><i class="fa fa-print mr-2"></i>Cetak</b>',
                     extend: 'print',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                     },
                     className: 'btn btn-primary'
                 }
@@ -265,7 +275,7 @@
         //     $("#uang_duka_lihat").val(uang_duka);
         //
         // }
-        function edit_pernikahan(id, pt, dept, bank_id, rekening, kota_id, tanggal_menikah, nama_istri) {
+        function edit_pernikahan(id, pt, dept, bank_id, rekening, kota_id, tanggal_menikah, nama_istri, foto) {
             $("#updatePernikahanModal").modal('show');
             $("#key_idpernikahan").val(id);
             $("#pt_pernikahan").val(pt);
@@ -275,6 +285,7 @@
             $("#kota_id_pernikahan").val(kota_id);
             $("#tanggal_pernikahan_edit").val(tanggal_menikah);
             $("#nama_istri_edit").val(nama_istri);
+            $("#foto_pernikahan_edit").val(foto);
 
         }
         function del(id) {

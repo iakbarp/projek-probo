@@ -854,6 +854,18 @@
                                                id="nama_istri_edit">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label>Foto Istri<i style="color: red">Max Size 5MB</i></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control" placeholder="indonesia " name="foto"
+                                               id="foto_pernikahan_edit" accept="image/*">
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
@@ -934,7 +946,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Kota Menikah</label>
+                                    <label>Kota Lahir</label>
                                     <div class="input-group">
                                         <select name="kota_id"
                                                 class="form-control selectpicker use-select2" data-live-search="true">
@@ -978,6 +990,18 @@
                                         </div>
                                         <input type="text" class="form-control" placeholder="Nama Anak " name="nama_anak"
                                                id="nama_anak_edit">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Foto Anak<i style="color: red">Max Size 5MB</i></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-photo"></i>
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control" placeholder="indonesia " name="foto"
+                                               id="foto_kelahiran_edit" accept="image/*">
                                     </div>
                                 </div>
                             </form>

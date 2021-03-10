@@ -30,6 +30,7 @@ class CreateKelahiranTable extends Migration
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->date('tanggal_lahir')->nullable();
             $table->text('nama_anak')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

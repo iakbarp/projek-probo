@@ -33,6 +33,13 @@ class PernikahanController extends Controller
     public function update_pernikahan(Request $request)
     {
         $data = Pernikahan::find($request->id);
+        if ($request->hasFile('foto')) {
+            $this->validate($request, ['foto' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
+            $foto = $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->storeAs('public/dokumen/foto/pernikahan/', $foto);
+        } else {
+            $foto = $data->foto;
+        }
 
         try {
             $data->update([
@@ -43,6 +50,7 @@ class PernikahanController extends Controller
                 'rekening' => $request->rekening,
                 'kota_id' => $request->kota_id,
                 'nama_istri' => $request->nama_istri,
+                'foto' => $foto,
 
             ]);
             return response()->json([

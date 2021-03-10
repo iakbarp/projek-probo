@@ -34,7 +34,13 @@ class KelahiranController extends Controller
     public function update_kelahiran(Request $request)
     {
         $data = Kelahiran::find($request->id);
-
+        if ($request->hasFile('foto')) {
+            $this->validate($request, ['foto' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
+            $foto = $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->storeAs('public/dokumen/foto/kelahiran/', $foto);
+        } else {
+            $foto = $data->foto;
+        }
         try {
             $data->update([
                 'pt' => $request->pt,
@@ -45,6 +51,7 @@ class KelahiranController extends Controller
                 'putra' => $request->putra,
                 'kota_id' => $request->kota_id,
                 'nama_anak' => $request->nama_anak,
+                'foto' => $foto,
 
             ]);
             return response()->json([

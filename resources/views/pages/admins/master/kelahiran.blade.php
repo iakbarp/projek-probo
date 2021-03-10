@@ -39,6 +39,7 @@
                                     <th>Tgl Lahir</th>
                                     <th>Kota Lahir</th>
                                     <th>Nama Anak</th>
+                                    <th>Foto</th>
                                     <th>Nominal</th>
                                     <th>Terbilang</th>
                                     <th>Action</th>
@@ -77,6 +78,15 @@
                                             @endif
                                         </td>
                                         <td>{{$item->nama_anak}}</td>
+                                        <td style="vertical-align: middle" align="center">
+                                            <a href="{{asset('storage/dokumen/foto/kelahiran/'. $item->foto)}}"
+                                               target="_blank">
+                                                <img class="img-responsive float-left mr-2" width="80"
+                                                     alt="Thumbnail" src="{{$item->foto != "" ?
+                                                                     asset('storage/dokumen/foto/kelahiran/'.$item->foto)
+                                                                     : asset('admins/img/avatar/avatar-1.png')}}">
+                                            </a>
+                                        </td>
                                         <td>Rp{{number_format($item->get_dokumen->nominal,2,',','.')}}</td>
                                         <td>{{$item->get_dokumen->terbilang}}</td>
                                         {{--                                        <td>--}}
@@ -302,7 +312,7 @@
                     text: '<b class="text-uppercase"><i class="far fa-file-excel mr-2"></i>Excel</b>',
                     extend: 'excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
                     },
                     className: 'btn btn-primary',
                     title: export_pesanan,
@@ -311,7 +321,7 @@
                     text: '<b class="text-uppercase"><i class="fa fa-file-pdf mr-2"></i>PDF</b>',
                     extend: 'pdf',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
                     },
                     className: 'btn btn-primary',
                     title: export_pesanan,
@@ -320,7 +330,7 @@
                     text: '<b class="text-uppercase"><i class="fa fa-print mr-2"></i>Cetak</b>',
                     extend: 'print',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
                     },
                     className: 'btn btn-primary'
                 }
@@ -423,7 +433,7 @@
             $("#uang_duka_lihat").val(uang_duka);
 
         }
-        function edit_kelahiran(id, pt, dept, bank_id, rekening, putra, kota_id, tanggal_lahir, nama_anak) {
+        function edit_kelahiran(id, pt, dept, bank_id, rekening, putra, kota_id, tanggal_lahir, nama_anak, foto) {
             $("#updateKelahiranModal").modal('show');
             $("#key_id_kelahiran").val(id);
             $("#pt_edit_kelahiran").val(pt);
@@ -434,6 +444,7 @@
             $("#kota_id_edit_kelahiran").val(kota_id);
             $("#tanggal_kelahiran_edit").val(tanggal_lahir);
             $("#nama_anak_edit").val(nama_anak);
+            $("#foto_kelahiran_edit").val(foto);
 
         }
         function del(id) {

@@ -29,6 +29,7 @@ class CreatePernikahanTable extends Migration
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->date('tanggal_menikah')->nullable();
             $table->text('nama_istri')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }
