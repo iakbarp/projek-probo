@@ -13,15 +13,12 @@ class DatabaseSeeder extends Seeder
     {
          $this->call([
              KategoriTableSeeder::class,
-             SubKategoriTableSeeder::class,
              NegaraTableSeeder::class,
              PovinsiTableSeeder::class,
              KotaTableSeeder::class,
              BankTableSeeder::class,
 
              UserTableSeeder::class,
-             ProyekLayananSeeder::class,
-             MessageSeeder::class,
          ]);
     }
 }

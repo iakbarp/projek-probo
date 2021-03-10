@@ -64,10 +64,6 @@ class UserTableSeeder extends Seeder
                         'bintang' => $arr[array_rand($arr)]
                     ]);
 
-                    \App\Model\Dompet::create([
-                       'user_id' => $user->id,
-
-                    ]);
                 }
             }
         }

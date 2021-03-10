@@ -4,12 +4,11 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Kematian extends Model
+class Pernikahan extends Model
 {
-    protected $table = 'kematian';
+    protected $table = 'pernikahan';
     protected $guarded = ['id'];
     protected $casts = ['lampiran' => 'array'];
-
     public function get_dokumen()
     {
         return $this->belongsTo(Dokumen::class, 'dokumen_id');

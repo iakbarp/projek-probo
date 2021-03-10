@@ -23,8 +23,11 @@
         <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">
             <i class="fas fa-briefcase"></i><span>Data Master</span></a>
         <ul class="dropdown-menu">
-            <li class=""><a href="{{route('admin.show.kematian')}}" class="nav-link">Kematian</a></li>
-            <li class=""><a href="{{route('admin.show.status_kematian')}}" class="nav-link">Status</a></li>
+            <li class=""><a href="{{route('admin.show.status_dokumen')}}" class="nav-link">Status Dokumen</a></li>
+            <li class=""><a href="{{route('admin.show.pernikahan')}}" class="nav-link">Menikah</a></li>
+            <li class=""><a href="{{route('admin.show.kematian')}}" class="nav-link">Meninggal</a></li>
+            <li class=""><a href="{{route('admin.show.kelahiran')}}" class="nav-link">Kelahiran</a></li>
+            <li class=""><a href="{{route('admin.show.perubahan')}}" class="nav-link">Status</a></li>
         </ul>
     </li>
 
@@ -33,18 +36,17 @@
             <i class="fas fa-user"></i><span>Akun</span></a>
         <ul class="dropdown-menu">
             <li class=""><a href="{{route('admin.show.admin')}}" class="nav-link">Admin</a></li>
-            <li class=""><a href="{{route('admin.show.user')}}" class="nav-link">User</a></li>
             <li class=""><a href="{{route('admin.settings')}}" class="nav-link">Pengaturan</a></li>
         </ul>
     </li>
 
-    <li class="dropdown">
-        <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">
-            <i class="fas fa-map-marker-alt"></i><span>Lokasi</span></a>
-        <ul class="dropdown-menu">
-            <li class=""><a href="{{route('admin.show.negara')}}" class="nav-link">Negara & Provinsi</a></li>
-        </ul>
-    </li>
+{{--    <li class="dropdown">--}}
+{{--        <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">--}}
+{{--            <i class="fas fa-map-marker-alt"></i><span>Lokasi</span></a>--}}
+{{--        <ul class="dropdown-menu">--}}
+{{--            <li class=""><a href="{{route('admin.show.negara')}}" class="nav-link">Negara & Provinsi</a></li>--}}
+{{--        </ul>--}}
+{{--    </li>--}}
 
     <li class="dropdown">
         <a href="javascript:void(0)" class="nav-link has-dropdown remove-caret" data-toggle="dropdown">

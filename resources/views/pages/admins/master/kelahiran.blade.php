@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Admin '.env('APP_NAME').': Kelola Data Proyek | '.env('APP_TITLE'))
+@section('title', 'Admin '.env('APP_NAME').': Kelola Data Kelahiran | '.env('APP_TITLE'))
 
 @push('styles')
     <style></style>
@@ -8,21 +8,21 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>Kelola Data Meninggal</h1>
+            <h1>Kelola Data Kelahiran</h1>
         </div>
 
         <div class="row">
             <div class="col-12 ">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Data Meninggal</h4>
+                        <h4>Data Kelahiran</h4>
                     </div>
                     <div class="card-body">
-{{--                        <div>--}}
-{{--                            <button class="btn btn-info btn-icon icon-left" id="add_kematian"><i--}}
-{{--                                    class="fa fa-plus"></i> Tambah Data--}}
-{{--                            </button>--}}
-{{--                        </div>--}}
+                        {{--                        <div>--}}
+                        {{--                            <button class="btn btn-info btn-icon icon-left" id="add_kematian"><i--}}
+                        {{--                                    class="fa fa-plus"></i> Tambah Data--}}
+                        {{--                            </button>--}}
+                        {{--                        </div>--}}
                         <div class="table-responsive">
                             <table class="table table-striped" id="project-dt">
                                 <thead>
@@ -35,31 +35,28 @@
                                     <th>PT</th>
                                     <th>Dept.</th>
                                     <th>Nomor Rekening</th>
-                                    <th>Yang Meninggal</th>
-                                    <th>Hari</th>
-                                    <th>Tgl</th>
-                                    <th>Kota</th>
-{{--                                    <th>Akte Kematian</th>--}}
-                                    <th>Nama Alm.</th>
+                                    <th>Putra/Putri</th>
+                                    <th>Tgl Lahir</th>
+                                    <th>Kota Lahir</th>
+                                    <th>Nama Anak</th>
                                     <th>Nominal</th>
                                     <th>Terbilang</th>
-                                    <th>Alm/Almh</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($kematian as $item)
+                                @foreach($kelahiran as $item)
                                     <tr>
                                         <td>
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>{{$item->created_at->formatLocalized('%d %B %Y')}}</td>
-{{--                                        <td>--}}
-{{--                                            <a id="lihat-kematian-{{$item->id}}"--}}
-{{--                                            onclick="lihat_kematian('{{$item->nik}}','{{$item->name}}','{{$item->dept}}'--}}
-{{--                                                ,'{{$item->group}}','{{$item->meninggal}}','{{$item->status_meninggal}}','{{$item->uang_duka}}')">--}}
-{{--                                                <u style="color: blue" >{{$item->name}}</u></a>--}}
-{{--                                        </td>--}}
+                                        {{--                                        <td>--}}
+                                        {{--                                            <a id="lihat-kematian-{{$item->id}}"--}}
+                                        {{--                                            onclick="lihat_kematian('{{$item->nik}}','{{$item->name}}','{{$item->dept}}'--}}
+                                        {{--                                                ,'{{$item->group}}','{{$item->meninggal}}','{{$item->status_meninggal}}','{{$item->uang_duka}}')">--}}
+                                        {{--                                                <u style="color: blue" >{{$item->name}}</u></a>--}}
+                                        {{--                                        </td>--}}
                                         <td>{{$item->get_dokumen->name}}</td>
                                         <td>{{$item->pt}}</td>
                                         <td>{{$item->dept}}</td>
@@ -70,45 +67,43 @@
                                                 {{$item->get_bank->nama}} - {{$item->rekening}}
                                             @endif
                                         </td>
-                                        <td>{{$item->status_meninggal}}</td>
+                                        <td>{{$item->putra}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->tanggal_lahir)->formatLocalized('%d %B %Y')}}</td>
-                                        <td>{{\Carbon\Carbon::parse($item->tanggal_lahir)->formatLocalized('%A')}}</td>
                                         <td>
                                             @if ($item->kota_id == NULL)
 
-                                                @else
-                                            {{$item->get_kota->nama}}
-                                                @endif
+                                            @else
+                                                {{$item->get_kota->nama}}
+                                            @endif
                                         </td>
-                                        <td>{{$item->meninggal}}</td>
+                                        <td>{{$item->nama_anak}}</td>
                                         <td>Rp{{number_format($item->get_dokumen->nominal,2,',','.')}}</td>
                                         <td>{{$item->get_dokumen->terbilang}}</td>
-                                        <td>{{$item->alm}}</td>
-{{--                                        <td>--}}
-{{--                                            @if(($item->surat_kematian == Null))--}}
-{{--                                                <span>Data Belum lengkap</span>--}}
-{{--                                                @else--}}
-{{--                                            <span style="color: greenAkte">Data lengkap</span>--}}
-{{--                                                @endif--}}
-{{--                                        </td>--}}
+                                        {{--                                        <td>--}}
+                                        {{--                                            @if(($item->surat_kematian == Null))--}}
+                                        {{--                                                <span>Data Belum lengkap</span>--}}
+                                        {{--                                                @else--}}
+                                        {{--                                            <span style="color: greenAkte">Data lengkap</span>--}}
+                                        {{--                                                @endif--}}
+                                        {{--                                        </td>--}}
                                         <td>
-{{--                                            <form id="delete-form-{{$item->id}}"--}}
-{{--                                                  action="{{ route('admin.show.kematian.delete',['id' => $item->id])}}"--}}
-{{--                                                  method="POST"--}}
-{{--                                                  style="display: none;">--}}
+                                            {{--                                            <form id="delete-form-{{$item->id}}"--}}
+                                            {{--                                                  action="{{ route('admin.show.kematian.delete',['id' => $item->id])}}"--}}
+                                            {{--                                                  method="POST"--}}
+                                            {{--                                                  style="display: none;">--}}
 
-{{--                                                @csrf--}}
-{{--                                            </form>--}}
+                                            {{--                                                @csrf--}}
+                                            {{--                                            </form>--}}
                                             <button class="btn btn-info btn-icon"
-                                                    id="edit-kematian-{{$item->id}}"
-                                                    onclick="edit_kematian('{{$item->id}}','{{$item->pt}}'
-                                                        ,'{{$item->dept}}','{{$item->meninggal}}','{{$item->tanggal_meninggal}}'
-                                                        ,'{{$item->status_meninggal}}','{{$item->bank_id}}','{{$item->rekening}}','{{$item->alm}}','{{$item->kota_id}}')">
+                                                    id="edit-kelahiran-{{$item->id}}"
+                                                    onclick="edit_kelahiran('{{$item->id}}','{{$item->pt}}'
+                                                        ,'{{$item->dept}}','{{$item->bank_id}}','{{$item->rekening}}'
+                                                        ,'{{$item->putra}}','{{$item->kota_id}}','{{$item->tanggal_lahir}}','{{$item->nama_anak}}')">
                                                 <i
                                                     class="fa fa-edit"></i></button>
-{{--                                            <button class="btn btn-icon" style="color: white;background-color: grey"--}}
-{{--                                                    onclick="del({{$item->id}})"><i--}}
-{{--                                                    class="fa fa-trash"></i></button>--}}
+                                            {{--                                            <button class="btn btn-icon" style="color: white;background-color: grey"--}}
+                                            {{--                                                    onclick="del({{$item->id}})"><i--}}
+                                            {{--                                                    class="fa fa-trash"></i></button>--}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -211,14 +206,14 @@
                             <i class="fa fa-file"></i>
                         </div>
                     </div>
-{{--                    <input type="file" class="form-control" accept="image/*"--}}
-{{--                           id="attach-thumbnail" name="lampiran" required>--}}
+                    {{--                    <input type="file" class="form-control" accept="image/*"--}}
+                    {{--                           id="attach-thumbnail" name="lampiran" required>--}}
                     <div>
                         <input type="file" name="surat_kematian" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.odt,.ppt,.pptx"
                                id="attach-lampiran" style="display: none;">
                         <div class="input-group">
-{{--                                                        <span class="input-group-addon"><i--}}
-{{--                                                                class="fa fa-image"></i></span>--}}
+                            {{--                                                        <span class="input-group-addon"><i--}}
+                            {{--                                                                class="fa fa-image"></i></span>--}}
                             <input type="text" id="txt_lampiran"
                                    name="file"
                                    style="cursor: pointer"
@@ -226,46 +221,46 @@
                                    placeholder="Pilih File Surat Kematian" data-toggle="tooltip"
                                    data-placement="top"
                                    title="Ekstensi yang diizinkan: jpg, jpeg, gif, png, pdf, doc, docx, xls, xlsx, odt, ppt, pptx. Ukuran yang diizinkan: < 5 MB">
-{{--                            <span class="input-group-btn">--}}
-{{--                                                                <button--}}
-{{--                                                                    class="browse_lampiran btn btn-link btn-sm btn-block"--}}
-{{--                                                                    type="button" style="border: 1px solid #ccc">--}}
-{{--                                                                    <i class="fa fa-search"></i></button>--}}
-{{--                                                            </span>--}}
+                            {{--                            <span class="input-group-btn">--}}
+                            {{--                                                                <button--}}
+                            {{--                                                                    class="browse_lampiran btn btn-link btn-sm btn-block"--}}
+                            {{--                                                                    type="button" style="border: 1px solid #ccc">--}}
+                            {{--                                                                    <i class="fa fa-search"></i></button>--}}
+                            {{--                                                            </span>--}}
                         </div>
                     </div>
                 </div>
                 <br>
-{{--                <div class="input-group">--}}
-{{--                    <div class="input-group-prepend">--}}
-{{--                        <div class="input-group-text">--}}
-{{--                            <i class="fa fa-flag"></i>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    --}}{{--                    <input type="file" class="form-control" accept="image/*"--}}
-{{--                    --}}{{--                           id="attach-thumbnail" name="lampiran" required>--}}
-{{--                    <div>--}}
-{{--                        <input type="file" name="akte_kematian" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.odt,.ppt,.pptx"--}}
-{{--                               id="attach-akte" style="display: none;">--}}
-{{--                        <div class="input-group">--}}
-{{--                            --}}{{--                                                        <span class="input-group-addon"><i--}}
-{{--                            --}}{{--                                                                class="fa fa-image"></i></span>--}}
-{{--                            <input type="text" id="txt_akte"--}}
-{{--                                   name="file"--}}
-{{--                                   style="cursor: pointer"--}}
-{{--                                   class="browse_akte form-control" readonly--}}
-{{--                                   placeholder="Pilih File Akte Kematian" data-toggle="tooltip"--}}
-{{--                                   data-placement="top"--}}
-{{--                                   title="Ekstensi yang diizinkan: jpg, jpeg, gif, png, pdf, doc, docx, xls, xlsx, odt, ppt, pptx. Ukuran yang diizinkan: < 5 MB">--}}
-{{--                            --}}{{--                            <span class="input-group-btn">--}}
-{{--                            --}}{{--                                                                <button--}}
-{{--                            --}}{{--                                                                    class="browse_lampiran btn btn-link btn-sm btn-block"--}}
-{{--                            --}}{{--                                                                    type="button" style="border: 1px solid #ccc">--}}
-{{--                            --}}{{--                                                                    <i class="fa fa-search"></i></button>--}}
-{{--                            --}}{{--                                                            </span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                {{--                <div class="input-group">--}}
+                {{--                    <div class="input-group-prepend">--}}
+                {{--                        <div class="input-group-text">--}}
+                {{--                            <i class="fa fa-flag"></i>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                    --}}{{--                    <input type="file" class="form-control" accept="image/*"--}}
+                {{--                    --}}{{--                           id="attach-thumbnail" name="lampiran" required>--}}
+                {{--                    <div>--}}
+                {{--                        <input type="file" name="akte_kematian" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.odt,.ppt,.pptx"--}}
+                {{--                               id="attach-akte" style="display: none;">--}}
+                {{--                        <div class="input-group">--}}
+                {{--                            --}}{{--                                                        <span class="input-group-addon"><i--}}
+                {{--                            --}}{{--                                                                class="fa fa-image"></i></span>--}}
+                {{--                            <input type="text" id="txt_akte"--}}
+                {{--                                   name="file"--}}
+                {{--                                   style="cursor: pointer"--}}
+                {{--                                   class="browse_akte form-control" readonly--}}
+                {{--                                   placeholder="Pilih File Akte Kematian" data-toggle="tooltip"--}}
+                {{--                                   data-placement="top"--}}
+                {{--                                   title="Ekstensi yang diizinkan: jpg, jpeg, gif, png, pdf, doc, docx, xls, xlsx, odt, ppt, pptx. Ukuran yang diizinkan: < 5 MB">--}}
+                {{--                            --}}{{--                            <span class="input-group-btn">--}}
+                {{--                            --}}{{--                                                                <button--}}
+                {{--                            --}}{{--                                                                    class="browse_lampiran btn btn-link btn-sm btn-block"--}}
+                {{--                            --}}{{--                                                                    type="button" style="border: 1px solid #ccc">--}}
+                {{--                            --}}{{--                                                                    <i class="fa fa-search"></i></button>--}}
+                {{--                            --}}{{--                                                            </span>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
             </div>
         </form>
     </section>
@@ -307,7 +302,7 @@
                     text: '<b class="text-uppercase"><i class="far fa-file-excel mr-2"></i>Excel</b>',
                     extend: 'excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                     },
                     className: 'btn btn-primary',
                     title: export_pesanan,
@@ -316,7 +311,7 @@
                     text: '<b class="text-uppercase"><i class="fa fa-file-pdf mr-2"></i>PDF</b>',
                     extend: 'pdf',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                     },
                     className: 'btn btn-primary',
                     title: export_pesanan,
@@ -325,7 +320,7 @@
                     text: '<b class="text-uppercase"><i class="fa fa-print mr-2"></i>Cetak</b>',
                     extend: 'print',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                     },
                     className: 'btn btn-primary'
                 }
@@ -392,10 +387,10 @@
                 }
             ]
         });
-        function update_kematian() {
-            $('#modal-edit-kematian').ajaxSubmit({
+        function update_kelahiran() {
+            $('#modal-edit-kelahiran').ajaxSubmit({
                 success: function (data) {
-                    $("#updateKematianModal").modal('hide');
+                    $("#updateKelahiranModal").modal('hide');
                     console.log(data);
                     swal("Data Berhasil Diperbarui", {
                         icon: "success",
@@ -428,18 +423,17 @@
             $("#uang_duka_lihat").val(uang_duka);
 
         }
-        function edit_kematian(id, pt, dept, meninggal, tanggal_meninggal, status_meninggal, bank_id, rekening, kota_id, alm) {
-            $("#updateKematianModal").modal('show');
-            $("#key_id").val(id);
-            $("#pt_edit").val(pt);
-            $("#dept_edit").val(dept);
-            $("#meninggal_edit").val(meninggal);
-            $("#tanggal_meninggal_edit").val(tanggal_meninggal);
-            $("#status_meninggal_edit").val(status_meninggal);
-            $("#bank_id_edit").val(bank_id);
-            $("#rekening_edit").val(rekening);
-            $("#kota_id_edit").val(kota_id);
-            $("#alm_edit").val(alm);
+        function edit_kelahiran(id, pt, dept, bank_id, rekening, putra, kota_id, tanggal_lahir, nama_anak) {
+            $("#updateKelahiranModal").modal('show');
+            $("#key_id_kelahiran").val(id);
+            $("#pt_edit_kelahiran").val(pt);
+            $("#dept_edit_kelahiran").val(dept);
+            $("#bank_id_edit_kelahiran").val(bank_id);
+            $("#rekening_edit_kelahiran").val(rekening);
+            $("#putra_edit_kelahiran").val(putra);
+            $("#kota_id_edit_kelahiran").val(kota_id);
+            $("#tanggal_kelahiran_edit").val(tanggal_lahir);
+            $("#nama_anak_edit").val(nama_anak);
 
         }
         function del(id) {

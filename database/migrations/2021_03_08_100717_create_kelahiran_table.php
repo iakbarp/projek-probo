@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKematianTable extends Migration
+class CreateKelahiranTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,27 +13,23 @@ class CreateKematianTable extends Migration
      */
     public function up()
     {
-        Schema::create('kematian', function (Blueprint $table) {
+        Schema::create('kelahiran', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('dokumen_id')->nullable();
             $table->foreign('dokumen_id')->references('id')->on('status_dokumen')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-//            $table->string('nik');
-//            $table->text('name');
             $table->text('pt')->nullable();
             $table->text('dept')->nullable();
-            $table->text('meninggal')->nullable();
-            $table->date('tanggal_meninggal')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->foreign('bank_id')->references('id')->on('bank')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->text('rekening')->nullable();
+            $table->string('rekening')->nullable();
+            $table->text('putra')->nullable();
             $table->unsignedBigInteger('kota_id')->nullable();
             $table->foreign('kota_id')->references('id')->on('kota')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->text('status_meninggal')->nullable();
-//            $table->string('nominal');
-            $table->text('alm')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->text('nama_anak')->nullable();
             $table->timestamps();
         });
     }
@@ -45,6 +41,6 @@ class CreateKematianTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kematian');
+        Schema::dropIfExists('kelahiran');
     }
 }

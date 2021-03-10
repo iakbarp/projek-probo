@@ -7,6 +7,11 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
         'as' => 'admin.dashboard'
     ]);
 
+    Route::get('/',[
+        'uses' => 'AdminController@index_master',
+        'as' => 'admin.master'
+    ]);
+
     Route::group(['prefix' => 'account'], function () {
 
         Route::get('admin/show', [
@@ -90,6 +95,11 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
             'as' => 'admin.show.kematian'
         ]);
 
+        Route::get('pernikahan', [
+            'uses' => 'KematianController@pernikahan',
+            'as' => 'admin.show.pernikahan'
+        ]);
+
         Route::get('service', [
             'uses' => 'MasterProjectServiceController@service',
             'as' => 'admin.show.service'
@@ -116,6 +126,72 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
         Route::post('{id}/delete', [
             'uses' => 'KematianController@delete_kematian',
             'as' => 'admin.show.kematian.delete'
+        ]);
+    });
+
+    Route::group(['prefix' => 'pernikahan'], function () {
+        Route::get('show', [
+            'uses' => 'PernikahanController@pernikahan',
+            'as' => 'admin.show.pernikahan'
+        ]);
+
+        Route::post('store',[
+            'uses' => 'PernikahanController@store_pernikahan',
+            'as' => 'admin.show.pernikahan.store'
+        ]);
+
+        Route::post('update',[
+            'uses' => 'PernikahanController@update_pernikahan',
+            'as' => 'admin.show.pernikahan.update'
+        ]);
+
+        Route::post('{id}/delete', [
+            'uses' => 'PernikahanController@delete_pernikahan',
+            'as' => 'admin.show.pernikahan.delete'
+        ]);
+    });
+
+    Route::group(['prefix' => 'kelahiran'], function () {
+        Route::get('show', [
+            'uses' => 'KelahiranController@kelahiran',
+            'as' => 'admin.show.kelahiran'
+        ]);
+
+        Route::post('store',[
+            'uses' => 'KelahiranController@store_kelahiran',
+            'as' => 'admin.show.kelahiran.store'
+        ]);
+
+        Route::post('update',[
+            'uses' => 'KelahiranController@update_kelahiran',
+            'as' => 'admin.show.kelahiran.update'
+        ]);
+
+        Route::post('{id}/delete', [
+            'uses' => 'KelahiranController@delete_kelahiran',
+            'as' => 'admin.show.kelahiran.delete'
+        ]);
+    });
+
+    Route::group(['prefix' => 'perubahan'], function () {
+        Route::get('show', [
+            'uses' => 'PerubahanController@perubahan',
+            'as' => 'admin.show.perubahan'
+        ]);
+
+        Route::post('store',[
+            'uses' => 'PerubahanController@store_perubahan',
+            'as' => 'admin.show.perubahan.store'
+        ]);
+
+        Route::post('update',[
+            'uses' => 'PerubahanController@update_perubahan',
+            'as' => 'admin.show.perubahan.update'
+        ]);
+
+        Route::post('{id}/delete', [
+            'uses' => 'PerubahanController@delete_perubahan',
+            'as' => 'admin.show.perubahan.delete'
         ]);
     });
 
@@ -207,17 +283,27 @@ Route::group(['namespace' => 'Pages\Admins', 'prefix' => 'sys-admin', 'middlewar
         });
     });
 
-    Route::group(['prefix' => 'status_data'], function () {
+    Route::group(['prefix' => 'status_dokumen'], function () {
 
-        Route::group(['prefix' => 'status_kematian'], function () {
+        Route::group(['prefix' => 'status_dokumen'], function () {
             Route::get('/', [
-                'uses' => 'StatusController@kematian',
-                'as' => 'admin.show.status_kematian'
+                'uses' => 'DokumenController@index',
+                'as' => 'admin.show.status_dokumen'
             ]);
 
-            Route::get('store',[
-                'uses' => 'LokasiController@store_negara',
-                'as' => 'admin.show.negara.store'
+            Route::post('store',[
+                'uses' => 'DokumenController@store_dokumen',
+                'as' => 'admin.show.status_dokumen.store'
+            ]);
+
+            Route::post('update',[
+                'uses' => 'DokumenController@update_dokumen',
+                'as' => 'admin.show.status_dokumen.update'
+            ]);
+
+            Route::post('{id}/delete', [
+                'uses' => 'DokumenController@delete_dokumen',
+                'as' => 'admin.show.status_dokumen.delete'
             ]);
 
         });

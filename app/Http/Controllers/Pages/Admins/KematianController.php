@@ -31,14 +31,13 @@ class KematianController extends Controller
      */
     public function store_kematian(Request $request)
     {
-        if ($request->hasFile('surat_kematian')) {
-            $this->validate($request, ['surat_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
-            $surat_kematian = $request->file('surat_kematian')->getClientOriginalName();
-//                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
-            $request->file('surat_kematian')->storeAs('public/kematian/surat', $surat_kematian);
-        } else {
-            $surat_kematian = null;
-        }
+//        if ($request->hasFile('surat_kematian')) {
+//            $this->validate($request, ['surat_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
+//            $surat_kematian = $request->file('surat_kematian')->getClientOriginalName();
+//            $request->file('surat_kematian')->storeAs('public/kematian/surat', $surat_kematian);
+//        } else {
+//            $surat_kematian = null;
+//        }
 //        if ($request->hasFile('akte_kematian')) {
 //            $this->validate($request, ['akte_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
 //            $akte_kematian = $request->file('akte_kematian')->getClientOriginalName();
@@ -49,14 +48,15 @@ class KematianController extends Controller
 //        }
         try {
             Kematian::create([
-                'nik' => $request->nik,
-                'name' => $request->name,
-                'meninggal' => $request->meninggal,
-                'status_meninggal' => $request->status_meninggal,
+                'pt' => $request->pt,
                 'dept' => $request->dept,
-                'group' => $request->group,
-                'surat_kematian' => $surat_kematian,
-                'uang_duka' => $request->uang_duka,
+                'meninggal' => $request->meninggal,
+                'tanggal_meninggal' => $request->tanggal_meninggal,
+                'bank' => $request->bank,
+                'rekening' => $request->rekening,
+                'status_meninggal' => $request->status_meninggal,
+                'kota_id' => $request->kota_id,
+                'alm' => $request->alm,
 //                'akte_kematian' => $akte_kematian,
             ]);
             return response()->json([
@@ -85,47 +85,18 @@ class KematianController extends Controller
     public function update_kematian(Request $request)
     {
         $data = Kematian::find($request->id);
-        if ($request->hasFile('surat_kematian')) {
-            $this->validate($request, ['surat_kematian' => 'mimes:jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,odt,ppt,pptx|max:5120']);
-            $surat_kematian = $request->file('surat_kematian')->getClientOriginalName();
-//                $request->file('thumbnail')->storeAs('public/proyek/thumbnail', sprintf("%05d", Auth::id()).now()->format('ymds'). sprintf("%02d", rand(0, 99)).'_'.$thumbnail);
-            $request->file('surat_kematian')->storeAs('public/kematian/surat', $surat_kematian);
-        } else {
-            $surat_kematian = $data->surat_kematian;
-        }
+
         try {
-//            $data = Kematian::find($request->id);
-
-            StatusKematian::create([
-                'jenis_perubahan' => $request->jenis_perubahan,
-                'kematian_id' => $data->id,
-                'old_name' => $data->name,
-                'old_nik' => $data->nik,
-                'old_meninggal' => $data->meninggal,
-                'old_status_meninggal' => $data->status_meninggal,
-                'old_dept' => $data->dept,
-                'old_group' => $data->group,
-                'old_surat_kematian' => $data->surat_kematian,
-                'old_uang_duka' => $data->uang_duka,
-                'new_name' => $request->name,
-                'new_nik' => $request->nik,
-                'new_meninggal' => $request->meninggal,
-                'new_status_meninggal' => $request->status_meninggal,
-                'new_dept' => $request->dept,
-                'new_group' => $request->group,
-                'new_surat_kematian' => $surat_kematian,
-                'new_uang_duka' => $request->uang_duka,
-            ]);
-
             $data->update([
-                'name' => $request->name,
-                'nik' => $request->nik,
-                'meninggal' => $request->meninggal,
-                'status_meninggal' => $request->status_meninggal,
+                'pt' => $request->pt,
                 'dept' => $request->dept,
-                'group' => $request->group,
-                'surat_kematian' => $surat_kematian,
-                'uang_duka' => $request->uang_duka,
+                'meninggal' => $request->meninggal,
+                'tanggal_meninggal' => $request->tanggal_meninggal,
+                'bank_id' => $request->bank_id,
+                'rekening' => $request->rekening,
+                'status_meninggal' => $request->status_meninggal,
+                'kota_id' => $request->kota_id,
+                'alm' => $request->alm,
 
             ]);
             return response()->json([

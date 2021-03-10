@@ -50,7 +50,7 @@
             <ul class="navbar-nav mr-auto">
                 <li>
                     <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-                        <a style="background-color: #122752" href="{{route('beranda')}}" class="btn btn-lg btn-block ">
+                        <a style="background-color: #122752" href="{{route('admin.dashboard')}}" class="btn btn-lg btn-block ">
                             <span style="color: white"> <i class="fas fa-paper-plane"> </i> GO TO MAIN SITE</span></a>
                     </div>
                 </li>
@@ -157,6 +157,265 @@
         <!-- Main Content -->
         <div class="main-content">
             @yield('content')
+{{--            Dokumen--}}
+            <div class="modal fade" tabindex="-1" role="dialog" id="updateDokumenModal" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sunting Data Dokumen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-edit-dokumen" action="{{route('admin.show.status_dokumen.update')}}" method="post">
+                                @CSRF
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="id" id="keyid">
+                                </div>
+                                <div class="form-group">
+                                    <label>NIK</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control disabled" placeholder="NIK"
+                                               name="nik" id="key_dokumen" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="indonesia " name="name"
+                                               id="name_dokumen" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kategori</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <select name="kategori_id"
+                                                      class="form-control use-select2" required>
+                                        <option disabled selected id="kategori_id_edit">Pilih Kategori</option>
+                                            <option value="1">Menikah</option>
+                                            <option value="2">Kelahiran</option>
+                                            <option value="3">Meninggal</option>
+                                            <option value="4">Status</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>R2</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="R2 " name="r2"
+                                               id="r2_edit" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nominal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-money-bill-wave-alt"></i>
+                                            </div>
+                                        </div>
+                                        <input id="nominal_edit" class="form-control"
+                                               name="nominal"
+                                               type="text" placeholder="Rp. "
+                                               onkeypress="return numberOnly(event, false)"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Terbilang</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <input style="text-transform:uppercase" type="text" class="form-control" placeholder="Terbilang " name="terbilang"
+                                               id="terbilang_edit" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Keterangan</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Keterangan " name="keterangan"
+                                               id="keterangan_edit" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Berkas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="file" class="form-control" placeholder="indonesia " name="berkas"
+                                               id="berkas_edit" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kelengkapan Berkas</label>
+                                    <div class="input-group">
+{{--                                    <div class="custom-checkbox custom-control">--}}
+{{--                                        <input id="cb-selesai" type="checkbox"--}}
+{{--                                               class="custom-control-input"--}}
+{{--                                               name="selesai" value="1">--}}
+{{--                                        <label for="cb-selesai" class="custom-control-label"--}}
+{{--                                               style="text-transform: none;">Berkas Lengkap ?--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                    </div>
+                                        <select name="selesai"
+                                                class="form-control use-select2" required>
+                                            <option disabled selected id="selesai_id_edit">Pilih</option>
+                                            <option value="1">Belum</option>
+                                            <option value="2">Sudah</option>
+                                        </select>
+                                </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="update_dokumen()">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="lihatKematian" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Detail Data Kematian</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-lihat-kematian">
+                                @CSRF
+                                <div class="form-group">
+                                    <label>NIK</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control disabled" placeholder="indonesia "
+                                               name="nik" id="key_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="indonesia " name="name"
+                                               id="name_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dept</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Department " name="dept"
+                                               id="dept_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Group</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Group" id="group_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Orang Meninggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nama Orang Meninggal" name="meninggal" id="meninggal_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status Meninggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Departement" name="status_meninggal" id="status_meninggal_lihat" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Uang Santunan</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-money-bill-wave-alt"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Departement" name="uang_duka" id="uang_duka_lihat" disabled>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal" style="z-index: 99999">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -251,34 +510,19 @@
                 </div>
             </div>
 
-            <div class="modal fade" tabindex="-1" role="dialog" id="updateKematianModal" style="z-index: 99999">
+{{--            Status Dokumen--}}
+            <div class="modal fade" tabindex="-1" role="dialog" id="lihatKematian" style="z-index: 99999">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Sunting Data Kematian</h5>
+                            <h5 class="modal-title">Detail Data Kematian</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="modal-edit-kematian" action="{{route('admin.show.kematian.update')}}" method="post">
+                            <form id="modal-lihat-kematian">
                                 @CSRF
-                                <div class="form-group"></div>
-                                <div class="input-group">
-                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
-                                           name="id" id="keyid">
-                                </div>
-                                <div class="form-group">
-                                    <label>Jenis Perubahan</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fa fa-user-times"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" placeholder="Jenis Perubahan" name="jenis_perubahan" id="" required>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <label>NIK</label>
                                     <div class="input-group">
@@ -287,8 +531,8 @@
                                                 <i class="fa fa-key"></i>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control disabled" placeholder="NIK"
-                                               name="nik" id="key_kematian" required>
+                                        <input type="text" class="form-control disabled" placeholder="indonesia "
+                                               name="nik" id="key_lihat" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -300,7 +544,7 @@
                                             </div>
                                         </div>
                                         <input type="text" class="form-control" placeholder="indonesia " name="name"
-                                               id="name_kematian" required>
+                                               id="name_lihat" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -312,7 +556,7 @@
                                             </div>
                                         </div>
                                         <input type="text" class="form-control" placeholder="Department " name="dept"
-                                               id="dept_edit" required>
+                                               id="dept_lihat" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -323,12 +567,7 @@
                                                 <i class="fa fa-users"></i>
                                             </div>
                                         </div>
-                                        <select id="group_edit" name="group"
-                                                class="form-control use-select2" required>
-                                            <option disabled selected>Pilih Group</option>
-                                            <option value="PT. Ajinomoto">PT. Ajinomoto</option>
-                                            <option value="PT. Ajinex">PT. Ajinex</option>
-                                        </select>
+                                        <input type="text" class="form-control" placeholder="Group" id="group_lihat" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -339,7 +578,7 @@
                                                 <i class="fa fa-user-times"></i>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="Nama Orang Meninggal" name="meninggal" id="meninggal_edit" required>
+                                        <input type="text" class="form-control" placeholder="Nama Orang Meninggal" name="meninggal" id="meninggal_lihat" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -350,17 +589,7 @@
                                                 <i class="fa fa-user"></i>
                                             </div>
                                         </div>
-                                        <select id="status_meninggal_edit" name="status_meninggal"
-                                                class="form-control use-select2" required>
-                                            <option disabled selected>Status Meninggal</option>
-                                            <option value="Ayah Kandung">Ayah Kandung</option>
-                                            <option value="Ayah Mertua">Ayah Mertua</option>
-                                            <option value="Ibu Kandung">Ibu Kandung</option>
-                                            <option value="Ibu Mertua">Ibu Mertua</option>
-                                            <option value="Suami">Suami</option>
-                                            <option value="Istri">Istri</option>
-                                            <option value="Anak">Anak</option>
-                                        </select>
+                                        <input type="text" class="form-control" placeholder="Departement" name="status_meninggal" id="status_meninggal_lihat" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -371,42 +600,455 @@
                                                 <i class="fa fa-money-bill-wave-alt"></i>
                                             </div>
                                         </div>
-                                        <input id="uang_duka_edit" class="form-control"
-                                               name="uang_duka"
-                                               type="text" placeholder="Rp. "
-                                               onkeypress="return numberOnly(event, false)"
-                                               required>
+                                        <input type="text" class="form-control" placeholder="Departement" name="uang_duka" id="uang_duka_lihat" disabled>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="updateKematianModal" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sunting Data Meninggal</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-edit-kematian" action="{{route('admin.show.kematian.update')}}" method="post">
+                                @CSRF
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="id" id="key_id">
+                                </div>
+                                <div class="form-group">
+                                    <label>PT</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <select  name="pt"
+                                                class="form-control use-select2">
+                                            <option id="pt_edit" disabled selected>Pilih Group</option>
+                                            <option value="PT. Ajinomoto">PT. Ajinomoto</option>
+                                            <option value="PT. Ajinex">PT. Ajinex</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Surat Kematian</label>
+                                    <label>Dept.</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
                                                 <i class="fa fa-flag"></i>
                                             </div>
                                         </div>
-                                        <input type="file" class="form-control" placeholder="indonesia " name="surat_kematian"
-                                               id="surat_kematian_edit" required>
+                                        <input type="text" class="form-control" placeholder="Dept " name="dept"
+                                               id="dept_edit">
                                     </div>
                                 </div>
-{{--                                <div class="form-group">--}}
-{{--                                    <label>Akte Kematian</label>--}}
-{{--                                    <div class="input-group">--}}
-{{--                                        <div class="input-group-prepend">--}}
-{{--                                            <div class="input-group-text">--}}
-{{--                                                <i class="fa fa-flag"></i>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <input type="file" class="form-control" placeholder="indonesia " name="akte_kematian"--}}
-{{--                                               id="lampiran_kematian" required>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
+                                <div class="form-group">
+                                    <label>Bank</label>
+                                    <div class="input-group">
+                                        <select name="bank_id"
+                                                class="form-control selectpicker use-select2" data-live-search="true">
+                                            <option id="bank_id_edit" disabled selected>Pilih Bank</option>
+                                            @foreach(\App\Model\Bank::all() as $item)
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nomor Rekening</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nomor Rekening" name="rekening" id="rekening_edit">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Yang Meninggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Yang Meninggal" name="status_meninggal" id="status_meninggal_edit">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Meninggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <input class="form-control" type="date" id="tanggal_meninggal_edit" name="tanggal_meninggal">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kota</label>
+                                    <div class="input-group">
+                                        <select name="kota_id"
+                                                class="form-control selectpicker use-select2" data-live-search="true">
+                                            <option id="kota_id_edit" disabled selected>Pilih Kota</option>
+                                            @foreach(\App\Model\Kota::all() as $item)
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                                @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Alm.</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nama Almarhum " name="meninggal"
+                                               id="meninggal_edit">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Alm.</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <select name="alm"
+                                                class="form-control use-select2">
+                                            <option id="alm_edit" disabled selected>Pilih Alm</option>
+                                            <option value="Almarhum">Almarhum</option>
+                                            <option value="Almarhumah">Almarhumah</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" onclick="update_kematian()">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{{--            edit menikah--}}
+            <div class="modal fade" tabindex="-1" role="dialog" id="updatePernikahanModal" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sunting Data Menikah</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-edit-pernikahan" action="{{route('admin.show.pernikahan.update')}}" method="post">
+                                @CSRF
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="id" id="key_idpernikahan">
+                                </div>
+                                <div class="form-group">
+                                    <label>PT</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <select  name="pt"
+                                                 class="form-control use-select2">
+                                            <option id="pt_pernikahan" disabled selected>Pilih Group</option>
+                                            <option value="PT. Ajinomoto">PT. Ajinomoto</option>
+                                            <option value="PT. Ajinex">PT. Ajinex</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dept.</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Dept " name="dept"
+                                               id="dept_pernikahan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bank</label>
+                                    <div class="input-group">
+                                        <select name="bank_id" class="form-control selectpicker use-select2" data-live-search="true">
+                                            <option id="bank_id_pernikahan" disabled selected>Pilih Bank</option>
+                                            @foreach(\App\Model\Bank::all() as $item)
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nomor Rekening</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nomor Rekening" name="rekening" id="rekening_pernikahan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kota Menikah</label>
+                                    <div class="input-group">
+                                        <select name="kota_id"
+                                                class="form-control selectpicker use-select2" data-live-search="true">
+                                            <option id="kota_id_pernikahan" disabled selected>Pilih Kota</option>
+                                            @foreach(\App\Model\Kota::all() as $item)
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Menikah</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <input class="form-control" type="date" id="tanggal_pernikahan_edit" name="tanggal_menikah">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Istri</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nama Istri " name="nama_istri"
+                                               id="nama_istri_edit">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="update_pernikahan()">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{{--            edit kelahiran--}}
+            <div class="modal fade" tabindex="-1" role="dialog" id="updateKelahiranModal" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sunting Data Kelahiran</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-edit-kelahiran" action="{{route('admin.show.kelahiran.update')}}" method="post">
+                                @CSRF
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="id" id="key_id_kelahiran">
+                                </div>
+                                <div class="form-group">
+                                    <label>PT</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <select  name="pt"
+                                                 class="form-control use-select2">
+                                            <option id="pt_edit_kelahiran" disabled selected>Pilih Group</option>
+                                            <option value="PT. Ajinomoto">PT. Ajinomoto</option>
+                                            <option value="PT. Ajinex">PT. Ajinex</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dept.</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Dept " name="dept"
+                                               id="dept_edit_kelahiran">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bank</label>
+                                    <div class="input-group">
+                                        <select name="bank_id" class="form-control selectpicker use-select2" data-live-search="true">
+                                            <option id="bank_id_edit_kelahiran" disabled selected>Pilih Bank</option>
+                                            @foreach(\App\Model\Bank::all() as $item)
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nomor Rekening</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user-times"></i>
+                                            </div>
+                                        </div>
+                                        <input type="number" class="form-control" placeholder="Nomor Rekening" name="rekening"
+                                               id="rekening_edit_kelahiran">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kota Menikah</label>
+                                    <div class="input-group">
+                                        <select name="kota_id"
+                                                class="form-control selectpicker use-select2" data-live-search="true">
+                                            <option id="kota_id_edit_kelahiran" disabled selected>Pilih Kota</option>
+                                            @foreach(\App\Model\Kota::all() as $item)
+                                                <option value="{{$item->id}}">{{$item->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Putra/Putri</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Putra/Putri ke- " name="putra"
+                                               id="putra_edit_kelahiran">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Lahir</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <input class="form-control" type="date" id="tanggal_kelahiran_edit" name="tanggal_lahir">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Anak</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-flag"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nama Anak " name="nama_anak"
+                                               id="nama_anak_edit">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="update_kelahiran()">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{{--            edit perubahan--}}
+            <div class="modal fade" tabindex="-1" role="dialog" id="updatePerubahanModal" style="z-index: 99999">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sunting Data Perubahan Status</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal-edit-perubahan" action="{{route('admin.show.perubahan.update')}}" method="post">
+                                @CSRF
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="id" id="key_id_perubahan">
+                                </div>
+                                <div class="form-group">
+                                    <label>Perubahan</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Jenis Perubahan " name="perubahan"
+                                               id="perubahan_edit">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dari Sebelumnya</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-undo"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Sebelumnya " name="sebelum"
+                                               id="sebelum_perubahan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Menjadi</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-redo"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Menjadi " name="sesudah"
+                                               id="sesudah_perubahan">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="update_perubahan()">Save changes
                             </button>
                         </div>
                     </div>
@@ -584,7 +1226,7 @@
                                                     <i class="fa fa-credit-card"></i>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control disabled" placeholder="indonesia "
+                                            <input type="number" class="form-control disabled" placeholder="indonesia "
                                                    name="rekening" id="rekening" required readonly>
                                             <input type="hidden" name="id" id="id_payment">
                                         </div>
@@ -598,7 +1240,7 @@
                                                 </div>
                                             </div>
                                             <input type="text" class="form-control disabled" placeholder="indonesia "
-                                                   name="an" id="bank" required readonly>
+                                                   name="an" id="bank_id" required readonly>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-12 col-12">

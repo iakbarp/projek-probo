@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Admins;
 
+use App\Model\Bank;
 use App\Model\Bio;
 use App\Model\SubKategori;
 use App\Support\Role;
@@ -22,6 +23,13 @@ class AdminController extends Controller
         $admins = User::where('role', Role::ADMIN)->get();
 
         return view('pages.admins.dashboard', compact('role', 'admins'));
+    }
+
+    public function bank(Request $request)
+    {
+        $bank = Bank::all();
+
+        return view('layouts.mst_admin', compact('bank'));
     }
 
     public function editProfile()

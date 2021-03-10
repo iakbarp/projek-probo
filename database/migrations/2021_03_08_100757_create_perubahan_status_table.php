@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDompetTable extends Migration
+class CreatePerubahanStatusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateDompetTable extends Migration
      */
     public function up()
     {
-        Schema::create('dompet', function (Blueprint $table) {
+        Schema::create('perubahan_status', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')
+            $table->unsignedBigInteger('dokumen_id')->nullable();
+            $table->foreign('dokumen_id')->references('id')->on('status_dokumen')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->string('pin')->nullable();
-//            $table->string('saldo')->nullable();
+            $table->text('perubahan')->nullable();
+            $table->text('sebelum')->nullable();
+            $table->text('sesudah')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateDompetTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dompet');
+        Schema::dropIfExists('perubahan_status');
     }
 }
