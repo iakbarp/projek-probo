@@ -317,15 +317,15 @@
                     className: 'btn btn-primary',
                     title: export_pesanan,
                     extension: '.xls'
-                }, {
-                    text: '<b class="text-uppercase"><i class="fa fa-file-pdf mr-2"></i>PDF</b>',
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                    },
-                    className: 'btn btn-primary',
-                    title: export_pesanan,
-                    extension: '.pdf'
+                // }, {
+                //     text: '<b class="text-uppercase"><i class="fa fa-file-pdf mr-2"></i>PDF</b>',
+                //     extend: 'pdf',
+                //     exportOptions: {
+                //         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                //     },
+                //     className: 'btn btn-primary',
+                //     title: export_pesanan,
+                //     extension: '.pdf'
                 }, {
                     text: '<b class="text-uppercase"><i class="fa fa-print mr-2"></i>Cetak</b>',
                     extend: 'print',

@@ -435,6 +435,28 @@ Route::group(['prefix' => 'akun'], function () {
                     'as' => 'hapus.skill'
                 ]);
             });
+            Route::group(['prefix' => 'status_dokumen'], function () {
+                Route::get('/', [
+                    'uses' => 'AkunController@index',
+                    'as' => 'akun.show.status_dokumen'
+                ]);
+
+                Route::post('store',[
+                    'uses' => 'AkunController@store_dokumen',
+                    'as' => 'akun.show.status_dokumen.store'
+                ]);
+
+                Route::post('update',[
+                    'uses' => 'AkunController@update_dokumen',
+                    'as' => 'akun.show.status_dokumen.update'
+                ]);
+
+                Route::post('{id}/delete', [
+                    'uses' => 'AkunController@delete_dokumen',
+                    'as' => 'akun.show.status_dokumen.delete'
+                ]);
+
+            });
         });
 
         Route::get('pengaturan', [

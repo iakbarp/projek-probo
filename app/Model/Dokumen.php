@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Dokumen extends Model
@@ -12,5 +13,9 @@ class Dokumen extends Model
     public function get_kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+    public function get_users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

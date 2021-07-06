@@ -71,8 +71,8 @@
                                             @endif
                                         </td>
                                         <td>{{$item->status_meninggal}}</td>
-                                        <td>{{\Carbon\Carbon::parse($item->tanggal_lahir)->formatLocalized('%d %B %Y')}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->tanggal_lahir)->formatLocalized('%A')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->tanggal_lahir)->formatLocalized('%d %B %Y')}}</td>
                                         <td>
                                             @if ($item->kota_id == NULL)
 
@@ -103,7 +103,7 @@
                                                     id="edit-kematian-{{$item->id}}"
                                                     onclick="edit_kematian('{{$item->id}}','{{$item->pt}}'
                                                         ,'{{$item->dept}}','{{$item->meninggal}}','{{$item->tanggal_meninggal}}'
-                                                        ,'{{$item->status_meninggal}}','{{$item->bank_id}}','{{$item->rekening}}','{{$item->alm}}','{{$item->kota_id}}')">
+                                                        ,'{{$item->status_meninggal}}','{{$item->bank_id}}','{{$item->rekening}}','{{$item->kota_id}}','{{$item->alm}}')">
                                                 <i
                                                     class="fa fa-edit"></i></button>
 {{--                                            <button class="btn btn-icon" style="color: white;background-color: grey"--}}

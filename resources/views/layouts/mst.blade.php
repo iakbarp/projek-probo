@@ -694,6 +694,86 @@
 
         @yield('content')
     </div>
+    <footer class="footer-color7">
+        <div class="content-widgets">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="footer-widget widget">
+                            <h4 data-toc-skip>Tinggalkan Pesan</h4>
+                            <form method="post" class="footer-form" action="{{route('kirim.kontak')}}">
+                                @csrf
+                                <input id="footer_name" name="name" type="text" placeholder="Nama lengkap"
+                                       value="{{Auth::check() ? Auth::user()->name : ''}}" required>
+                                <input id="footer_email" name="email" type="email" placeholder="Alamat email"
+                                       value="{{Auth::check() ? Auth::user()->email : ''}}" required>
+                                <input id="footer_subject" name="subject" type="text" placeholder="Subyek"
+                                       required>
+                                <textarea id="footer_message" name="message"
+                                          placeholder="Tulis pesan Anda disini&hellip;"
+                                          required></textarea>
+                                <button type="submit" class="btn btn-construct">Kirim</button>
+                            </form>
+                        </div>
+                    </div>
+{{--                    <div class="col-md-4 col-sm-6">--}}
+{{--                        <div class="footer-widget widget">--}}
+{{--                            <h4 data-toc-skip>Tautan Lain</h4>--}}
+{{--                            <ul class="contact">--}}
+{{--                                <li><a href="{{route('tentang')}}"><i class="fa fa-caret-right"></i> Tentang BAGASKU</a>--}}
+{{--                                </li>--}}
+{{--                                <li><a href="{{route('cara-kerja')}}"><i class="fa fa-caret-right"></i> Cara Kerja</a>--}}
+{{--                                </li>--}}
+{{--                                <li><a href="{{route('ketentuan-layanan')}}"><i class="fa fa-caret-right"></i> Ketentuan--}}
+{{--                                        Layanan</a></li>--}}
+{{--                                <li><a href="{{route('kebijakan-privasi')}}"><i class="fa fa-caret-right"></i> Kebijakan--}}
+{{--                                        Privasi</a></li>--}}
+{{--                                <li><a href="{{route('kontak')}}"><i class="fa fa-caret-right"></i> Kontak</a></li>--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+                    <div class="col-md-4 col-sm-6">
+                        <div class="footer-widget widget">
+                            <h4 data-toc-skip>Tetap Terhubung</h4>
+                            <ul class="contact">
+                                <li>
+                                    <i class="fa fa-map-marked-alt" style="color: #fff"></i>
+                                    Pohkecik, Dlanggu, Mojokerto, Jawa Timur — 61371
+                                </li>
+                                <li>
+                                    <a href="tel:+6281252658218"><i class="fa fa-phone"></i> +62 812-5265-8218</a>
+                                </li>
+                                <li>
+                                    <a href="mailto:{{env('MAIL_USERNAME')}}"><i
+                                            class="fa fa-envelope"></i> {{env('MAIL_USERNAME')}}</a>
+                                </li>
+                            </ul>
+                            <div class="social-media">
+                                <a href="https://fb.com/ramadhanwahyu.gonzales" target="_blank">
+                                    <i class="fab fa-facebook-f"></i></a>
+                                <a href="https://twitter.com/ramadhanwahyuu5" target="_blank">
+                                    <i class="fab fa-twitter"></i></a>
+                                <a href="https://github.com/Ramadhan1101" target="_blank">
+                                    <i class="fab fa-github"></i></a>
+                                <a href="https://instagram.com/Ramadhan_Wahyu_11" target="_blank">
+                                    <i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>© {{now()->format('Y').' '.env('APP_NAME')}}. All rights reserved.{{-- | Designed & Developed by
+                            <a href="http://rabbit-media.net" target="_blank">Rabbit Media</a>--}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
 
 @include('layouts.partials._signUpIn')

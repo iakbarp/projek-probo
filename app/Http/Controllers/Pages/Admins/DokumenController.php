@@ -10,8 +10,10 @@ use App\Model\Kematian;
 use App\Model\Pernikahan;
 use App\Model\StatusKematian;
 use App\Model\StatusPerubahan;
+use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use phpDocumentor\Reflection\Types\Null_;
 use Whoops\Exception\ErrorException;
 
@@ -60,6 +62,7 @@ class DokumenController extends Controller
         try {
             $data = Dokumen::create([
                 'nik' => $request->nik,
+                'user_id' => Auth::id(),
                 'name' => $request->name,
                 'kategori_id' => $request->kategori_id,
                 'r2' => $request->r2,
@@ -152,6 +155,7 @@ class DokumenController extends Controller
 //            ]);
 
             $data->update([
+                'user_id' => Auth::id(),
                 'nik' => $request->nik,
                 'name' => $request->name,
                 'kategori_id' => $kategori,

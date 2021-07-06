@@ -48,12 +48,21 @@
 {{--                        <i class="fas fa-bars"></i></a></li>--}}
 {{--            </ul>--}}
             <ul class="navbar-nav mr-auto">
+                @if(Auth::user()->isRoot() || Auth::user()->isAdmin())
                 <li>
                     <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
                         <a style="background-color: #122752" href="{{route('admin.dashboard')}}" class="btn btn-lg btn-block ">
                             <span style="color: white"> <i class="fas fa-paper-plane"> </i> GO TO MAIN SITE</span></a>
                     </div>
                 </li>
+                @else
+                    <li>
+                        <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
+                            <a style="background-color: #122752" href="{{route('beranda')}}" class="btn btn-lg btn-block ">
+                                <span style="color: white"> <i class="fas fa-paper-plane"> </i> GO TO MAIN SITE</span></a>
+                        </div>
+                    </li>
+                    @endif
             </ul>
             <ul class="navbar-nav navbar-right">
 {{--                <li class="dropdown dropdown-list-toggle">--}}
@@ -143,7 +152,11 @@
             <aside id="sidebar-wrapper">
                 <div class="sidebar-brand">
 {{--                    <a href="{{route('admin.dashboard')}}">Admin {{env('APP_NAME')}}</a>--}}
+                    @if(Auth::user()->isRoot() || Auth::user()->isAdmin())
                     <a href="{{route('admin.dashboard')}}"><img src="{{asset('images/logo/undagi_logo.png')}}" alt="" height="50" width="175"></a>
+                    @else
+                        <a href="{{route('beranda')}}"><img src="{{asset('images/logo/undagi_logo.png')}}" alt="" height="50" width="175"></a>
+                        @endif
                 </div>
                 <div class="sidebar-brand sidebar-brand-sm">
                     <a href="{{route('admin.dashboard')}}">
@@ -168,11 +181,19 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            @if(Auth::user()->isRoot() || Auth::user()->isAdmin())
                             <form id="modal-edit-dokumen" action="{{route('admin.show.status_dokumen.update')}}" method="post">
+                                @else
+                                    <form id="modal-edit-dokumen" action="{{route('akun.show.status_dokumen.update')}}" method="post">
+                                        @endif
                                 @CSRF
                                 <div class="input-group">
                                     <input type="hidden" class="form-control disabled" placeholder="indonesia "
                                            name="id" id="keyid">
+                                </div>
+                                <div class="input-group">
+                                    <input type="hidden" class="form-control disabled" placeholder="indonesia "
+                                           name="user_id" id="key_user_id">
                                 </div>
                                 <div class="form-group">
                                     <label>NIK</label>

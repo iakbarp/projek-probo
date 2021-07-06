@@ -113,7 +113,7 @@
                                             </form>
                                             <button class="btn btn-info btn-icon"
                                                     id="edit-dokumen-{{$item->id}}"
-                                                    onclick="edit_dokumen('{{$item->id}}','{{$item->nik}}','{{$item->name}}','{{$item->kategori_id}}'
+                                                    onclick="edit_dokumen('{{$item->id}}','{{$item->user_id}}','{{$item->nik}}','{{$item->name}}','{{$item->kategori_id}}'
                                                         ,'{{$item->r2}}','{{$item->nominal}}','{{$item->terbilang}}','{{$item->keterangan}}','{{$item->berkas}}', '{{$item->selesai}}')">
                                                 <i
                                                     class="fa fa-edit"></i></button>
@@ -451,9 +451,10 @@
             });
         }
 
-        function lihat_dokumen(id, nik, name, kategori_id, r2, nominal,terbilang, keterangan, berkas) {
+        function lihat_dokumen(id, user_id, nik, name, kategori_id, r2, nominal,terbilang, keterangan, berkas) {
             $("#lihatDokumen").modal('show');
             $("#keyid").val(id);
+            $("#key_user_id").val(user_id);
             $("#key_lihat").val(nik);
             $("#name_lihat").val(name);
             $("#kategori_lihat").val(kategori_id);
@@ -464,9 +465,10 @@
             $("#berkas_lihat").val(berkas);
 
         }
-        function edit_dokumen(id, nik, name, kategori_id, r2, nominal, terbilang, keterangan, berkas, selesai) {
+        function edit_dokumen(id, user_id, nik, name, kategori_id, r2, nominal, terbilang, keterangan, berkas, selesai) {
             $("#updateDokumenModal").modal('show');
             $("#keyid").val(id);
+            $("#key_user_id").val(id);
             $("#key_dokumen").val(nik);
             $("#name_dokumen").val(name);
             $("#kategori_id_edit").val(kategori_id);

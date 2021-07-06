@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Pages;
 
 use App\Model\Bid;
 use App\Model\Bio;
+use App\Model\Kelahiran;
+use App\Model\Kematian;
 use App\Model\PengerjaanLayanan;
+use App\Model\Pernikahan;
 use App\Model\Project;
 use App\Model\Review;
 use App\Model\ReviewWorker;
 use App\Model\Services;
+use App\Model\StatusPerubahan;
 use App\Model\Testimoni;
 use App\Model\UlasanService;
 use App\Support\Role;
@@ -23,11 +27,10 @@ class MainController extends Controller
 {
     public function index()
     {
-        $proyek = Project::where('pribadi', false)->doesntHave('get_pengerjaan')->orderByDesc('id')->take(8)->get();
-        $layanan = Services::orderByDesc('id')->take(8)->get();
-        $pekerja = Bio::whereHas('get_user', function ($q) {
-            $q->where('role', Role::OTHER);
-        })->where('total_bintang_pekerja', '>', 0)->orderByDesc('total_bintang_pekerja')->take(8)->get();
+        $kematian = Kematian::orderByDesc('id')->take(8)->get();
+        $pernikahan = Pernikahan::orderByDesc('id')->take(8)->get();
+        $kelahiran = Kelahiran::orderByDesc('id')->take(8)->get();
+        $perubahan_status = StatusPerubahan::orderByDesc('id')->take(8)->get();
 
         $testimoni = Testimoni::where('bintang', '>', 3)->orderByDesc('id')->take(12)->get();
         if (Auth::check()) {
@@ -36,7 +39,7 @@ class MainController extends Controller
             $cek = null;
         }
 
-        return view('pages.main.beranda', compact('proyek', 'layanan', 'pekerja', 'testimoni', 'cek'));
+        return view('pages.main.beranda', compact('kematian', 'kelahiran', 'pernikahan','perubahan_status', 'testimoni', 'cek'));
     }
 
     public function detailProyek(Request $request)
